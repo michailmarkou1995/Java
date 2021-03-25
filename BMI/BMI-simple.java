@@ -258,7 +258,7 @@ public class Main extends Application{
 
 
         // Button event Handler
-        submitButton.setOnAction(event -> {
+        submitButton.setOnAction(event -> { //we don't reference it anywhere so its safe to call it like this
 
                 //Creating a panel for the output message
                 StackPane root = new StackPane();

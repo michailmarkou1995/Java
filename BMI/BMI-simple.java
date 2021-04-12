@@ -449,7 +449,7 @@ public class Main extends Application{
                 return true;
             else {
                 runnable.run();
-                alert.setContentText("Data Entry Error: No Negative numbers");
+                alert.setContentText("Data Entry Error Age: No Negative numbers");
                 alert.showAndWait();
                 return false;}
         }
@@ -469,7 +469,7 @@ public class Main extends Application{
                 return true;
             else {
                 runnable.run();
-                alert.setContentText("Data Entry Error Age: No Negative numbers");
+                alert.setContentText("Data Entry Error Height: No Negative numbers");
                 alert.showAndWait();
                 return false;}
         }

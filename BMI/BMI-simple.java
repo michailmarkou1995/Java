@@ -335,7 +335,7 @@ public class Main extends Application{
         GridPane.setHalignment(submitButton, HPos.CENTER);
         GridPane.setMargin(submitButton, new Insets(20, 0,20,0));
 
-        alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Alert");
 
         // BMI Button event Handler
@@ -444,8 +444,14 @@ public class Main extends Application{
     private boolean isIntAge(TextField ageField)
     {
         try {
-            Integer.parseInt(ageField.getText());
-            return true;
+            int temp=Integer.parseInt(ageField.getText());
+            if (!(temp < 0))
+                return true;
+            else {
+                runnable.run();
+                alert.setContentText("Data Entry Error: No Negative numbers");
+                alert.showAndWait();
+                return false;}
         }
         catch (NumberFormatException e)
         {
@@ -458,13 +464,19 @@ public class Main extends Application{
     private boolean isDoubleheight(TextField heightField)
     {
         try {
-            Double.parseDouble(heightField.getText());
-            return true;
+            double temp=Double.parseDouble(heightField.getText());
+            if (!(temp < 0))
+                return true;
+            else {
+                runnable.run();
+                alert.setContentText("Data Entry Error Age: No Negative numbers");
+                alert.showAndWait();
+                return false;}
         }
         catch (NumberFormatException e)
         {
             runnable.run();
-            alert.setContentText("Data Entry Error: height as double");
+            alert.setContentText("Data Entry Error Height: height as double");
             alert.showAndWait();
             return false;
         }
@@ -472,8 +484,14 @@ public class Main extends Application{
     private boolean isDoubleWeight(TextField weightField)
     {
         try {
-            Double.parseDouble(weightField.getText());
-            return true;
+            double temp=Double.parseDouble(weightField.getText());
+            if (!(temp < 0))
+                return true;
+            else {
+                runnable.run();
+                alert.setContentText("Data Entry Error Weight: No Negative numbers");
+                alert.showAndWait();
+                return false;}
         }
         catch (NumberFormatException e)
         {

@@ -215,7 +215,7 @@ public class Main extends Application{
 
     }
 
-    public GridPane createHealthAppForm() {
+    private GridPane createHealthAppForm() {
         // Instantiate a new Grid Pane
         gridPane = new GridPane();
 
@@ -246,7 +246,7 @@ public class Main extends Application{
         return gridPane;
     }
 
-    public void addUIControls(Stage primaryStage) {
+    private void addUIControls(Stage primaryStage) {
         //Header
         headerLabel = new Label("BMI calculator");
         headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
@@ -345,7 +345,7 @@ public class Main extends Application{
                 resultPrompt(primaryStage);
         });
     }
-    public void resultPrompt(Stage primaryStage)
+    private void resultPrompt(Stage primaryStage)
     {
         //Creating a panel for the output message
         Vbox = new VBox();
@@ -394,7 +394,6 @@ public class Main extends Application{
             Vbox.getChildren().add(output);
             VBox.setMargin(output, new Insets(20, 20, 20, 20));
             retBut(primaryStage);
-            //alert.showAndWait();
         });
 
         output.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -404,7 +403,7 @@ public class Main extends Application{
         retBut(primaryStage);
     }
 
-    public void retBut(Stage primaryStage)
+    private void retBut(Stage primaryStage)
     {
         //Adding return Button
         returnButton = new Button("Return");
@@ -424,7 +423,7 @@ public class Main extends Application{
             weightField.setText("Enter your weight");
         });
     }
-    public boolean isNameOk(){
+    private boolean isNameOk(){
 
         errorMessageName="";
         if(nameField.getText().length()==0) {
@@ -442,7 +441,7 @@ public class Main extends Application{
             return false;
         }
     }
-    public boolean isIntAge(TextField ageField)
+    private boolean isIntAge(TextField ageField)
     {
         try {
             Integer.parseInt(ageField.getText());
@@ -456,7 +455,7 @@ public class Main extends Application{
             return false;
         }
     }
-    public boolean isDoubleheight(TextField heightField)
+    private boolean isDoubleheight(TextField heightField)
     {
         try {
             Double.parseDouble(heightField.getText());
@@ -470,7 +469,7 @@ public class Main extends Application{
             return false;
         }
     }
-    public boolean isDoubleWeight(TextField weightField)
+    private boolean isDoubleWeight(TextField weightField)
     {
         try {
             Double.parseDouble(weightField.getText());

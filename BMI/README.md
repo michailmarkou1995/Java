@@ -1,3 +1,3 @@
-![layout](img/program1.png)
-![layout1](img/program2.png)
-![layout2](img/program3.png)
+<img src="img/program1.png" width="50">
+<img src="img/program2.png" width="50">
+<img src="img/program3.png" width="50">

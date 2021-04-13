@@ -1,2 +1,2 @@
 # JavaFX
-BSc Computer Science Projects
+BSc Computer Science Projects Java

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"/>
+<body roleId="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<head th:replace="common/header :: navbar"/>
+<div class="container main">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Medical Information</h3>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+    <br/>
+</div>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Category</th>
+                 <th>Name</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>diagnosed</th>
+                <th>Instructions</th>
+                <th>Information</th>
+            </tr>
+            </thead>
+            <tbody>
+           <tr data-th-each="med : ${medsav}">
+                 <td data-th-text="${med.doctorAccount.categoryDoctor}">...</td>
+                  <td data-th-text="${med.doctorAccount.firstName} + ' ' +${med.doctorAccount.lastName}">...</td>
+                  <td data-th-text="${med.doctorAccount.city}">...</td>
+                  <td data-th-text="${med.datesDoctorAvailable.dateAvailable}">...</td>
+                 <td data-th-text="${med.datesDoctorAvailable.timeAvailable}">...</td>
+                   <td data-th-text="${med.patienthealth.patientDiagnosed}">...</td> 
+                   <td data-th-text="${med.treatmentGuide.prescritpionDirections}">...</td> 
+ <td><a class="btn btn-warning btn-xs" id="buttonappointment" th:onclick="|window.location.href='/medical/fetch/scheduled/${med.id}'|" th-text="(id1=${datess.dateID})">Show info</a>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+
+<div th:replace="common/header :: body-bottom-scripts"/>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+</body>
+</html>

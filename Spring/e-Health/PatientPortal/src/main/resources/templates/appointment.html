@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"/>
+<body roleId="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<head th:replace="common/header :: navbar"/>
+<div class="container main">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Schedule An Appointment</h3>
+            <form th:action="@{/appointment/create}" method="post" id="appointmentForm">
+                <input type="hidden" name="id" th:value="${appointment.id}"/>
+
+                <div class="form-group">
+                    <label for="dateString">Pick a Date from:</label>
+                    <div class="input-append date form_datetime input-group" data-date="YYYY-MM-DD"><!--2016-10-21T15:25:00Z-->
+                        <input class="form-control" type="text" value="" readonly="readonly"
+                               th:value="${dateStringFrom}" name="dateStringFrom"
+                               id="dateString" required="required"/>
+                        <span class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+
+                    <div class="form-group">
+                    <label for="dateString">Pick a Date To:</label>
+                    <div class="input-append date form_datetime input-group" data-date="YYYY-MM-DD">
+                        <input class="form-control" type="text" value="" readonly="readonly"
+                               th:value="${dateStringTo}" name="dateStringTo"
+                               id="dateString" required="required"/>
+                        <span class="input-group-addon"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+
+  
+                <div class="form-group">
+                    <label for="location">Pick a location:</label><!--location.doctorAccount.dateID-->
+                    <select class="form-control" th:value="0" name="location" id="location">   
+                        <option  value="0" disabled="disabled" selected="selected" > -- select the location --</option>
+                        
+                        <option  th:each="location,iterStat : ${locations}" th:value="${location[0]}" th:text="${location[0]}"></option>
+
+                   </select>
+                </div> 
+
+
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+
+                <a class="btn btn-primary" id="submitAppointment">Search</a>
+            </form>
+
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+    <br/>
+</div>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Category</th>
+                 <th>Name</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>schedule it</th>
+            </tr>
+            </thead>
+            <tbody>
+         <tr data-th-each="datess : ${datesav}">
+
+                 <td data-th-text="${datess.doctorAccount.categoryDoctor}">...</td>
+                  <td data-th-text="${datess.doctorAccount.firstName} + ' ' +${datess.doctorAccount.lastName}">...</td>
+                  <td data-th-text="${datess.doctorAccount.city}">...</td>
+                <td data-th-text="${datess.dateAvailable}">...</td>
+                 <td data-th-text="${datess.timeAvailable}">...</td>
+ <td><a class="btn btn-warning btn-xs" id="buttonappointment" th:onclick="|window.location.href='/appointment/create/scheduled/${datess.dateID}'|" th-text="(id1=${datess.dateID})">Schedule it</a>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+
+<div th:replace="common/header :: body-bottom-scripts"/>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+</body>
+</html>

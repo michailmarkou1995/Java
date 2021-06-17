@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"/>
+<body roleId="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<head th:replace="common/header :: navbar"/>
+<div class="container main">
+    <div class="row">
+        <div class="col-lg-12">
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h2>Medications over year: </h2>
+                        </div>
+        
+                         <div class="col-xs-6 text-right">
+                            <h1><i class="fa fa-usd" aria-hidden="true"></i> <span th:text="hi">...</span></h1>
+                        </div>
+                    </div>
+                </div>
+                <a th:href="@{/account/medicationAccount}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h2>Appointments: </h2>
+                        </div>
+                          <div class="col-xs-6 text-right">
+                            <h1><i class="fa fa-usd" aria-hidden="true"></i> <span th:text="hi">...</span></h1>
+                        </div>
+                    </div>
+                </div>
+                <a th:href="@{/appointment/show}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fas fa-user fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>Profile</div>
+                        </div>
+                    </div>
+                </div>
+                <a th:href="@{/user/profile}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Go to Profile</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fas fa-heartbeat fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>Personal Information</div>
+                        </div>
+                    </div>
+                </div>
+                <a th:href="@{/account/personalAccount}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Go to Personal Information</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+
+</div>
+
+
+<div th:replace="common/header :: body-bottom-scripts"/>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"/>
+<body roleId="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<head th:replace="common/header :: navbar"/>
+<div class="container main">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>My Appointments</h3>
+
+                <div class="table-responsive">
+        <table id="example" class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Cancel</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-th-each="datess : ${datesav}">
+                  <td data-th-text="${datess.doctorAccount.categoryDoctor}">...</td>
+                  <td data-th-text="${datess.doctorAccount.firstName} + ' ' +${datess.doctorAccount.lastName}">...</td>
+                  <td data-th-text="${datess.doctorAccount.city}">...</td>
+                <td data-th-text="${datess.dateAvailable}">...</td>
+                 <td data-th-text="${datess.timeAvailable}">...</td>
+ <td><button type="button"  th:onclick="|window.location.href='/appointment/show/scheduled/${datess.dateID}'|" th-text="(id1=${datess.dateID})" class="btn btn-danger btn-xs">Cancel it</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+    <br/>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+
+<div th:replace="common/header :: body-bottom-scripts"/>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<h1>Patient Account Page</h1>
+<!-- class="table table-striped" cellspacing="0" width="100%" -->
+ <table datatable [dtOptions]="dtOptions" class="row-border hover"><!--id="userTable"-->
+	 <thead>
+		<tr>
+			<th>ID</th>
+			<th>User Name</th>
+			<th>First Name</th>
+		</tr>
+	</thead>
+	<tbody *ngIf="patientUser?.length != 0">
+		<tr *ngFor="let patient of patientUser">
+			<td>{{patient.patientID}}</td>
+		
+			<td>{{patient.firstName}}</td>
+			<td>{{patient.lastName}}</td>
+			
+		<tbody *ngIf="patientUser?.length == 0">
+			<tr>
+			  <td colspan="3" class="no-data-available">No data!</td>
+			</tr>
+	</tbody>
+	
+	<!-- <p>{{doctorShow["test"]}}</p>-->
+</table> 
+
+
+
+<!-- <h1>Patient Account Page</h1>
+ class="table table-striped" cellspacing="0" width="100%" 
+ <table datatable [dtOptions]="dtOptions" class="row-border hover">id="userTable"
+	 <thead>
+		<tr>
+			<th>ID</th>
+			<th>User Name</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Phone</th>
+			<th>Enabled</th>
+			<th>isDoctor</th>
+			<th>Account</th>
+			<th>DeleteAcc</th>
+		</tr>
+	</thead>
+	<tbody *ngIf="patientUser?.length != 0">
+		<tr *ngFor="let patient of patientUser">
+			<td>{{patient.patientID}}</td>
+			<td>{{patient.username}}</td>
+			<td>{{patient.firstName}}</td>
+			<td>{{patient.lastName}}</td>
+			<td>{{patient.email}}</td>
+			<td>{{patient.phone}}</td>
+			<td>{{patient.enabled}}</td>
+			<td [hidden]="patient.doctorIs"><a (click)="enableDoctor(patient.username)" style="cursor: pointer;">Enable</a></td>
+			<td [hidden]="!patient.doctorIs"><a (click)="disableDoctor(patient.username)" style="cursor: pointer;">Disable</a></td>
+			<td [hidden]="patient.enabled"><a (click)="enableUser(patient.username)" style="cursor: pointer;">Enable</a></td>
+			<td [hidden]="!patient.enabled"><a (click)="disableUser(patient.username)" style="cursor: pointer;">Disable</a></td>
+			<td ><a (click)="deleteUser(patient.patientID)" style="cursor: pointer;">Delete</a></td>
+		</tr>
+		<tbody *ngIf="patientUser?.length == 0">
+			<tr>
+			  <td colspan="3" class="no-data-available">No data!</td>
+			</tr>
+	</tbody>
+	<p>{{doctorShow}}</p> -->
+	<!-- <p>{{doctorShow["test"]}}</p> 
+</table>  -->

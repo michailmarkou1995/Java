@@ -1,0 +1,76 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+<!-- 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Admin Portal</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+   <li [style.display]="getDisplay()"><a routerLink="/patientAccount" routerLinkActive="active"> Manage Accounts <span class="sr-only">(current)</span></a></li>
+  <li [style.display]="getDisplay()"><a routerLink="/saveExport" routerLinkActive="active"> Save/Export <span class="sr-only">(current)</span></a></li> 
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li [style.display]="getDisplay()" class="nav-item active">
+        <a routerLink="/patientAccount" routerLinkActive="active" class="nav-link" href="#">Manage Accounts <span class="sr-only">(current)</span></a>
+      </li>
+      <li [style.display]="getDisplay()" class="nav-item">
+        <a routerLink="/saveExport" routerLinkActive="active" class="nav-link" href="#">Save/Export<span class="sr-only">(current)</span></a>
+      </li>
+      <li [style.display]="getDisplay()" class="nav-item navbar-right">
+        <a (click)="logout()" style="cursor: pointer;" class="nav-link" href="#">logout</a>
+      </li>
+    </ul>
+     
+
+  </div>
+</nav> -->
+
+ <nav class="navbar navbar-clean">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+     <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" routerLink="/login" routerLinkActive="active">Admin Portal</a>
+      </div>
+  
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapsed navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li [style.display]="getDisplay()"><a routerLink="/patientAccount" routerLinkActive="active"> Manage Accounts <span class="sr-only">(current)</span></a></li>
+          <li [style.display]="getDisplay()"><a routerLink="/saveExport" routerLinkActive="active"> Save/Export <span class="sr-only">(current)</span></a></li>
+           <!-- <li [style.display]="getDisplay()"><a routerLink="/appointment" routerLinkActive="active"> Appointment <span class="sr-only">(current)</span></a></li>  -->
+       </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li [style.display]="getDisplay()"><a (click)="logout()" style="cursor: pointer;">Logout</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+   </div><!-- /.container-fluid -->
+  </nav> 
+
+
+  <nav class="navbar navbar-clean navbar-expand-md">
+    <button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
+    data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span>
+&#x2630;</button> <a class="navbar-brand"
+    routerlink="/login" routerlinkactive="active">Admin Portal</a>
+    <!-- Collect
+    the nav links, forms, and other content for toggling -->
+    <div class="collapsed navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li [style.display]="getDisplay()" class="nav-item"><a routerlink="/patientAccount" routerlinkactive="active" class="nav-link"> Manage Accounts <span class="sr-only">(current)</span></a>
+            </li>
+            <li [style.display]="getDisplay()" class="nav-item"><a routerlink="/saveExport" routerlinkactive="active" class="nav-link"> Save/Export <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+            <li [style.display]="getDisplay()" class="nav-item"><a (click)="logout()" style="cursor: pointer;" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+  

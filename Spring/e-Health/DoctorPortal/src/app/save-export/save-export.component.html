@@ -1,0 +1,96 @@
+
+
+
+ <h1>Patient Account Page</h1>
+
+<ng-template #content let-modal>
+	<form (ngSubmit)="onSubmit()" #userForm="ngForm" method="post" >
+	<div class="modal-header">
+	  <h4 class="modal-title" id="modal-basic-title">Appointments update</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+	  <!-- <form> -->
+		<div class="form-group">
+		  <label for="datesDoctorAvailable">Date Available Date</label>
+		  <div class="input-group">
+			<input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+			<div class="input-group-append">
+			  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+			</div>
+		  </div>
+		  <!-- <pre>Model: {{ model | json }}</pre> -->
+		  <div class="form-group"></div>
+		  <div class="form-group">
+			<label>Enter Available time</label>
+			<ngb-timepicker name="dp1" [(ngModel)]="time" [meridian]="meridian" [ngModelOptions]="{standalone: true}"></ngb-timepicker>
+			<!-- <hr>
+			<pre>Selected time: {{time | json}}</pre> -->
+		  </div>
+		  <div class="form-group">
+			<button class="btn btn-sm btn-outline-{{meridian ? 'success' : 'danger'}}" (click)="toggleMeridian()">
+				Meridian - {{meridian ? "ON" : "OFF"}}
+			</button></div>
+		</div>
+	  <!-- </form> -->
+	</div>
+	<div class="modal-footer">
+	  <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+	</div>
+	</form>
+  </ng-template>
+
+
+	<table  class="row-border hover"id="userTableD">
+	 <thead>
+		<tr>
+			<th>User Name</th>
+			<th>Phone</th>
+			<th>Date</th>
+			<th>Time</th>
+            <th>Edit</th>
+		</tr>
+	</thead> 
+	<tbody *ngIf="patientUser?.length != 0">
+		<tr *ngFor="let patient of apin1">
+			<td>{{patient.username}}</td>
+			<td>{{patient.phone}}</td>
+			<td>{{patient.date}}</td>
+			<td>{{patient.time}}</td>	
+            <td ><a (click)="editUserPrompt(contentDoctor, patient.username, patient.app_id)" style="cursor: pointer;"class="text-primary">Edit</a></td>
+		</tr>	
+		<tbody *ngIf="patientUser?.length == 0">
+			<tr>
+			  <td colspan="3" class="no-data-available">No data!</td>
+			</tr>
+	</tbody>
+</table> 
+
+  <ng-template #contentDoctor let-modal>
+	<form (ngSubmit)="onSubmitEdit()" #userForm="ngForm" method="post" >
+	<div class="modal-header">
+	  <h4 class="modal-title" id="modal-basic-title">Doctor Insert info</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+		<div class="form-group">
+		  <label for="datesDoctorAvailable">Doctor Info</label>
+		  <div class="form-group">
+			<label>Patient Diagnosed</label>
+			<input type="text" name="patient_diagnosed" [(ngModel)]="patient_diagnosed" class="form-control" />
+		   </div>
+		   <div class="form-group">
+			<label>Prescription Directions</label>
+			<input type="text" name="prescriptions_directions" [(ngModel)]="prescriptions_directions" class="form-control" />
+		   </div>
+		</div>
+	</div>
+	<div class="modal-footer">
+	  <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+	</div>
+	</form>
+  </ng-template>

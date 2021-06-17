@@ -1,0 +1,130 @@
+<h1>Patient Account Page</h1>
+
+<ng-template #content let-modal>
+	<form (ngSubmit)="onSubmit()" #userForm="ngForm" method="post" >
+	<div class="modal-header">
+	  <h4 class="modal-title" id="modal-basic-title">Appointments update</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+	  <!-- <form> -->
+		<div class="form-group">
+		  <label for="datesDoctorAvailable">Date Available Date</label>
+		  <div class="input-group">
+			<input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+			<div class="input-group-append">
+			  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+			</div>
+		  </div>
+		  <!-- <pre>Model: {{ model | json }}</pre> -->
+		  <div class="form-group"></div>
+		  <div class="form-group">
+			<label>Enter Available time</label>
+			<ngb-timepicker name="dp1" [(ngModel)]="time" [meridian]="meridian" [ngModelOptions]="{standalone: true}"></ngb-timepicker>
+			<!-- <hr>
+			<pre>Selected time: {{time | json}}</pre> -->
+		  </div>
+		  <div class="form-group">
+			<button class="btn btn-sm btn-outline-{{meridian ? 'success' : 'danger'}}" (click)="toggleMeridian()">
+				Meridian - {{meridian ? "ON" : "OFF"}}
+			</button></div>
+		</div>
+	  <!-- </form> -->
+	</div>
+	<div class="modal-footer">
+	  <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+	</div>
+	</form>
+  </ng-template>
+
+
+<div align="right">
+	<button style="margin:5px;" type="button" name="add_patient" (click)="addDataAppointment(content)" class="btn btn-outline-primary mb-2 mr-2 btn-ripple">Create Appointment</button>
+</div>
+	<table  class="row-border hover"id="userTableD">
+	 <thead>
+		<tr>
+			<th>User Name</th>
+			<th>First Name</th>
+			<th>Delete Date</th>
+		</tr>
+	</thead> 
+	<tbody *ngIf="patientUser?.length != 0">
+		<tr *ngFor="let patient of test1">
+			<td>{{patient.dateAvailable}}</td>
+			<td>{{patient.timeAvailable}}</td>	
+			<td ><a (click)="deleteUserPrompt('autofocus', patient)" style="cursor: pointer;"class="text-primary">Delete</a></td>
+		</tr>	
+		<tbody *ngIf="patientUser?.length == 0">
+			<tr>
+			  <td colspan="3" class="no-data-available">No data!</td>
+			</tr>
+	</tbody>
+</table> 
+<!-- <ng-template #content let-modal>
+	<form (ngSubmit)="onSubmit()" #userForm="ngForm" method="post" >
+	<div class="modal-header">
+	  <h4 class="modal-title">Add {{nameEvent}}</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	  
+	</div>
+	<div class="modal-body">
+	   <div class="alert alert-danger alert-dismissible" *ngIf="error">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{errorMessage}}
+        </div>
+		<div class="form-group">
+        <label>Enter First Name</label>
+        <input type="text" name="first_name" [(ngModel)]="first_name" class="form-control" />
+       </div>
+	   <div class="form-group">
+        <label>Enter Last Name</label>
+        <input type="text" name="last_name" [(ngModel)]="last_name" class="form-control" />
+       </div>
+	   <div class="form-group">
+        <label>Enter Date of Birth</label>
+         <input type="text" name="dateOfBirth" [(ngModel)]="dateOfBirth" class="form-control" /> 
+	
+			  <div class="input-group">
+				<input class="form-control" placeholder="yyyy-mm-dd"
+					   name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+				<div class="input-group-append">
+				  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+				</div>
+			  </div>
+			
+		 <pre>Month: {{ date.month }}.{{ date.year }}</pre> 
+<pre>Model: {{ model | json }}</pre>
+       </div>
+	   <div class="form-group">
+        <label>Enter Phone</label>
+        <input type="text" name="phone" [(ngModel)]="phone" class="form-control" />
+       </div>
+	   <div class="form-group">
+        <label>Enter email</label>
+        <input type="text" name="email" [(ngModel)]="email" class="form-control" />
+       </div>
+	   <div class="form-group">
+        <label>Enter username</label>
+        <input type="text" name="username" [(ngModel)]="username" class="form-control" />
+       </div>
+	   <div class="form-group">
+        <label>Enter password</label>
+        <input type="text" name="password" [(ngModel)]="password" class="form-control" />
+       </div>
+	   balta se class anti xima etsi password px patient.password
+	   <div class="form-group">
+        <label>Enter Category</label>
+        <input type="text" name="category" [(ngModel)]="category" class="form-control" />
+       </div>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn btn-danger" (click)="modal.close('Save click')" [disabled]="!userForm.form.valid">Create</button>
+	  <button type="button" class="btn btn-light" (click)="modal.dismiss('Close click')">Close</button>
+	</div>
+</form>
+  </ng-template> -->

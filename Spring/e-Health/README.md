@@ -5,5 +5,5 @@ Spring boot<br/>
 Spring security<br/>
 Hibernate JPA<br/>
 Angular 12<br/>
-Thymeleaf
+Thymeleaf\
 MySQL<br/>

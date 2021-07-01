@@ -2,14 +2,18 @@ package com.michailkalinx.rain.graphics;
 
 import java.util.Random;
 
+import com.michailkalinx.rain.level.tile.Tile;
+
 public class Screen {
 
-	private int width, height;
+	public int width, height;
 	public int[] pixels;
 	public final int MAP_SIZE = 64;
 	public final int MAP_SIZE_MASK = MAP_SIZE - 1;
 	//public int[] tiles = new int[64*64];//64 << 6
 	public int[] tiles = new int[MAP_SIZE*MAP_SIZE];
+	
+	public int xOffset, yOffset;
 	
 	private Random random = new Random();
 
@@ -19,7 +23,7 @@ public class Screen {
 	public Screen(int width, int height) {
 		this.width = width;
 		this.height = height;
-		pixels = new int[width * height]; //0-50,399 = 50,400
+		pixels = new int[width * height]; //0-50,399 = 50,400//1 integer for each pixel in our screen created here
 		
 		for(int i = 0; i < MAP_SIZE*MAP_SIZE; i++) {//64<<6
 			tiles[i]=random.nextInt(0xffffff);
@@ -27,13 +31,14 @@ public class Screen {
 		}
 	}
 
+	//clear after animation old void black pixel
 	public void clear() {
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = 0;
 		}
 	}
 
-	public void render(int xOffset, int yOffset) {
+	public void renderOld(int xOffset, int yOffset) {
 //		counter++;
 //		if(counter % 100 == 0) xtime--;//xtime++;
 //		if(counter % 100 == 0) ytime--;//ytime++;
@@ -49,16 +54,42 @@ public class Screen {
 
 		for (int y = 0; y < height; y++) {
 			int yy=y+yOffset;
+			int yp=y+yOffset;//-
 			//if (y < 0 || y >= height)break;
+			if(yp<0 || yp>= height) continue;
 			for (int x = 0; x < width; x++) {
 				int xx=x+xOffset;
+				int xp=x+xOffset;//-
 				//if (x < 0 || x >= width)break;				
 				//int tileIndex = ((xx >> 4) & 63)+(((yy>>4)&63) << 6);	//(x/32)+( y/32)	 * 64	 || (x >> 4)+(y>>4)*64;
-				//int tileIndex = ((xx >> 4)/*+ xOffset not smooth scrolling map*/& MAP_SIZE_MASK)+(((yy>>4)&MAP_SIZE_MASK) * MAP_SIZE);	
-				int tileIndex = ((xx >> 4)& MAP_SIZE_MASK)+(((yy>>4)&MAP_SIZE_MASK) * MAP_SIZE);		
-				pixels[x + y * width] = tiles[tileIndex];
+				//int tileIndex = ((xx >> 4)/*+ xOffset not smooth scrolling map*/& MAP_SIZE_MASK)+(((yy>>4)&MAP_SIZE_MASK) * MAP_SIZE);
+				
+				//TILESIZE 32 is from this -> (2*6) or x/32 or xx>>6 
+				int tileIndex = ((xx >> 6)& MAP_SIZE_MASK)+(((yy>>6)&MAP_SIZE_MASK) * MAP_SIZE);		
+				//pixels[x + y * width] = Sprite.grass.pixels[(xx&31) +(yy&31)*Sprite.grass.SIZE];//tiles[tileIndex]; // moves tiles wrapping
+				if(xp<0 || xp>= width) continue;
+				pixels[xp+ yp * width] = Sprite.grass.pixels[(x&63) +(y&63)*Sprite.grass.SIZE];
 			}
 		}
+	}
+	
+	public void renderTile(int xp, int yp, Tile tile) {
+		xp -=xOffset;
+		yp -= yOffset;
+		for (int y=0; y< tile.sprite.SIZE; y++) {
+			int ya = y + yp;
+			for (int x=0; x< tile.sprite.SIZE; x++) {
+				int xa = x +xp;
+				if (xa < 0 || xa >= width || ya < 0 || ya >= width) break;//render what on your screen
+				pixels[xa+ya*width] = tile.sprite.pixels[x+y*tile.sprite.SIZE];//offset changes on the screen but not the tile
+				
+			}
+		}
+	}
+	
+	public void setOffset(int xOffset, int yOffset) {
+		this.xOffset=xOffset;
+		this.yOffset=yOffset;
 	}
 
 }

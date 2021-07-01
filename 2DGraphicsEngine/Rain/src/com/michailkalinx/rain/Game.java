@@ -1,7 +1,6 @@
 package com.michailkalinx.rain;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -12,6 +11,8 @@ import javax.swing.JFrame;
 
 import com.michailkalinx.rain.graphics.Screen;
 import com.michailkalinx.rain.input.Keyboard;
+import com.michailkalinx.rain.level.Level;
+import com.michailkalinx.rain.level.RandomLevel;
 
 public class Game extends Canvas implements Runnable {
 
@@ -28,27 +29,33 @@ public class Game extends Canvas implements Runnable {
 	private Thread thread;
 	private JFrame frame;
 	private Keyboard key;
+	private Level level;
 	private boolean running = false;
 	
 	private Screen screen;
 
+	//create an image to draw to
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	//get data structure of raster and manipulate array of pixels from the created image
+	//access the image
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
 	public Game() {
 		Dimension size = new Dimension(width * scale, height * scale);
+		//Dimension size = new Dimension(width , height);
 		setPreferredSize(size);
 		
 		screen = new Screen(width, height);
 		frame = new JFrame();
 		key = new Keyboard();
+		level = new RandomLevel(64,64);
 		
 		addKeyListener(key);
 	}
 
-	public synchronized void start() {
+	public synchronized void start() {//this is public in thread sharing res
 		running = true;
-		thread = new Thread(this, "Display");
+		thread = new Thread(this, "Display");//this == new Game() , name of thread
 		thread.start();
 	}
 
@@ -61,14 +68,15 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 
-	public void run() {
+	public void run() {//new Game() or this in start thread function/operation
 		//boolean test = false; int t=0;
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		final double ns = 1000000000.0 / 60.0 ;//60 times per second
+		final double ns = 1_000_000_000.0 / 60.0 ;//60 times per second
 		double delta = 0;
 		int frames=0;
 		int updates = 0;
+		requestFocus();
 		while (running) {
 			long now = System.nanoTime();
 			//System.out.println(now - lastTime);//distance
@@ -80,7 +88,7 @@ public class Game extends Canvas implements Runnable {
 			//delta += (now - lastTime);
 			//System.out.println(delta + " delta");
 //			if(test) {
-//				System.out.println(t +" t");
+//				System.out.phttps://www.youtube.com/watch?v=QRahYJqidws&list=PLlrATfBNZ98eOOCk2fOFg7Qg5yoQfFAdf&index=15rintln(t +" t");
 //				System.out.println(now -  + lastTime +" TimeTaken");
 //			System.exit(0);
 //			}
@@ -95,10 +103,16 @@ public class Game extends Canvas implements Runnable {
 			}
 			render();
 			frames++;
-			
+//			for(int x = 0; x<=99999999; x++) {
+//				for(int y= 0; y<=99999999; y++) {
+//					int i=0;
+//				}
+//			}
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				//System.out.println(updates + " ups, " + frames + " fps");
+				System.out.println(System.currentTimeMillis() + " | " + timer);
+				System.out.println(System.currentTimeMillis() - timer);
 				frame.setTitle(title + "    |    " + updates + " ups, " + frames + " fps");
 				updates=0;
 				frames=0;
@@ -120,7 +134,11 @@ public class Game extends Canvas implements Runnable {
 		if(key.down)  y++;
 		if(key.left)  x--;
 		if(key.right)  x++;
-		
+//		for(int x = 0; x<=99999999; x++) {
+//		for(int y= 0; y<=99999999; y++) {
+//			int i=0;
+//		}
+//	}
 	}
 
 	public void render() {
@@ -131,21 +149,26 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		screen.render(x,y);//0,0|x,0
+		//screen.renderOld(x,y);//0,0|x,0
+		level.render(x, y, screen);
 		
 		for (int i=0; i < pixels.length; i++) {
 			pixels[i]=screen.pixels[i];
 		}
-
+//		for(int x = 0; x<=99999999; x++) {
+//		for(int y= 0; y<=99999999; y++) {
+//			int i=0;
+//		}
+//	}
 		Graphics g = bs.getDrawGraphics();
-//		g.setColor(Color.BLACK);
+//		g.setColor(Color.BLACK);new color(R,G,B)
 //		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		g.dispose();
 		bs.show();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) { //psvm here driver method
 		Game game = new Game();
 		game.frame.setResizable(false);
 		game.frame.setTitle(Game.title);

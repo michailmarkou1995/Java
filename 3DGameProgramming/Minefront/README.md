@@ -1,2 +1,2 @@
-2D Game Graphics Engine\
+3D Game Programming\
 instructor: thecherno

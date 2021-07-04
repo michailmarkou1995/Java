@@ -21,6 +21,8 @@ public class Game extends Canvas implements Runnable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	//calculate pixels from resolution pixel size calculator
+	//300x168 50400 pixels
 	public static int width = 300;
 	public static int height = width / 16 * 9;
 	public static int scale = 3;
@@ -48,7 +50,7 @@ public class Game extends Canvas implements Runnable {
 		screen = new Screen(width, height);
 		frame = new JFrame();
 		key = new Keyboard();
-		level = new RandomLevel(64,64);
+		level = new RandomLevel(64,64);//getTile from Level and RandomLevel 0-3 (4) and why generateLevel in constructor actually calls RandomLevel overridden method and not his empty one instead
 		
 		addKeyListener(key);
 	}
@@ -133,7 +135,7 @@ public class Game extends Canvas implements Runnable {
 		if(key.up)  y--;//controlling the map with tiles
 		if(key.down)  y++;
 		if(key.left)  x--;
-		if(key.right)  x++;
+		if(key.right)  x++;//x+=16; move one tile right instead of smooth
 //		for(int x = 0; x<=99999999; x++) {
 //		for(int y= 0; y<=99999999; y++) {
 //			int i=0;
@@ -150,7 +152,7 @@ public class Game extends Canvas implements Runnable {
 		
 		screen.clear();
 		//screen.renderOld(x,y);//0,0|x,0
-		level.render(x, y, screen);
+		level.render(x, y, screen);//call generateLevel from overridden method cause Level level = new RandomLevel(64,64);
 		
 		for (int i=0; i < pixels.length; i++) {
 			pixels[i]=screen.pixels[i];

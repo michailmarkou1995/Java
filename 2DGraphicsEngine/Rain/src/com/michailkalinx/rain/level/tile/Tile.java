@@ -10,11 +10,13 @@ public abstract class Tile {//template super class
 	public static Tile grass = new GrassTile(Sprite.grass);//constant grass not changes to solid eg.
 	public static Tile voidTile = new VoidTile(Sprite.voidSprite);
 	
-	//each Tile gona have a sprite even null
+	//each Tile gona have a sprite even null(not)
 	public Tile(Sprite sprite) {
 		this.sprite = sprite;
 	}
 	
+	//in subTile classes e.g. VoidTIle
+	//every tile renders its self
 	public void render(int x, int y, Screen screen) {
 		
 	}

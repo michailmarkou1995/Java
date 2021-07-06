@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import com.mime.minefront.graphics.Render;
 import com.mime.minefront.graphics.Screen;
+import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable{
 	
@@ -29,6 +30,7 @@ public class Display extends Canvas implements Runnable{
 	private boolean running = false;
 	private int[] pixels;
 	private Render render;
+	private InputHandler input;
 	
 	public Display() {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -39,6 +41,12 @@ public class Display extends Canvas implements Runnable{
 		game = new Game();
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt)img.getRaster().getDataBuffer()).getData();
+		
+		input = new InputHandler();
+		addKeyListener(input);
+		addFocusListener(input);
+		addMouseListener(input);
+		addMouseMotionListener(input);
 	}
 	
 	private void start() {
@@ -89,10 +97,10 @@ public class Display extends Canvas implements Runnable{
 					frames=0;					
 				}
 			}
-//			if (ticked) {
-//				render();
-//				frames++;
-//			}
+			if (ticked) {
+				render();
+				frames++;
+			}
 			render();
 			frames++;
 		}
@@ -123,7 +131,7 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	private void tick() {
-		
+		game.tick(input.key);
 	}
 
 	public static void main(String[] args) {

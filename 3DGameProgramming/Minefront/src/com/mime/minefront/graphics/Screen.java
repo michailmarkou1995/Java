@@ -58,7 +58,8 @@ public void render(Game game) {
 			PIXELS[i]=0;
 		}
 
-		render3d.floor();
+		render3d.floor(game);
+		render3d.renderDistanceLimiter();
 		draw(render3d,0,0);
 	}
 

@@ -1,7 +1,9 @@
 package com.michailkalinx.rain;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -9,6 +11,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.michailkalinx.rain.entity.mob.Player;
 import com.michailkalinx.rain.graphics.Screen;
 import com.michailkalinx.rain.input.Keyboard;
 import com.michailkalinx.rain.level.Level;
@@ -32,6 +35,7 @@ public class Game extends Canvas implements Runnable {
 	private JFrame frame;
 	private Keyboard key;
 	private Level level;
+	private Player player;
 	private boolean running = false;
 	
 	private Screen screen;
@@ -51,6 +55,7 @@ public class Game extends Canvas implements Runnable {
 		frame = new JFrame();
 		key = new Keyboard();
 		level = new RandomLevel(64,64);//getTile from Level and RandomLevel 0-3 (4) and why generateLevel in constructor actually calls RandomLevel overridden method and not his empty one instead
+		player = new Player(key);
 		
 		addKeyListener(key);
 	}
@@ -95,7 +100,7 @@ public class Game extends Canvas implements Runnable {
 //			System.exit(0);
 //			}
 			lastTime = now;
-			while (delta >= 1) {//only 60 times per second..delta >= ns
+			while (delta >= 1) {//only 60 times per second..delta >= ns ..1/60 if passed?
 				update();
 				updates++;
 				delta--;
@@ -124,7 +129,7 @@ public class Game extends Canvas implements Runnable {
 		stop();
 	}
 
-	int x=0,y=0;
+//	int x=0,y=0;
 	public void update() {
 		//System.out.println("update RUNNED...");
 //		y++;
@@ -132,10 +137,14 @@ public class Game extends Canvas implements Runnable {
 		//x++;//smooth scrolling map
 		//x++;
 		key.update();
-		if(key.up)  y--;//controlling the map with tiles
-		if(key.down)  y++;
-		if(key.left)  x--;
-		if(key.right)  x++;//x+=16; move one tile right instead of smooth
+		player.update();
+		
+//		if(key.up)  y--;//controlling the map with tiles
+//    	if(key.down)  y++;
+//		if(key.left)  x--;
+//		if(key.right)  x++;//x+=16; move one tile right instead of smooth
+//		
+		
 //		for(int x = 0; x<=99999999; x++) {
 //		for(int y= 0; y<=99999999; y++) {
 //			int i=0;
@@ -152,8 +161,13 @@ public class Game extends Canvas implements Runnable {
 		
 		screen.clear();
 		//screen.renderOld(x,y);//0,0|x,0
-		level.render(x, y, screen);//call generateLevel from overridden method cause Level level = new RandomLevel(64,64);
-		
+		int xScroll = player.x-screen.width/2;//center player pos by Moving MAP not PLAYER tracking
+		int yScroll = player.y-screen.height/2;
+		//level.render(0,0, screen);//move player not MAP;
+		//offsets map from the player
+		level.render(xScroll,yScroll, screen);//call generateLevel from overridden method cause Level level = new RandomLevel(64,64);
+		player.render(screen);
+		//System.out.println(xScroll);
 		for (int i=0; i < pixels.length; i++) {
 			pixels[i]=screen.pixels[i];
 		}
@@ -166,6 +180,9 @@ public class Game extends Canvas implements Runnable {
 //		g.setColor(Color.BLACK);new color(R,G,B)
 //		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", 0, 50));
+		g.drawString("X: " + player.x + ", Y: " + player.y, 450, 400);
 		g.dispose();
 		bs.show();
 	}

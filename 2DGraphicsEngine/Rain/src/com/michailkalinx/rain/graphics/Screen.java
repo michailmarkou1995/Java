@@ -2,6 +2,7 @@ package com.michailkalinx.rain.graphics;
 
 import java.util.Random;
 
+import com.michailkalinx.rain.entity.mob.Player;
 import com.michailkalinx.rain.level.tile.Tile;
 
 public class Screen {
@@ -146,6 +147,23 @@ public class Screen {
 				//tile.sprite.pixels[x+y*tile.sprite.SIZE]; == which pixels of the sprite gets rendered 
 				//no offsets because the location on the screen does e.g. pixels[xa+ya*width] and not the image of the tile
 				pixels[xa+ya*width] = tile.sprite.pixels[x+y*tile.sprite.SIZE];//offset changes on the screen but not the tile
+				
+			}
+		}
+	}
+	
+	public void renderPlayer(int xp, int yp, Sprite player) {
+		xp -=xOffset;
+		yp -= yOffset;
+		for (int y=0; y< 16; y++) {
+			int ya = y + yp;
+			for (int x=0; x< 16; x++) {
+				int xa = x +xp;
+
+				if (xa < -16 || xa >= width || ya < 0 || ya >= height) break;// ya>=height instead of width
+				if (xa < 0) xa=0;
+				int col = player.pixels[x+y*16];
+				if (col != 0xff4CFF00) pixels[xa+ya*width] = col;
 				
 			}
 		}

@@ -9,6 +9,12 @@ public class Sprite {
 	
 	public static Sprite grass = new Sprite(16,0,0, SpriteSheet.tiles);//null
 	public static Sprite voidSprite = new Sprite(16, 0x1B87E0);//16
+	
+	public static Sprite player0 = new Sprite(16, 0, 8, SpriteSheet.tiles);
+	public static Sprite player1 = new Sprite(16, 1, 8, SpriteSheet.tiles);
+	public static Sprite player2 = new Sprite(16, 0, 9, SpriteSheet.tiles);
+	public static Sprite player3 = new Sprite(16, 1, 9, SpriteSheet.tiles);
+
 
 	//from file Sprite Call Constructor
 	public Sprite(int size, int x, int y, SpriteSheet sprite) {

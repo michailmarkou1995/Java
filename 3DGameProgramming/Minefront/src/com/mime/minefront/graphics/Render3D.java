@@ -89,7 +89,8 @@ public void floor(Game game) {
 		double forward = game.controls.z;
 		double right = game.controls.x;
 		double floorPosition = 8;
-		double ceilPosition = 8;
+		double ceilPosition = 8;//put biger than RenderDistanceLimiter e.g. 800 Ceil disappear
+		//double ceilPosition = Math.sin(game.time / 10) + 10;
 		double rotation = game.controls.rotation;
 		double cosine = Math.cos(rotation);
 		double sine = Math.sin(rotation);
@@ -111,8 +112,10 @@ public void floor(Game game) {
 					int xPix = (int) (xx + right);
 					int yPix = (int) (yy + forward);
 					zBuffer[x+y*WIDTH] = z;
-					PIXELS[x+y*WIDTH] = ((xPix & 15)<<4) | ((yPix & 15)<<4) << 8;	
+					//PIXELS[x+y*WIDTH] = ((xPix & 15)<<4) | ((yPix & 15)<<4) << 8;	
+					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * 8];	
 					
+					//limit Render Distance and the renderDistanceLimiter() is just smoothing the brigthness
 					if(z > 400) {//x,y <,> etc 50 100
 						PIXELS[x+y*WIDTH] = 0;
 					}

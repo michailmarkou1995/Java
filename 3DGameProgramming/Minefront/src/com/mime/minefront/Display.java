@@ -1,8 +1,13 @@
 package com.mime.minefront;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -11,6 +16,7 @@ import javax.swing.JFrame;
 
 import com.mime.minefront.graphics.Render;
 import com.mime.minefront.graphics.Screen;
+import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable{
@@ -21,7 +27,7 @@ public class Display extends Canvas implements Runnable{
 	private static final long serialVersionUID = 1L;
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
-	public static final String TITLE = "Minefront Pre-Alpha 0.02";
+	public static final String TITLE = "Minefront Pre-Alpha 0.03";
 	
 	private Thread thread;
 	private Screen screen;
@@ -31,6 +37,9 @@ public class Display extends Canvas implements Runnable{
 	private int[] pixels;
 	private Render render;
 	private InputHandler input;
+	private JFrame frame;
+	private int newX=0, newY=0, oldX=0, oldY;
+	private int fpsInnerText;
 	
 	public Display() {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -72,7 +81,7 @@ public class Display extends Canvas implements Runnable{
 	public void run() {
 		
 		int frames=0;
-		double unprocessedSeconds=0;
+		double unprocessedSeconds=0;//AKA delta time in s(seconds) here not ns(nanoseconds)
 		long previousTime = System.nanoTime();
 		double secondsPetTick = 1/60.0;
 		int tickCount = 0;
@@ -84,7 +93,7 @@ public class Display extends Canvas implements Runnable{
 			long currentTime = System.nanoTime();
 			long passedTime = currentTime - previousTime;
 			previousTime = currentTime;
-			unprocessedSeconds += passedTime/1000000000.0;
+			unprocessedSeconds += passedTime/1000000000.0;//nanoseconds to seconds
 			
 			while (unprocessedSeconds > secondsPetTick) {
 				tick();
@@ -92,7 +101,9 @@ public class Display extends Canvas implements Runnable{
 				ticked = true;
 				tickCount++;
 				if (tickCount % 60 == 0) {
-					System.out.println(frames + "fps");
+					frame.setTitle(TITLE + " FPS: " + frames);
+					fpsInnerText = frames;
+					//System.out.println(frames + "fps");
 					previousTime += 1000;
 					frames=0;					
 				}
@@ -103,6 +114,31 @@ public class Display extends Canvas implements Runnable{
 			}
 			render();
 			frames++;
+			//Mouse Position Track Debug
+			//System.out.println("X: " + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
+			
+			newX = InputHandler.MouseX;
+			newY = InputHandler.MouseY;
+			//String temp = newX < oldX ? System.out.println("Left"); : "";
+			if (newX > oldX) {
+				//System.out.println("Right");
+				Controller.turnRightM = true;
+			}
+			if ( newX == oldX) {
+				//System.out.println("Still X");
+				Controller.turnLeftM = false;
+				Controller.turnRightM = false;
+			}
+			//if(newX == WIDTH/2 || newX < WIDTH/2)//goes with direct below if
+			if (newX < oldX) {
+				//System.out.println("Left");
+				Controller.turnLeftM = true;
+			}
+//			if (newY == oldY) {
+//				//System.out.println("Still Y");
+//			}
+					oldX = newX;
+					//oldY = newY;
 		}
 	}
 
@@ -125,6 +161,9 @@ public class Display extends Canvas implements Runnable{
 		//g.drawImage(img, 0, 0, WIDTH*20, HEIGHT*20, null);
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
+		g.setFont(new Font("Verdana", 0, 50));//0,1,2,3 bold italics bold and italics
+		g.setColor(Color.WHITE);
+		g.drawString(fpsInnerText + " fps", 20, 50);//drawString me +"" oxi sketo int tha baraei error
 		g.dispose();
 		bs.show();
 		
@@ -135,16 +174,29 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	public static void main(String[] args) {
+		    BufferedImage cursor = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
+		    Cursor blank = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blank");
 			Display game = new Display();
-			JFrame frame = new JFrame();
-			frame.add(game);
-			frame.setResizable(false);
-			frame.setTitle(TITLE);
-			frame.pack();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//JFrame frame = new JFrame();//if here and not in Game class THEN not able to run in on WINDOW FPS LABEL 
+//			frame = new JFrame();
+//			frame.add(game);
+//			frame.setResizable(false);
+//			frame.setTitle(TITLE);
+//			frame.pack();
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			//frame.setSize(WIDTH,HEIGHT);// remove if setPreffered is set on Constructor
+//			frame.setLocationRelativeTo(null);
+//			frame.setVisible(true);
+			game.frame = new JFrame();
+			game.frame.add(game);
+			game.frame.setResizable(false);
+			game.frame.setTitle(TITLE);//if not here delay to appear a little
+			game.frame.pack();
+			//game.frame.getContentPane().setCursor(blank);
+			game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			//frame.setSize(WIDTH,HEIGHT);// remove if setPreffered is set on Constructor
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
+			game.frame.setLocationRelativeTo(null);
+			game.frame.setVisible(true);
 			
 			game.start();
 	}

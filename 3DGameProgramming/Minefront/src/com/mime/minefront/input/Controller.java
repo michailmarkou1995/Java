@@ -3,6 +3,7 @@ package com.mime.minefront.input;
 public class Controller {
 
 	public double x, z, rotation, xa, za, rotationa;
+	public static boolean turnLeftM = false, turnRightM = false;
 	
 	public void tick(boolean forward,boolean back,boolean left
 				,boolean right,boolean turnLeft,boolean turnRight) {
@@ -32,6 +33,14 @@ public class Controller {
 		}
 		
 		if(turnRight) {
+			rotationa += rotationSpeed;
+		}
+		
+		if(turnLeftM) {
+			rotationa -= rotationSpeed;
+		}
+		
+		if(turnRightM) {
 			rotationa += rotationSpeed;
 		}
 		

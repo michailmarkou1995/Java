@@ -155,16 +155,37 @@ public class Screen {
 	public void renderPlayer(int xp, int yp, Sprite player) {
 		xp -=xOffset;
 		yp -= yOffset;
-		for (int y=0; y< 16; y++) {
+		for (int y=0; y< 32; y++) {//16
 			int ya = y + yp;
-			for (int x=0; x< 16; x++) {
+			int ys = 31-y; //s for sprite
+			for (int x=0; x< 32; x++) {//16 pixels 4 calls quad
 				int xa = x +xp;
-
-				if (xa < -16 || xa >= width || ya < 0 || ya >= height) break;// ya>=height instead of width
-				if (xa < 0) xa=0;
-				int col = player.pixels[x+y*16];
-				if (col != 0xff4CFF00) pixels[xa+ya*width] = col;
+				int xs = 31-x;
 				
+				if (xa < -32 || xa >= width || ya < 0 || ya >= height) break;// ya>=height instead of width
+				if (xa < 0) xa=0;
+				int col = player.pixels[x+y*32];//xs ys for reverse x y for normal dir
+				if (col != 0xff4CFF00) pixels[xa+ya*width] = col;	
+			}
+		}
+	}
+	
+	public void renderPlayer(int xp, int yp, Sprite player, int flip) {
+		xp -=xOffset;
+		yp -= yOffset;
+		for (int y=0; y< 32; y++) {//16
+			int ya = y + yp;
+			int ys=y;
+			if (flip ==2 || flip ==3)  ys = 31-y; //s for sprite
+			for (int x=0; x< 32; x++) {//16 pixels 4 calls quad
+				int xa = x +xp;
+				int xs=x;
+				if (flip ==1 || flip ==3)  xs = 31-x;
+				 //xs = 31-x;
+				if (xa < -32 || xa >= width || ya < 0 || ya >= height) break;// ya>=height instead of width
+				if (xa < 0) xa=0;
+				int col = player.pixels[xs+ys*32];//xs ys for reverse x y for normal dir
+				if (col != 0xff4CFF00) pixels[xa+ya*width] = col;	
 			}
 		}
 	}

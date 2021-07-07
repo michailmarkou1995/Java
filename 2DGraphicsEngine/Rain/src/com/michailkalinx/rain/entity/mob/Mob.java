@@ -8,7 +8,8 @@ import com.michailkalinx.rain.graphics.Sprite;
 public abstract class Mob extends Entity{
 	
 	protected Sprite spite;
-	protected int dir = 0;//north 1 is east 2 is south 3 is west
+	protected int dir = 0;//north 1 is east 2 is south 3 is west -1 if not initialized in constructor of Player 		spriteP = Sprite.player_forward;
+
 	protected boolean moving = false;
 	
 	public void move(int xa, int ya) {
@@ -27,6 +28,7 @@ public abstract class Mob extends Entity{
 			4 - South East
 		 */
 		
+		//track locations direction of mobs
 		if (xa > 0) dir = 1;//right
 		if (xa < 0) dir = 3;//left
 		if (ya > 0) dir = 2;//bottom

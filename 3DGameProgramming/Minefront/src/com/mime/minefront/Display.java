@@ -1,5 +1,6 @@
 package com.mime.minefront;
 
+import java.awt.AWTException;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -7,10 +8,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
@@ -28,7 +32,7 @@ public class Display extends Canvas implements Runnable{
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final String TITLE = "Minefront Pre-Alpha 0.03";
-	
+
 	private Thread thread;
 	private Screen screen;
 	private BufferedImage img;
@@ -40,6 +44,7 @@ public class Display extends Canvas implements Runnable{
 	private JFrame frame;
 	private int newX=0, newY=0, oldX=0, oldY;
 	private int fpsInnerText;
+	Robot robot;
 	
 	public Display() {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -58,14 +63,14 @@ public class Display extends Canvas implements Runnable{
 		addMouseMotionListener(input);
 	}
 	
-	private void start() {
+	public synchronized void start() {
 		if (running) return;
 		running = true;
 		thread = new Thread(this);
 		thread.start();
 	}
 	
-	private void stop() {
+	public synchronized void stop() {
 		if (!running) return;
 		running=false;
 		try {
@@ -79,14 +84,15 @@ public class Display extends Canvas implements Runnable{
 
 	@Override
 	public void run() {
-		
+
 		int frames=0;
 		double unprocessedSeconds=0;//AKA delta time in s(seconds) here not ns(nanoseconds)
 		long previousTime = System.nanoTime();
 		double secondsPetTick = 1/60.0;
 		int tickCount = 0;
 		boolean ticked = false;
-		
+		long timer = System.currentTimeMillis();
+
 		requestFocus();
 		//game loop
 		while (running) {
@@ -94,7 +100,7 @@ public class Display extends Canvas implements Runnable{
 			long passedTime = currentTime - previousTime;
 			previousTime = currentTime;
 			unprocessedSeconds += passedTime/1000000000.0;//nanoseconds to seconds
-			
+	
 			while (unprocessedSeconds > secondsPetTick) {
 				tick();
 				unprocessedSeconds -= secondsPetTick;
@@ -105,9 +111,43 @@ public class Display extends Canvas implements Runnable{
 					fpsInnerText = frames;
 					//System.out.println(frames + "fps");
 					previousTime += 1000;
-					frames=0;					
+					frames=0;
+//					var temp = Controller.jumped;
+//					Controller.jumped = !temp;
+					//timer++;
+					//System.out.println(System.currentTimeMillis() - timer);
+					
+					//ThreadTest tt1 = new ThreadTest();
+					
+
+					//tt1.pause();
+					//tt1.run();
+					//tt1.start();
 				}
 			}
+			
+			if (System.currentTimeMillis() - timer > 1000) {
+			Controller.timeJ1 = System.currentTimeMillis() - timer;
+			timer += 1000;
+			//var temp = Controller.jumped;
+			//Controller.jumped = !temp;
+			//System.out.println(timer);
+			Controller.jumped = false;
+			if(Controller.timeJ < 7500) Controller.timeJ++; else Controller.timeJ = 0;
+			//Controller.timeJ = timer;
+		}
+			
+//			if (System.currentTimeMillis() - timer > 2000) {
+//				Controller.timeJ1 = System.currentTimeMillis() - timer;
+//				timer += 2000;
+//				//var temp = Controller.jumped;
+//				//Controller.jumped = !temp;
+//				//System.out.println(timer);
+//				Controller.jumped = false;
+//				if(Controller.timeJ < 7500) Controller.timeJ++; else Controller.timeJ = 0;
+//				//Controller.timeJ = timer;
+//			}
+			
 			if (ticked) {
 				render();
 				frames++;
@@ -170,7 +210,18 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	private void tick() {
+		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
+		//robot.keyPress(KeyEvent.VK_H);
+		//robot.keyRelease(KeyEvent.VK_H);
+		//System.out.println(Arrays.toString(input.key));//cant overriden because its point to array as whole not for each element! thats why for loop must
+		//System.out.println(input.key);
+		for (int i =0; i < input.key.length; i++) {
+			if(input.key[i] == true) { 
+				//System.out.println(i); System.out.println(Arrays.toString(input.key));
+			}}
 		game.tick(input.key);
+		//System.out.println("break");
+		
 	}
 
 	public static void main(String[] args) {

@@ -1,11 +1,15 @@
 package com.mime.minefront.graphics;
 
+import java.util.Random;
+
 import com.mime.minefront.Game;
+import com.mime.minefront.input.Controller;
 
 public class Render3D extends Render{
 	
 	public double[] zBuffer;
 	private double renderDistance = 5000;
+	private double forwardGlobal;
 
 	public Render3D(int width, int height) {
 		super(width, height);
@@ -86,24 +90,46 @@ public class Render3D extends Render{
 	
 public void floor(Game game) {
 		
-		double forward = game.controls.z;
+	//double forward = game.time % 100 / 20.0;
+		double forward = game.controls.z; // game.time % 100 / 20.0; //pop back and forth like movie clip
+		forwardGlobal = forward;
 		double right = game.controls.x;
 		double floorPosition = 8;
-		double ceilPosition = 8;//put biger than RenderDistanceLimiter e.g. 800 Ceil disappear
+		double ceilPosition = 16;//put biger than RenderDistanceLimiter e.g. 800 Ceil disappear
 		//double ceilPosition = Math.sin(game.time / 10) + 10;
 		double rotation = game.controls.rotation;
 		double cosine = Math.cos(rotation);
 		double sine = Math.sin(rotation);
+		//double up = Math.sin(game.time/10.0)* 2.0;//with /10 is lagging 10.0 must
+		double up = game.controls.y;
+		double walking = Math.sin(game.time / 6.0) * 0.4; //moving "camera" just floor and ceil
+		
+		if (Controller.jumpedStop) {
+			 up = 0;
+		}
+		if (Controller.crouchWalk) {
+			walking = Math.sin(game.time / 6.0) * 0.2;
+		}
+		if (Controller.runWalk) {
+			walking = Math.sin(game.time / 6.0) * 0.7;
+		}
 		
 		for (int y=0; y<HEIGHT; y++) {
 			double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
 			
-			double z = floorPosition / yDepthCeiling;
-			
-			if (yDepthCeiling < 0) {
-				z = ceilPosition /-yDepthCeiling;//z = -yDepthCeiling wipes ceiling
+			double z = (floorPosition + up) / yDepthCeiling;//+wallking
+			if (Controller.walk) {
+				 z = (floorPosition + up + walking) / yDepthCeiling;//+wallking
+
 			}
 			
+			if (yDepthCeiling < 0) {
+				z = (ceilPosition - up) /-yDepthCeiling;//z = -yDepthCeiling wipes ceiling
+				if (Controller.walk) {
+					 z = (ceilPosition - up - walking) / -yDepthCeiling;//+wallking
+				}
+			}
+			//System.out.println(up);
 				for (int x=0; x<WIDTH; x++) {
 					double xDepth = (x - WIDTH /2.0) / HEIGHT;
 					xDepth *=z;
@@ -121,6 +147,7 @@ public void floor(Game game) {
 					}
 				}	
 			}
+		//wall();
 	}
 
 //pixels further gets less brightness
@@ -148,6 +175,87 @@ public void floor(Game game) {
 			PIXELS[i] = r << 16 |  g << 8 | b;// << is * 2^x ==255? e.g. is 8.. 2^x==? 255!
 		}
 }
+	
+	public void wall() {
+		Random random = new Random(100);//if in beg of file its go crazy
+
+		for (int i = 0; i < 10000; i++) {//250000 more solid bigger the pixels
+//The 2D objects   are called "billboards" ^^ Sprites are REALLY static, like the FPS counter
+		double xx = random.nextDouble(); //-1; // +1;
+		double yy = random.nextDouble(); //-1; // +1;
+		double zz = 1.5 - forwardGlobal / 16;
+		
+		int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+		int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+		if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+			PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+		}
+		}
+		for (int i = 0; i < 10000; i++) {
+
+			double xx = random.nextDouble(); 
+			double yy = random.nextDouble() - 1; 
+			
+			double zz = 1.5 - forwardGlobal / 16;
+			
+			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			}
+			}
+		for (int i = 0; i < 10000; i++) {//250000 more solid bigger the pixels
+		double xx = random.nextDouble(); //-1; // +1;
+		double yy = random.nextDouble(); //-1; // +1;
+		double zz = 1.5 - forwardGlobal / 16;
+		
+		int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+		int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+		if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+			PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+		}
+		}
+		for (int i = 0; i < 10000; i++) {
+
+			double xx = random.nextDouble() - 1; 
+			double yy = random.nextDouble() - 1; 
+			
+			double zz = 1.5 - forwardGlobal / 16;
+			
+			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			}
+			}
+		for (int i = 0; i < 10000; i++) {
+
+			double xx = random.nextDouble() - 1; 
+			double yy = random.nextDouble(); 
+			
+			double zz = 1.5 - forwardGlobal / 16;
+			
+			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			}
+			}
+		for (int i = 0; i < 10000; i++) {
+
+			double xx = random.nextDouble(); 
+			double yy = random.nextDouble(); 
+			
+			double zz = 2 - forwardGlobal / 16;
+			
+			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
+			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
+			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
+				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			}
+			}
+
+	}
 	
 //cos sin wave make a rotation O istead of C or half O they are opossite null
 }

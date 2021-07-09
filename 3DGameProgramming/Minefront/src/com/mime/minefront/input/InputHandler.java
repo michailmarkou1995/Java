@@ -7,10 +7,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 
 public class InputHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener {
 
-	public boolean[] key = new boolean[65536];
+	//public boolean[] key = new boolean[65536];
+	public boolean[] key = new boolean[300];
 	public static int MouseX, MouseY;
 	
 	@Override
@@ -97,5 +99,11 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 //			key[i] = false;
 //		}
 	}
+
+//	@Override
+//	public String toString() {
+//		return "InputHandler [key=" + Arrays.toString(key) + "]";
+//	}
+	
 
 }

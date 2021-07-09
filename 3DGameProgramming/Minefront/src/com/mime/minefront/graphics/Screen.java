@@ -59,7 +59,9 @@ public void render(Game game) {
 		}
 
 		render3d.floor(game);
+		//render3d.wall(); //renderDistanceLimiter Filter does apply if rendered here
 		render3d.renderDistanceLimiter();
+		render3d.wall(); //renderDistanceLimiter Filter does NOT apply if rendered here
 		draw(render3d,0,0);
 	}
 

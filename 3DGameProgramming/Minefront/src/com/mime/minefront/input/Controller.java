@@ -2,16 +2,17 @@ package com.mime.minefront.input;
 
 import java.awt.Robot;
 
+import com.mime.minefront.Display;
 import com.mime.minefront.RunnableTest;
 import com.mime.minefront.ThreadCheck;
 import com.mime.minefront.ThreadTest;
 
 public class Controller {
 
-	public double x, y, z, rotation, xa, za, rotationa;
+	public static double x, y, z, rotation, xa, za, rotationa, rotationUpa, rotationUp=1;
 	//public BigDecimal y = new BigDecimal("0.0");
 	public static boolean turnLeftM = false, turnRightM = false, jumped=false
-			,jumpAgain=true;
+			,jumpAgain=true, turnUpM=false, turnDownM=false;
 	public static long timeJ, timeJ1;
 	Robot robot;
 	public static boolean walk = false;
@@ -44,6 +45,17 @@ public class Controller {
 		double crouchHeight = 0.35;
 		double xMove = 0;
 		double zMove = 0;
+		
+		if(Display.mouseSpeed < 3 && Display.mouseSpeed > 0 
+				&& Display.mouseSpeed != 0)rotationSpeed *= 0.05;
+		if(Display.mouseSpeed >= 3)rotationSpeed *= 0.5;
+		if(Display.mouseSpeed < 0 && Display.mouseSpeed >= -3
+				&& Display.mouseSpeed != 0)rotationSpeed *= 0.05;
+		if(Display.mouseSpeed < -3)rotationSpeed *= 0.5;
+		if(Display.mouseSpeed == 0)rotationSpeed *= 0.0;
+		//System.out.println(Display.mouseSpeed);
+//		boolean test = -10 < -1; //yeah don't laugh :|
+//		System.out.println(test);
 		
 		if (regenH) {
 			//Thread thread = new Thread(new ThreadTest());
@@ -113,6 +125,14 @@ public class Controller {
 		
 		if(turnRightM) {
 			rotationa += rotationSpeed;
+		}
+		
+		if(turnUpM) {
+			rotationUpa += rotationSpeed;
+		}
+		
+		if(turnDownM) {
+			rotationUpa -= rotationSpeed;
 		}
 		
 		if(crouch) {
@@ -268,6 +288,10 @@ public class Controller {
 		za *= 0.1;
 		rotation += rotationa;
 		rotationa *= 0.5;
+//		if(Display.mouseSpeed < 5)rotationa *= 0.1;
+//		if(Display.mouseSpeed > 5)rotationa *= 0.5;
+		rotationUp += rotationUpa;
+		rotationUpa *= 0.2;
 		
 		
 	}

@@ -1,5 +1,7 @@
 package com.mime.minefront.input;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -9,11 +11,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
 
-public class InputHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener {
+public class InputHandler implements KeyListener, FocusListener, MouseListener
+, MouseMotionListener, ComponentListener {
 
 	//public boolean[] key = new boolean[65536];
 	public boolean[] key = new boolean[300];
 	public static int MouseX, MouseY;
+	public static int MouseXwrap, MouseYwrap;
+	public static int WindowX, WindowY;
+	Object MouseCapture;
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -47,14 +53,14 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		//system out something?
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		MouseX=e.getX();
+		MouseY=e.getY();
+		MouseCapture = e.getSource();
 	}
 
 	@Override
@@ -63,6 +69,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 		
 	}
 
+	//outside of window frame
 	@Override
 	public void focusLost(FocusEvent e) {
 		for (int i = 0; i < key.length; i++) {
@@ -98,6 +105,31 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 //		for (int i = 0; i < key.length; i++) {
 //			key[i] = false;
 //		}
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		WindowX=e.getComponent().getX();
+		WindowY=e.getComponent().getY();
+		//e.getComponent().getLocation().x // causes heap allocation above preferable
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 //	@Override

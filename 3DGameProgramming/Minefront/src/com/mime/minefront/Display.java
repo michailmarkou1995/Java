@@ -11,6 +11,8 @@ import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -32,6 +34,8 @@ public class Display extends Canvas implements Runnable{
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	public static final String TITLE = "Minefront Pre-Alpha 0.03";
+	public static Point WindowLocation;
+	public static int mouseSpeed;
 
 	private Thread thread;
 	private Screen screen;
@@ -42,7 +46,7 @@ public class Display extends Canvas implements Runnable{
 	private Render render;
 	private InputHandler input;
 	private JFrame frame;
-	private int newX=0, newY=0, oldX=0, oldY;
+	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
 	Robot robot;
 	
@@ -156,9 +160,52 @@ public class Display extends Canvas implements Runnable{
 			frames++;
 			//Mouse Position Track Debug
 			//System.out.println("X: " + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
-			
+			//System.out.println(InputHandler.WindowX); //WindowY
+
 			newX = InputHandler.MouseX;
 			newY = InputHandler.MouseY;
+			int winX=InputHandler.WindowX;
+			int winY=InputHandler.WindowY;
+			
+			{
+			//mouse Speed below calc
+				/*
+				 * Pythagore theorem
+					The distance travelled by the mouse between 2 calls to the mouseMotionListener is
+
+					squareRoot(deltaX + deltaY)
+
+					where:
+					deltaX is (oldX - newX) at the power of 2
+					deltaY is (oldY - newY) at the power of 2
+
+					your mouseMotionListener can also store the time in milli if you want a really exact "speed"
+				 */
+			//System.out.println("X: " + (oldX-newX) + " Y: " + (oldY-newY));
+			//System.out.println((oldX-newX) + (oldY-newY));
+			mouseSpeed = (oldX-newX) + (oldY-newY);
+			}
+			
+			try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
+			//System.out.println(WindowLocation);
+			
+//			if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
+//			if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
+
+//			if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
+//			if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
+			
+			if(newX<0) robot.mouseMove(winX+ WIDTH -20, winY + newY);
+			if (newX>=WIDTH) robot.mouseMove(winX+20, winY + newY);
+			if(newY<0) robot.mouseMove(winX + newX, winY + HEIGHT-20);
+			if(newY>=HEIGHT) robot.mouseMove(winX + newX, winY + 20);
+
+			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
+			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
+			if(newY == oldY) {Controller.turnUpM = false; Controller.turnDownM = false;}
+			if(newY > oldY && Controller.rotationUp >= -0.8) {Controller.turnDownM = true;}
+			if(newY > oldY && Controller.rotationUp <= -0.8) {Controller.turnDownM = false;}
+
 			//String temp = newX < oldX ? System.out.println("Left"); : "";
 			if (newX > oldX) {
 				//System.out.println("Right");
@@ -178,6 +225,7 @@ public class Display extends Canvas implements Runnable{
 //				//System.out.println("Still Y");
 //			}
 					oldX = newX;
+					oldY = newY;
 					//oldY = newY;
 		}
 	}
@@ -244,9 +292,17 @@ public class Display extends Canvas implements Runnable{
 			game.frame.setTitle(TITLE);//if not here delay to appear a little
 			game.frame.pack();
 			//game.frame.getContentPane().setCursor(blank);
-			game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			//game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			game.frame.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent windowEvent) {
+					System.exit(0);
+				}
+			});
 			//frame.setSize(WIDTH,HEIGHT);// remove if setPreffered is set on Constructor
 			game.frame.setLocationRelativeTo(null);
+			WindowLocation=game.frame.getLocation();
+			game.frame.addComponentListener(game.input);//new InputHandler()
 			game.frame.setVisible(true);
 			
 			game.start();

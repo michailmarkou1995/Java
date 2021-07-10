@@ -103,6 +103,7 @@ public class Game {
 //		if (Controller.jumped==false) jump = key[KeyEvent.VK_SPACE];
 //		else jump=false;
 
-		controls.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, sprint, regenH);
+		controls.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, 
+				sprint, regenH);
 	}
 }

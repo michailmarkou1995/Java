@@ -89,6 +89,10 @@ public class Render3D extends Render{
 //	}
 	
 public void floor(Game game) {
+	int change=0;
+	for(int i =0; i < 1000; i++) {
+		change+=i;
+	}
 		
 	//double forward = game.time % 100 / 20.0;
 		double forward = game.controls.z; // game.time % 100 / 20.0; //pop back and forth like movie clip
@@ -98,6 +102,9 @@ public void floor(Game game) {
 		double ceilPosition = 16;//put biger than RenderDistanceLimiter e.g. 800 Ceil disappear
 		//double ceilPosition = Math.sin(game.time / 10) + 10;
 		double rotation = game.controls.rotation;
+		double rotationUp = game.controls.rotationUp;
+		double cosine1 = Math.cos(rotationUp);
+		double sine1 = Math.sin(rotationUp);
 		double cosine = Math.cos(rotation);
 		double sine = Math.sin(rotation);
 		//double up = Math.sin(game.time/10.0)* 2.0;//with /10 is lagging 10.0 must
@@ -115,7 +122,18 @@ public void floor(Game game) {
 		}
 		
 		for (int y=0; y<HEIGHT; y++) {
-			double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
+			//double yDepthCeilingMoveYUpCamera = (y - WIDTH /1.0) / HEIGHT ;
+			//double yDepthCeilingMoveYDownCamera = (y + HEIGHT /2.0) / HEIGHT ;
+			//double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
+			//double yDepthCeiling;
+
+			double yDepthCeiling = (y - HEIGHT /2.0 * rotationUp) / HEIGHT ;
+			//System.out.println(rotationUp);
+			
+//			if(Controller.turnUpM)
+//				yDepthCeiling = (y - HEIGHT /2.0 * rotationUp) / HEIGHT ;
+//			if(Controller.turnDownM)
+//				yDepthCeiling = (y - HEIGHT /2.0 + rotationUp) / HEIGHT ;
 			
 			double z = (floorPosition + up) / yDepthCeiling;//+wallking
 			if (Controller.walk) {
@@ -133,8 +151,8 @@ public void floor(Game game) {
 				for (int x=0; x<WIDTH; x++) {
 					double xDepth = (x - WIDTH /2.0) / HEIGHT;
 					xDepth *=z;
-					double xx =  xDepth * cosine + z * sine; 
-					double yy = z * cosine - xDepth * sine; 
+					double xx =  (xDepth * cosine + z * sine) * 1; //change
+					double yy = (z * cosine - xDepth * sine) * 1; 
 					int xPix = (int) (xx + right);
 					int yPix = (int) (yy + forward);
 					zBuffer[x+y*WIDTH] = z;
@@ -188,7 +206,7 @@ public void floor(Game game) {
 		int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 		int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 		if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-			PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 		}
 		}
 		for (int i = 0; i < 10000; i++) {
@@ -201,7 +219,7 @@ public void floor(Game game) {
 			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+				PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 			}
 			}
 		for (int i = 0; i < 10000; i++) {//250000 more solid bigger the pixels
@@ -212,7 +230,7 @@ public void floor(Game game) {
 		int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 		int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 		if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-			PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+			PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 		}
 		}
 		for (int i = 0; i < 10000; i++) {
@@ -225,7 +243,7 @@ public void floor(Game game) {
 			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+				PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 			}
 			}
 		for (int i = 0; i < 10000; i++) {
@@ -238,7 +256,7 @@ public void floor(Game game) {
 			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+				PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 			}
 			}
 		for (int i = 0; i < 10000; i++) {
@@ -251,7 +269,7 @@ public void floor(Game game) {
 			int xPixel = (int) (xx / zz * HEIGHT /2 + WIDTH /2);
 			int yPixel = (int) (yy / zz * HEIGHT /2 + HEIGHT /2);
 			if (xPixel >= 0 && yPixel >= 0 && xPixel < WIDTH && yPixel < HEIGHT) {
-				PIXELS[xPixel + yPixel * WIDTH] = 0xffffff;
+				PIXELS[xPixel + yPixel * WIDTH] = 0x00ffff;
 			}
 			}
 

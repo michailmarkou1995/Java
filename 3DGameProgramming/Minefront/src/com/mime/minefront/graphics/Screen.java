@@ -59,9 +59,30 @@ public void render(Game game) {
 		}
 
 		render3d.floor(game);
-		//render3d.wall(); //renderDistanceLimiter Filter does apply if rendered here
+		//render3d.wallCrap(); //renderDistanceLimiter Filter does apply if rendered here
+//		render3d.renderWall(0, 0.5, 1.5, 1.5, 0);//back (0, 0.5, 1.5, 1.5, 0); 1, 0.5, 0.5, 0.5, 0
+//		render3d.renderWall(0, 0, 1, 0.5, 0);//sideL
+//		render3d.renderWall(0, 0.5, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+//		render3d.renderWall(0.5, 0.5, 1, 1.5, 0);//sideR
+/*		render3d.renderWall(0, 0.5, 1.5, 1.5, 0);//back (0, 0.5, 1.5, 1.5, 0); 1, 0.5, 0.5, 0.5, 0
+		render3d.renderWall(0, 0, 1, 1.5, 0);//sideL
+		render3d.renderWall(0, 0.5, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+		render3d.renderWall(0.5, 0.5, 1, 1.5, 0);//sideR */
+//		render3d.renderWallInverse(-0.5, 0, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+		{
+/*		render3d.renderWall(1.5, 2, 1, 1, 0);
+		render3d.renderWallInverse(-2, -1.5, 1, 1, 0);
+		render3d.renderWallDoubleSide(1, 1.5, 1, 1, 0);//Front//auto megalytero 0.5 se arnitiko se thetiko mikrotero to xLeft
+		render3d.renderWallDoubleSide(1, 1.5, 1.5, 1.5, 0);
+		render3d.renderWallDoubleSide(1.5, 2, 1, 1, 0); */
+		//-4.5, -4, 1, 1, 0 // if < 0 xLeft should < xRight else xLeft > xRight
+		/*e.g.  (1.0, 1.5, 1, 1, 0) or  (-1.5, -1.0, 1, 1, 0)*/ 
+		/* val swap for Inverse(back render) -(xLeft) , -(xRight) for front -(xRight), (-xLeft)*/
+		}
+		//render3d.renderWallDoubleSide(-4.5, -4, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
 		render3d.renderDistanceLimiter();
-		//render3d.wall(); //renderDistanceLimiter Filter does NOT apply if rendered here
+		//render3d.wallCrap(); //renderDistanceLimiter Filter does NOT apply if rendered here
+		//render3d.renderWall(0, 0.5, 1.5, 0);
 		draw(render3d,0,0);
 	}
 

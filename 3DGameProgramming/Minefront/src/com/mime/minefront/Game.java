@@ -4,11 +4,13 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 import com.mime.minefront.input.Controller;
+import com.mime.minefront.level.Level;
 
 public class Game {
 
 	public int time;
 	public Controller controls;
+	public Level level;
 	public boolean jumpIf;
 	ThreadCheck threadCheck;
 	ThreadTest tt1;
@@ -16,6 +18,7 @@ public class Game {
 	
 	public Game() {
 		controls = new Controller();
+		level = new Level(40, 40);
 		threadCheck = new ThreadCheck();
 		//t1 = new Thread(threadCheck, "T1");
 		//t1.start();

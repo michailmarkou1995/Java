@@ -39,7 +39,8 @@ public class Controller {
 	public void tick(boolean forward,boolean back,boolean left
 				,boolean right,boolean turnLeft,boolean turnRight
 				,boolean jump, boolean crouch, boolean sprint, boolean regenH) {
-		double rotationSpeed = 0.1;
+		double rotationSpeed = 0.1;//myWay
+		double rotationSpeed1 = 0.002 * Display.MouseSpeed;//theCherno
 		double walkSpeed = 0.35;
 		double jumpHeight = 0.4;
 		double crouchHeight = 0.35;
@@ -112,11 +113,19 @@ public class Controller {
 		}
 		
 		if(turnLeft) {
-			rotationa -= rotationSpeed;
+			if (InputHandler.MouseButton == 3) {
+				
+			} else {
+				rotationa -= rotationSpeed;
+			}
 		}
 		
 		if(turnRight) {
-			rotationa += rotationSpeed;
+		if (InputHandler.MouseButton == 3) {
+				//Debug only hold
+			} else {
+				rotationa += rotationSpeed;//rotationSpeed
+			}
 		}
 		
 		if(turnLeftM) {
@@ -160,6 +169,7 @@ public class Controller {
 		if (!forward && !back && !left &&  !right) {
 			walk = false;
 		}
+		
 		
 //		if(jump) {y += jumpHeight; RunnableTest.keyp1=false;
 //		} else if (y <= 3.9 && y >=0.01){if(timeJ % 20 > 10 ) y -= jumpHeight;} 

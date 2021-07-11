@@ -7,6 +7,7 @@ public class Render {
 	public final int WIDTH;
 	public final int HEIGHT;
 	public final int[] PIXELS;
+	//public final int[] PIXELS1;
 	
 	//private Display display;
 	
@@ -15,6 +16,7 @@ public class Render {
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		PIXELS = new int[width*height];
+		//PIXELS1 = new int[width*height];
 	}
 	
 	public void draw(Render render, int xOffset, int yOffset) {

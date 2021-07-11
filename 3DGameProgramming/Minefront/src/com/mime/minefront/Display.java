@@ -36,6 +36,7 @@ public class Display extends Canvas implements Runnable{
 	public static final String TITLE = "Minefront Pre-Alpha 0.03";
 	public static Point WindowLocation;
 	public static int mouseSpeed;
+	public static int MouseSpeed;
 
 	private Thread thread;
 	private Screen screen;
@@ -183,7 +184,7 @@ public class Display extends Canvas implements Runnable{
 				 */
 			//System.out.println("X: " + (oldX-newX) + " Y: " + (oldY-newY));
 			//System.out.println((oldX-newX) + (oldY-newY));
-			mouseSpeed = (oldX-newX) + (oldY-newY);
+			mouseSpeed = Math.abs((oldX-newX) + (oldY-newY));
 			}
 			
 			try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
@@ -198,7 +199,7 @@ public class Display extends Canvas implements Runnable{
 			if(newX<0) robot.mouseMove(winX+ WIDTH -20, winY + newY);
 			if (newX>=WIDTH) robot.mouseMove(winX+20, winY + newY);
 			if(newY<0) robot.mouseMove(winX + newX, winY + HEIGHT-20);
-			if(newY>=HEIGHT) robot.mouseMove(winX + newX, winY + 20);
+			if(newY>=HEIGHT) robot.mouseMove(winX + newX, winY + 40);
 
 			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
@@ -224,6 +225,8 @@ public class Display extends Canvas implements Runnable{
 //			if (newY == oldY) {
 //				//System.out.println("Still Y");
 //			}
+					MouseSpeed = Math.abs((newX - oldX) + (newY - oldY));//no negative value return!
+					//if (MouseSpeed < 0) { MouseSpeed *= -1;}
 					oldX = newX;
 					oldY = newY;
 					//oldY = newY;

@@ -16,7 +16,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 
 	//public boolean[] key = new boolean[65536];
 	public boolean[] key = new boolean[300];
-	public static int MouseX, MouseY;
+	public static int MouseX, MouseY, MouseButton;
 	public static int MouseXwrap, MouseYwrap;
 	public static int WindowX, WindowY;
 	Object MouseCapture;
@@ -41,8 +41,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		MouseButton = e.getButton();
 	}
 
 	@Override

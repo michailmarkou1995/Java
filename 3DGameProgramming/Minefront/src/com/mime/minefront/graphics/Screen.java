@@ -80,7 +80,20 @@ public void render(Game game) {
 		/* val swap for Inverse(back render) -(xLeft) , -(xRight) for front -(xRight), (-xLeft)*/
 		}
 		//render3d.renderWallDoubleSide(-4.5, -4, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+//		render3d.renderDWall(-2, -1, 2, 2, 0);
+//		render3d.renderDWall(0, -1, 3, 3, 0);
+//		render3d.renderDWall(0, 1, 1, 1, 0);
+		render3d.renderDWall(-2, -1, 2, 2, 0);
+//		render3d.renderDWall(-1, -2, 5, 5, 0);
+		render3d.renderDWall(0, 1, 1, 1, 0);
+		render3d.renderDWall(5, 6, 2, 2, 0);
+//		render3d.renderDWall(6, 5, 5, 5, 0);
+//		render3d.renderDWall(0, 1, 1, 1, 0);
+//		render3d.renderDWall(5, 6, 6, 6, 0);
 		render3d.renderDistanceLimiter();
+//		render3d.collisionDetection(-2, -1, 2, 2);
+//		render3d.collisionDetection(0, 1, 1, 1);
+//		render3d.collisionDetection(5, 6, 2, 2);
 		//render3d.wallCrap(); //renderDistanceLimiter Filter does NOT apply if rendered here
 		//render3d.renderWall(0, 0.5, 1.5, 0);
 		draw(render3d,0,0);

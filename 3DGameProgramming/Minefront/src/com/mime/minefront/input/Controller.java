@@ -6,10 +6,12 @@ import com.mime.minefront.Display;
 import com.mime.minefront.RunnableTest;
 import com.mime.minefront.ThreadCheck;
 import com.mime.minefront.ThreadTest;
+import com.mime.minefront.graphics.Render3D;
 
 public class Controller {
 
-	public static double x, y, z, rotation, xa, za, rotationa, rotationUpa, rotationUp=1;
+	public static double x, y, z, rotation, xa, za, rotationa, rotationUpa, rotationUp=1
+			, distanceTravel=0.0, distanceTravelX=0.0, distanceTravelY=0.0;
 	//public BigDecimal y = new BigDecimal("0.0");
 	public static boolean turnLeftM = false, turnRightM = false, jumped=false
 			,jumpAgain=true, turnUpM=false, turnDownM=false;
@@ -92,14 +94,16 @@ public class Controller {
 			//System.out.println(jumpIf);
 		}
 		
-		if(forward) {
+		if(forward && !Render3D.wallHit) {
 			zMove++;
 			walk = true;
+			//distanceTravel++;
 		}
 		
-		if(back) {
+		if(back ) {
 			zMove--;
 			walk = true;
+			//distanceTravel--;
 		}
 		
 		if(left) {
@@ -107,6 +111,7 @@ public class Controller {
 			walk = true;
 		}
 		
+		//if(right && !Render3D.wallHit && !Render3D.wallHitInverse) {
 		if(right) {
 			xMove++;
 			walk = true;
@@ -168,6 +173,7 @@ public class Controller {
 		
 		if (!forward && !back && !left &&  !right) {
 			walk = false;
+			//Render3D.wallHit=false;
 		}
 		
 		
@@ -284,6 +290,12 @@ public class Controller {
 //				jumped = false;
 //			}
 //		}
+		
+		
+		//distanceTravel = xa + za * 0.01;
+		//distanceTravel=xMove * Math.sin(rotation);	
+		distanceTravelX = x;
+		distanceTravelY = z;
 		
 		//move left right
 		xa += (xMove * Math.cos(rotation) + zMove * Math.sin(rotation)) * walkSpeed;

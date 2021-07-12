@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 
 import com.mime.minefront.graphics.Render;
 import com.mime.minefront.graphics.Screen;
+import com.mime.minefront.gui.Launcher;
 import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
@@ -31,9 +32,13 @@ public class Display extends Canvas implements Runnable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
-	public static final String TITLE = "Minefront Pre-Alpha 0.03";
+//	public static final int WIDTH = 800;
+//	public static final int HEIGHT = 600;
+	public static int selection = 1;
+	public static  int WIDTH = 800, HEIGHT = 600;
+	//public int WIDTH1, HEIGHT1;
+	
+	public static final String TITLE = "Minefront Pre-Alpha 0.04";
 	public static Point WindowLocation;
 	public static int mouseSpeed;
 	public static int MouseSpeed;
@@ -45,20 +50,22 @@ public class Display extends Canvas implements Runnable{
 	private boolean running = false;
 	private int[] pixels;
 	private Render render;
-	private InputHandler input;
-	private JFrame frame;
+	protected InputHandler input;
+	protected JFrame frame;
 	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
 	Robot robot;
 	
 	public Display() {
-		Dimension size = new Dimension(WIDTH, HEIGHT);
+		//WIDTH = WIDTH1;
+		//HEIGHT = HEIGHT1;
+		Dimension size = new Dimension(getGameWidth(), getGameHeight());
 		setPreferredSize(size);
 		setMinimumSize(size);
 		setMaximumSize(size);
-		screen = new Screen(WIDTH,HEIGHT);
+		screen = new Screen(getGameWidth(),getGameHeight());
 		game = new Game();
-		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		img = new BufferedImage(getGameWidth(), getGameHeight(), BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt)img.getRaster().getDataBuffer()).getData();
 		
 		input = new InputHandler();
@@ -66,6 +73,36 @@ public class Display extends Canvas implements Runnable{
 		addFocusListener(input);
 		addMouseListener(input);
 		addMouseMotionListener(input);
+	}
+	
+	public static int getGameWidth() {
+		if(selection == 0 ) {
+			WIDTH = 640;
+		}
+		
+		if(selection == 1 || selection == -1) {
+			WIDTH = 800;
+		}
+		
+		if(selection == 2) {
+			WIDTH = 1024;
+		}
+		return WIDTH;
+	}
+	
+	public static int getGameHeight() {
+		if(selection == 0 ) {
+			HEIGHT = 480;
+		}
+		
+		if(selection == 1 || selection == -1) {
+			HEIGHT = 600;
+		}
+		
+		if(selection == 2) {
+			HEIGHT = 768;
+		}
+		return HEIGHT;
 	}
 	
 	public synchronized void start() {
@@ -196,10 +233,10 @@ public class Display extends Canvas implements Runnable{
 //			if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
 //			if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
 			
-			if(newX<0) robot.mouseMove(winX+ WIDTH -20, winY + newY);
-			if (newX>=WIDTH) robot.mouseMove(winX+20, winY + newY);
-			if(newY<0) robot.mouseMove(winX + newX, winY + HEIGHT-20);
-			if(newY>=HEIGHT) robot.mouseMove(winX + newX, winY + 40);
+			if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+			if (newX>=getGameWidth()) robot.mouseMove(winX+20, winY + newY);
+			if(newY<0) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+			if(newY>=getGameHeight()) robot.mouseMove(winX + newX, winY + 40);
 
 			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
@@ -243,7 +280,7 @@ public class Display extends Canvas implements Runnable{
 		
 		screen.render(game);
 		
-		for (int i = 0; i <WIDTH * HEIGHT; i++) {
+		for (int i = 0; i <getGameWidth() * getGameHeight(); i++) {
 			pixels[i] = screen.PIXELS[i];
 		}
 		
@@ -251,7 +288,7 @@ public class Display extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 		//g.drawImage(img, 0, 0, WIDTH*20, HEIGHT*20, null);
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
+		g.drawImage(img, 0, 0, getGameWidth(), getGameHeight(), null);
 		g.setFont(new Font("Verdana", 0, 50));//0,1,2,3 bold italics bold and italics
 		g.setColor(Color.WHITE);
 		g.drawString(fpsInnerText + " fps", 20, 50);//drawString me +"" oxi sketo int tha baraei error
@@ -276,39 +313,7 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	public static void main(String[] args) {
-		    BufferedImage cursor = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
-		    Cursor blank = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blank");
-			Display game = new Display();
-			//JFrame frame = new JFrame();//if here and not in Game class THEN not able to run in on WINDOW FPS LABEL 
-//			frame = new JFrame();
-//			frame.add(game);
-//			frame.setResizable(false);
-//			frame.setTitle(TITLE);
-//			frame.pack();
-//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//			//frame.setSize(WIDTH,HEIGHT);// remove if setPreffered is set on Constructor
-//			frame.setLocationRelativeTo(null);
-//			frame.setVisible(true);
-			game.frame = new JFrame();
-			game.frame.add(game);
-			game.frame.setResizable(false);
-			game.frame.setTitle(TITLE);//if not here delay to appear a little
-			game.frame.pack();
-			//game.frame.getContentPane().setCursor(blank);
-			
-			//game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			game.frame.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent windowEvent) {
-					System.exit(0);
-				}
-			});
-			//frame.setSize(WIDTH,HEIGHT);// remove if setPreffered is set on Constructor
-			game.frame.setLocationRelativeTo(null);
-			WindowLocation=game.frame.getLocation();
-			game.frame.addComponentListener(game.input);//new InputHandler()
-			game.frame.setVisible(true);
-			
-			game.start();
+		new Launcher(0);
 	}
 
 

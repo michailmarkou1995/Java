@@ -22,10 +22,10 @@ public class Render {
 	public void draw(Render render, int xOffset, int yOffset) {
 		for (int y = 0; y<render.HEIGHT; y++) {
 			int yPix = y + yOffset;
-			if (yPix < 0 || yPix >= Display.HEIGHT) continue;//600//HEIGHT
+			if (yPix < 0 || yPix >= Display.getGameHeight()) continue;//600//HEIGHT
 			for (int x = 0; x<render.WIDTH; x++) {
 				int xPix = x + xOffset;
-				if (xPix < 0 || xPix >= Display.WIDTH) continue;//800// or just WIDTH
+				if (xPix < 0 || xPix >= Display.getGameWidth()) continue;//800// or just WIDTH
 
 				int alpha = render.PIXELS[x+y * render.WIDTH];
 				try {

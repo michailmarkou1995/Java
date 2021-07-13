@@ -7,9 +7,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.mime.minefront.Configuration;
 import com.mime.minefront.Display;
 import com.mime.minefront.RunGame;
 
@@ -20,6 +23,7 @@ public class Launcher extends JFrame{
 	protected JPanel window = new JPanel();
 	private JButton play, options, help, quit;
 	private Rectangle rplay, roptions, rhelp, rquit;//if not = something e.g. 0 is null pointer
+	Configuration config = new Configuration();
 	
 	protected int width = 240, height = 320, buttonWidth = 80, buttonHeight = 40;
 
@@ -68,6 +72,7 @@ public class Launcher extends JFrame{
 		
 		play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				config.loadConfiguration("resources/settings/config.xml");
 				dispose();
 				new RunGame(Display.WindowLocation);
 			}
@@ -75,8 +80,9 @@ public class Launcher extends JFrame{
 		
 		options.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//config.saveConfiguration("sd", Display.selection);
 				dispose();
-				new Options();
+				new Options(1);//()
 			}
 		});
 		

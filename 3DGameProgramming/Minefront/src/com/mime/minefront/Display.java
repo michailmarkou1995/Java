@@ -21,6 +21,7 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 
 import com.mime.minefront.graphics.Render;
+import com.mime.minefront.graphics.Render3D;
 import com.mime.minefront.graphics.Screen;
 import com.mime.minefront.gui.Launcher;
 import com.mime.minefront.input.Controller;
@@ -35,8 +36,9 @@ public class Display extends Canvas implements Runnable{
 //	public static final int WIDTH = 800;
 //	public static final int HEIGHT = 600;
 	public static int selection = 1;
-	public static  int WIDTH = 800, HEIGHT = 600;
+	public static  int WIDTH, HEIGHT;
 	//public int WIDTH1, HEIGHT1;
+	//public int test;
 	
 	public static final String TITLE = "Minefront Pre-Alpha 0.04";
 	public static Point WindowLocation;
@@ -59,6 +61,7 @@ public class Display extends Canvas implements Runnable{
 	public Display() {
 		//WIDTH = WIDTH1;
 		//HEIGHT = HEIGHT1;
+		//int test;
 		Dimension size = new Dimension(getGameWidth(), getGameHeight());
 		setPreferredSize(size);
 		setMinimumSize(size);
@@ -73,35 +76,36 @@ public class Display extends Canvas implements Runnable{
 		addFocusListener(input);
 		addMouseListener(input);
 		addMouseMotionListener(input);
+		//System.out.println(test);
 	}
 	
 	public static int getGameWidth() {
-		if(selection == 0 ) {
-			WIDTH = 640;
-		}
-		
-		if(selection == 1 || selection == -1) {
-			WIDTH = 800;
-		}
-		
-		if(selection == 2) {
-			WIDTH = 1024;
-		}
+//		if(selection == 0 ) {
+//			WIDTH = 640;
+//		}
+//		
+//		if(selection == 1 || selection == -1) {
+//			WIDTH = 800;
+//		}
+//		
+//		if(selection == 2) {
+//			WIDTH = 1024;
+//		}
 		return WIDTH;
 	}
 	
 	public static int getGameHeight() {
-		if(selection == 0 ) {
-			HEIGHT = 480;
-		}
-		
-		if(selection == 1 || selection == -1) {
-			HEIGHT = 600;
-		}
-		
-		if(selection == 2) {
-			HEIGHT = 768;
-		}
+//		if(selection == 0 ) {
+//			HEIGHT = 480;
+//		}
+//		
+//		if(selection == 1 || selection == -1) {
+//			HEIGHT = 600;
+//		}
+//		
+//		if(selection == 2) {
+//			HEIGHT = 768;
+//		}
 		return HEIGHT;
 	}
 	
@@ -110,6 +114,7 @@ public class Display extends Canvas implements Runnable{
 		running = true;
 		thread = new Thread(this);
 		thread.start();
+		//System.out.println(Render3D.test);
 	}
 	
 	public synchronized void stop() {
@@ -232,11 +237,11 @@ public class Display extends Canvas implements Runnable{
 
 //			if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
 //			if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
-			
+			System.out.println(newY);
 			if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-			if (newX>=getGameWidth()) robot.mouseMove(winX+20, winY + newY);
-			if(newY<0) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-			if(newY>=getGameHeight()) robot.mouseMove(winX + newX, winY + 40);
+			if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+			if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+			if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
 			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}

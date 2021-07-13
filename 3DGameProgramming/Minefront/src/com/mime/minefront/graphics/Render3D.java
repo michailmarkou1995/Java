@@ -15,6 +15,7 @@ public class Render3D extends Render{
 	private double forwardGlobal;
 	private double forward, right, cosine, sine, up, walking, rotationUp, cosine1, sine1;
 	public static boolean wallHit, wallHitInverse;
+	public static int test;
 
 	public Render3D(int width, int height) {
 		super(width, height);
@@ -276,7 +277,7 @@ public void floor(Game game) {
 		//System.out.println(Controller.distanceTravelY - zDistanceRight);//Controller.distanceTravelX - xLeft
 		//System.out.println(Controller.distanceTravelX- (xLeft*8));//System.out.println(xLeft*8);
 		//System.out.println((Controller.distanceTravelY - (zDistanceLeft*8)));
-		System.out.println(Controller.distanceTravelX- (xRight*8));
+		//System.out.println(Controller.distanceTravelX- (xRight*8));
 		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
 		//System.out.println(yPixelLeftTop);
 		double collisionX = Controller.distanceTravelX;
@@ -435,7 +436,7 @@ public void floor(Game game) {
 				}
 			}
 		}
-		//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
+		collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
 	}
 	
 	public void collisionDetection(double xLeft, double xRight, double zDistanceLeft

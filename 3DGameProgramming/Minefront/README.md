@@ -4,4 +4,4 @@ instructor: thecherno
 
 3D X,Y,Z Engine
 
-<img src="resources/images/main.jpg" width="1200">
+<img src="resources/images/main.jpg" width="800">

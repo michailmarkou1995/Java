@@ -16,8 +16,10 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.mime.minefront.graphics.Render;
@@ -36,7 +38,7 @@ public class Display extends Canvas implements Runnable{
 //	public static final int WIDTH = 800;
 //	public static final int HEIGHT = 600;
 	public static int selection = 1;
-	public static  int WIDTH, HEIGHT;
+	public static  int WIDTH=800, HEIGHT=600;
 	//public int WIDTH1, HEIGHT1;
 	//public int test;
 	
@@ -57,6 +59,7 @@ public class Display extends Canvas implements Runnable{
 	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
 	Robot robot;
+	//Launcher launcher = new Launcher(0, new Display()); //it's own thread not same as game in will be hard and fail
 	
 	public Display() {
 		//WIDTH = WIDTH1;
@@ -112,7 +115,7 @@ public class Display extends Canvas implements Runnable{
 	public synchronized void start() {
 		if (running) return;
 		running = true;
-		thread = new Thread(this);
+		thread = new Thread(this, "game");
 		thread.start();
 		//System.out.println(Render3D.test);
 	}
@@ -147,6 +150,7 @@ public class Display extends Canvas implements Runnable{
 			long passedTime = currentTime - previousTime;
 			previousTime = currentTime;
 			unprocessedSeconds += passedTime/1000000000.0;//nanoseconds to seconds
+			//launcher.updateFrame();//it's own thread not same as game in will be hard and fail
 	
 			while (unprocessedSeconds > secondsPetTick) {
 				tick();
@@ -154,7 +158,7 @@ public class Display extends Canvas implements Runnable{
 				ticked = true;
 				tickCount++;
 				if (tickCount % 60 == 0) {
-					frame.setTitle(TITLE + " FPS: " + frames);
+					//frame.setTitle(TITLE + " FPS: " + frames);
 					fpsInnerText = frames;
 					//System.out.println(frames + "fps");
 					previousTime += 1000;
@@ -170,6 +174,12 @@ public class Display extends Canvas implements Runnable{
 					//tt1.pause();
 					//tt1.run();
 					//tt1.start();
+				}
+				if (ticked) {
+					//render();
+					//wont play here renderMenu()
+					/*renderMenu();*///Limited FPS here but run in own thread independedly went to Launcher Class
+					frames++;
 				}
 			}
 			
@@ -195,12 +205,14 @@ public class Display extends Canvas implements Runnable{
 //				//Controller.timeJ = timer;
 //			}
 			
-			if (ticked) {
-				render();
-				frames++;
-			}
-			render();
-			frames++;
+//			if (ticked) {
+//				//render();
+//				renderMenu();//not in loop run as same below put in above
+//				frames++;
+//			}
+//			render();
+//			frames++;
+			//renderMenu(); too much fps here squling GPU not good put in in Limit FPS mode
 			//Mouse Position Track Debug
 			//System.out.println("X: " + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
 			//System.out.println(InputHandler.WindowX); //WindowY
@@ -237,11 +249,11 @@ public class Display extends Canvas implements Runnable{
 
 //			if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
 //			if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
-			System.out.println(newY);
-			if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-			if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
-			if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-			if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
+			//System.out.println(newY);
+//			if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+//			if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+//			if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+//			if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
 			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
@@ -273,6 +285,33 @@ public class Display extends Canvas implements Runnable{
 					oldY = newY;
 					//oldY = newY;
 		}
+	}
+	
+	
+	public void renderMenu() {
+		//put it later in different thread? than Main Game?
+		BufferStrategy bs = this.getBufferStrategy();
+		if(bs==null) {
+			createBufferStrategy(3);
+			return;
+		}
+
+		
+		Graphics g = bs.getDrawGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 800, 400);
+		try {
+			g.drawImage(ImageIO.read(Display.class.getResource("/wallpapers/launcher_menu.jpg")),0,0, 800, 400, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", 0, 30));
+		g.drawString("Play", 720, 90);
+		g.dispose();
+		bs.show();
+		
 	}
 
 	private void render() {
@@ -318,7 +357,8 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	public static void main(String[] args) {
-		new Launcher(0);
+		Display display = new Display();
+		new Launcher(0, display);
 	}
 
 

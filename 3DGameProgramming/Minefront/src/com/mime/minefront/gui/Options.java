@@ -26,13 +26,13 @@ public class Options extends Launcher{
 	
 	int w=0, h=0;
 
-	public Options(int id) { //()
-		super(1);
+	public Options() { //() int id, Display display
+		super(1, new Display());//mpori kai null xwris crash sto new Display();
 		setTitle("Options");
 		setSize(new Dimension(width, height));
 		setLocationRelativeTo(null);
 		
-		if(id==1)
+		//if(id==1)
 		drawButtons();
 	}
 	
@@ -70,7 +70,7 @@ public class Options extends Launcher{
 		OK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new Launcher(0);
+				new Launcher(0, new Display());
 				config.saveConfiguration("width", parseWidth());
 				config.saveConfiguration("height", parseHeight());
 			}

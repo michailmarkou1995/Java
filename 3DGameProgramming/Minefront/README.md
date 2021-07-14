@@ -11,7 +11,7 @@ X,Y,Z axis navigation\
 Double side rendering aka Flipped Normals\
 Pixel simple Texturing\
 Sprite sheets\
-Simple Collision detection\
+Simple Collision detection
 
 <img src="resources/images/main.jpg" width="800">
 <img src="resources/images/in_game_maze.jpg" width="800">

@@ -1,7 +1,7 @@
 3D Game Programming\
-Using Java Built-in Libraries from scratch not graphics Card e.g. DirectX,OpenGL\n
+Using Java Built-in Libraries from scratch not graphics Card e.g. DirectX,OpenGL\
 instructor: thecherno
 
-3D X,Y,Z Engine
+3D X,Y,Z axis Render Engine
 
-<img src="resources/images/main.jpg" width="1200">
+<img src="resources/images/main.jpg" width="800">

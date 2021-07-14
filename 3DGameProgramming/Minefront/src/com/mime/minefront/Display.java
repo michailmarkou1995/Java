@@ -59,6 +59,7 @@ public class Display extends Canvas implements Runnable{
 	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
 	Robot robot;
+	static Launcher launcher = null;
 	//Launcher launcher = new Launcher(0, new Display()); //it's own thread not same as game in will be hard and fail
 	
 	public Display() {
@@ -80,6 +81,13 @@ public class Display extends Canvas implements Runnable{
 		addMouseListener(input);
 		addMouseMotionListener(input);
 		//System.out.println(test);
+	}
+	
+	public static Launcher getLauncherInstance() {
+		if (launcher == null) {
+			launcher = new Launcher(0);
+		}
+		return launcher;
 	}
 	
 	public static int getGameWidth() {
@@ -175,14 +183,18 @@ public class Display extends Canvas implements Runnable{
 					//tt1.run();
 					//tt1.start();
 				}
-				if (ticked) {
-					//render();
-					//wont play here renderMenu()
-					/*renderMenu();*///Limited FPS here but run in own thread independedly went to Launcher Class
-					frames++;
-				}
+//				if (ticked) {
+//					render();
+//					//wont play here renderMenu()
+//					/*renderMenu();*///Limited FPS here but run in own thread independedly went to Launcher Class
+//					frames++;
+//				}
 			}
 			
+			if (ticked) {
+				render();
+				frames++;
+			}
 			if (System.currentTimeMillis() - timer > 1000) {
 			Controller.timeJ1 = System.currentTimeMillis() - timer;
 			timer += 1000;
@@ -217,73 +229,7 @@ public class Display extends Canvas implements Runnable{
 			//System.out.println("X: " + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
 			//System.out.println(InputHandler.WindowX); //WindowY
 
-			newX = InputHandler.MouseX;
-			newY = InputHandler.MouseY;
-			int winX=InputHandler.WindowX;
-			int winY=InputHandler.WindowY;
-			
-			{
-			//mouse Speed below calc
-				/*
-				 * Pythagore theorem
-					The distance travelled by the mouse between 2 calls to the mouseMotionListener is
-
-					squareRoot(deltaX + deltaY)
-
-					where:
-					deltaX is (oldX - newX) at the power of 2
-					deltaY is (oldY - newY) at the power of 2
-
-					your mouseMotionListener can also store the time in milli if you want a really exact "speed"
-				 */
-			//System.out.println("X: " + (oldX-newX) + " Y: " + (oldY-newY));
-			//System.out.println((oldX-newX) + (oldY-newY));
-			mouseSpeed = Math.abs((oldX-newX) + (oldY-newY));
-			}
-			
-			try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
-			//System.out.println(WindowLocation);
-			
-//			if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
-//			if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
-
-//			if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
-//			if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
-			//System.out.println(newY);
-//			if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-//			if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
-//			if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-//			if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
-
-			if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
-			if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
-			if(newY == oldY) {Controller.turnUpM = false; Controller.turnDownM = false;}
-			if(newY > oldY && Controller.rotationUp >= -0.8) {Controller.turnDownM = true;}
-			if(newY > oldY && Controller.rotationUp <= -0.8) {Controller.turnDownM = false;}
-
-			//String temp = newX < oldX ? System.out.println("Left"); : "";
-			if (newX > oldX) {
-				//System.out.println("Right");
-				Controller.turnRightM = true;
-			}
-			if ( newX == oldX) {
-				//System.out.println("Still X");
-				Controller.turnLeftM = false;
-				Controller.turnRightM = false;
-			}
-			//if(newX == WIDTH/2 || newX < WIDTH/2)//goes with direct below if
-			if (newX < oldX) {
-				//System.out.println("Left");
-				Controller.turnLeftM = true;
-			}
-//			if (newY == oldY) {
-//				//System.out.println("Still Y");
-//			}
-					MouseSpeed = Math.abs((newX - oldX) + (newY - oldY));//no negative value return!
-					//if (MouseSpeed < 0) { MouseSpeed *= -1;}
-					oldX = newX;
-					oldY = newY;
-					//oldY = newY;
+		/**************/
 		}
 	}
 	
@@ -341,6 +287,7 @@ public class Display extends Canvas implements Runnable{
 		
 	}
 
+	//update method
 	private void tick() {
 		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
 		//robot.keyPress(KeyEvent.VK_H);
@@ -354,11 +301,80 @@ public class Display extends Canvas implements Runnable{
 		game.tick(input.key);
 		//System.out.println("break");
 		
+		newX = InputHandler.MouseX;
+		newY = InputHandler.MouseY;
+		int winX=InputHandler.WindowX;
+		int winY=InputHandler.WindowY;
+		
+		{
+		//mouse Speed below calc
+			/*
+			 * Pythagore theorem
+				The distance travelled by the mouse between 2 calls to the mouseMotionListener is
+
+				squareRoot(deltaX + deltaY)
+
+				where:
+				deltaX is (oldX - newX) at the power of 2
+				deltaY is (oldY - newY) at the power of 2
+
+				your mouseMotionListener can also store the time in milli if you want a really exact "speed"
+			 */
+		//System.out.println("X: " + (oldX-newX) + " Y: " + (oldY-newY));
+		//System.out.println((oldX-newX) + (oldY-newY));
+		mouseSpeed = Math.abs((oldX-newX) + (oldY-newY));
+		}
+		
+		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
+		//System.out.println(WindowLocation);
+		
+//		if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
+//		if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
+
+//		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
+//		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
+		//System.out.println(newY);
+//		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+//		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+//		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+//		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
+
+		if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
+		if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
+		if(newY == oldY) {Controller.turnUpM = false; Controller.turnDownM = false;}
+		if(newY > oldY && Controller.rotationUp >= -0.8) {Controller.turnDownM = true;}
+		if(newY > oldY && Controller.rotationUp <= -0.8) {Controller.turnDownM = false;}
+
+		//String temp = newX < oldX ? System.out.println("Left"); : "";
+		if (newX > oldX) {
+			//System.out.println("Right");
+			Controller.turnRightM = true;
+		}
+		if ( newX == oldX) {
+			//System.out.println("Still X");
+			Controller.turnLeftM = false;
+			Controller.turnRightM = false;
+		}
+		//if(newX == WIDTH/2 || newX < WIDTH/2)//goes with direct below if
+		if (newX < oldX) {
+			//System.out.println("Left");
+			Controller.turnLeftM = true;
+		}
+//		if (newY == oldY) {
+//			//System.out.println("Still Y");
+//		}
+				MouseSpeed = Math.abs((newX - oldX) + (newY - oldY));//no negative value return!
+				//if (MouseSpeed < 0) { MouseSpeed *= -1;}
+				oldX = newX;
+				oldY = newY;
+				//oldY = newY;
+		
 	}
 
 	public static void main(String[] args) {
-		Display display = new Display();
-		new Launcher(0, display);
+		//Display display = new Display();
+		//new Launcher(0, display );//
+		getLauncherInstance();
 	}
 
 

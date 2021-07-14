@@ -83,13 +83,24 @@ public void render(Game game) {
 //		render3d.renderDWall(-2, -1, 2, 2, 0);
 //		render3d.renderDWall(0, -1, 3, 3, 0);
 //		render3d.renderDWall(0, 1, 1, 1, 0);
-		render3d.renderDWall(-2, -1, 2, 2, 0);
+/////////////		render3d.renderDWall(-2, -1, 2, 2, 0);
 //		render3d.renderDWall(-1, -2, 5, 5, 0);
-		render3d.renderDWall(0, 1, 1, 1, 0);
-		render3d.renderDWall(5, 6, 2, 2, 0);
+////////////		render3d.renderDWall(0, 1, 1, 1, 0);
+//////////		render3d.renderDWall(5, 6, 2, 2, 0);
 //		render3d.renderDWall(6, 5, 5, 5, 0);
 //		render3d.renderDWall(0, 1, 1, 1, 0);
 //		render3d.renderDWall(5, 6, 6, 6, 0);
+		
+/*		render3d.renderDWall(0, 0.5, 1.5, 1.5, 0);//back (0, 0.5, 1.5, 1.5, 0); 1, 0.5, 0.5, 0.5, 0
+		render3d.renderDWall(0, 0, 1, 0.5, 0);//sideL
+		render3d.renderDWall(0, 0.5, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+		render3d.renderDWall(0.5, 0.5, 1, 1.5, 0);//sideR */
+		render3d.renderDWall(0, 1, 2, 2, 0);//back (0, 0.5, 1.5, 1.5, 0); 1, 0.5, 0.5, 0.5, 0
+		render3d.renderDWall(0, 0, 2, 1, 0);//sideL
+		render3d.renderDWall(0, 0, 0, -1, 0);//sideL
+		render3d.renderDWall(0, 1, 1, 1, 0);//front render3d.renderWall(0, 0.5, 1, 1, 0);
+		//render3d.renderDWall(1, 1, 1, 2, 0);//sideR
+		
 		render3d.renderDistanceLimiter();
 //		render3d.collisionDetection(-2, -1, 2, 2);
 //		render3d.collisionDetection(0, 1, 1, 1);

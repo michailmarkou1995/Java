@@ -187,7 +187,7 @@ public void floor(Game game) {
 				}	
 			}
 		//wall();
-		Level level = game.level;
+//		Level level = game.level;
 //		int size = 20;
 //		for (int xBlock = -size; xBlock <= size; xBlock++) {
 //			for (int zBlock = -size; zBlock <= size; zBlock++) {
@@ -213,7 +213,7 @@ public void floor(Game game) {
 //				}
 //			}
 //		}
-		
+//		
 //		for (int xBlock = -size; xBlock <= size; xBlock++) {
 //			for (int zBlock = -size; zBlock <= size; zBlock++) {
 //				Block block = level.create(xBlock, zBlock);
@@ -305,7 +305,7 @@ public void floor(Game game) {
 //			wallHit = true;
 //		} //else wallHit=false;
 		
-
+		//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
 		
 		////Basic corner pins below
 		//left side
@@ -396,7 +396,8 @@ public void floor(Game game) {
 			if(!Controller.turnUpM && !Controller.turnDownM) {
 				
 			}
-			
+			collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
+
 			//System.out.println("Left: "+xPixelLeftInt + " RIGHT: " + xPixelRightInt);
 			double pixelRotation = (x-xPixelLeft) / (xPixelRight - xPixelLeft);
 			double zWall = (tex1 + (tex2 - tex1) * pixelRotation);
@@ -436,11 +437,19 @@ public void floor(Game game) {
 				}
 			}
 		}
-		collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
+		//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
 	}
 	
 	public void collisionDetection(double xLeft, double xRight, double zDistanceLeft
 			,double zDistanceRight) {
+		//System.out.println(Controller.distanceTravelY - zDistanceRight);//Controller.distanceTravelX - xLeft
+		//System.out.println(Controller.distanceTravelX- (xLeft*8));//System.out.println(xLeft*8);
+		//System.out.println((Controller.distanceTravelY - (zDistanceLeft*8)));
+		//System.out.println(Controller.distanceTravelX- (xRight*8));
+		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
+		//System.out.println((wallHit));
+		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
+			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
 		 if(Controller.distanceTravelX - (xLeft*8) <= 0.9 &&
 			Controller.distanceTravelX - (xLeft*8) >= +0.0 &&
 			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
@@ -458,9 +467,65 @@ public void floor(Game game) {
 			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
 			Controller.distanceTravelY - (zDistanceRight*8) >= -6
 			) {
+			wallHit = true;
+		} else wallHit=false;
+
+	}
+	
+	public void collisionDetectionOld(double xLeft, double xRight, double zDistanceLeft
+			,double zDistanceRight) {
+		//System.out.println(Controller.distanceTravelY - zDistanceRight);//Controller.distanceTravelX - xLeft
+		System.out.println(Controller.distanceTravelX- (xLeft*8));//System.out.println(xLeft*8);
+		//System.out.println((Controller.distanceTravelY - (zDistanceLeft*8)));
+		//System.out.println(Controller.distanceTravelX- (xRight*8));
+		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
+		//System.out.println((wallHit));
+		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
+			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
+		 if(Controller.distanceTravelX - (xLeft*8) <= 0.9 &&
+			Controller.distanceTravelX - (xLeft*8) >= +0.0 &&
+			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			Controller.distanceTravelX- (xRight*8) <=0.0 &&
+			Controller.distanceTravelX- (xRight*8) >= -8.0 &&
+			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			Controller.distanceTravelY - (zDistanceRight*8) >= -6 ||
+			Controller.distanceTravelX - (xLeft*8) >= -0.9 &&
+			Controller.distanceTravelX - (xLeft*8) <= -0.0 &&
+			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			Controller.distanceTravelX- (xRight*8) >=0.0 &&
+			Controller.distanceTravelX- (xRight*8) <= 8.0 &&
+			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			Controller.distanceTravelY - (zDistanceRight*8) >= -6 //||
+//			Controller.distanceTravelX - (xLeft*8) <= -5.8 &&
+//			Controller.distanceTravelX - (xLeft*8) >= -5.5 //&&
+//			Controller.distanceTravelY - (zDistanceLeft*8) <= -6.8 &&
+//			Controller.distanceTravelY - (zDistanceLeft*8) >= -7w 
+			) {
 			//System.out.println("WATCH OUT");
 			wallHit = true;
 		} else wallHit=false;
+//		 else 		 if(!(Controller.distanceTravelX - (xLeft*8) <= 0.9) &&
+//					!(Controller.distanceTravelX - (xLeft*8) >= +0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceLeft*8) >= -6) ||
+//					!(Controller.distanceTravelX- (xRight*8) <=0.0) &&
+//					!(Controller.distanceTravelX- (xRight*8) >= -8.0) &&
+//					!(Controller.distanceTravelY - (zDistanceRight*8) <= 0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceRight*8) >= -6) ||
+//					!(Controller.distanceTravelX - (xLeft*8) >= -0.9) &&
+//					!(Controller.distanceTravelX - (xLeft*8) <= -0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceLeft*8) >= -6) ||
+//					!(Controller.distanceTravelX- (xRight*8) >=0.0) &&
+//					!(Controller.distanceTravelX- (xRight*8) <= 8.0) &&
+//					!(Controller.distanceTravelY - (zDistanceRight*8) <= 0.0) &&
+//					!(Controller.distanceTravelY - (zDistanceRight*8) >= -6)
+//					) {
+//					//System.out.println("WATCH OUT");
+//					wallHit = false;
+//				}  
 	}
 	
 	public void renderWallDoubleSide(double xLeft, double xRight, double zDistanceLeft
@@ -927,24 +992,25 @@ public void floor(Game game) {
 		//System.out.println(Controller.distanceTravelX- (-xRight*8));
 		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
 		//System.out.println(yPixelLeftTop);
-		double collisionX = Controller.distanceTravelX;
-		double collisionY = Controller.distanceTravelY;
-		 wallHitInverse=false;
-		 
-		 //if here FLIPED values because mirrored from the renderWall method
-		 //cut and del and test below in each with sout result "Debug" style
-		//if(Controller.distanceTravelY - zDistanceLeft <= 0.9 &&
-		 if(Controller.distanceTravelX - (-xLeft*8) >= -0.9 &&
-			Controller.distanceTravelX - (-xLeft*8) <= +0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= 6 ||
-			Controller.distanceTravelX- (-xRight*8) >= -0.0 &&
-			Controller.distanceTravelX- (-xRight*8) <= 8.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) <= 6) {
-			//System.out.println("WATCH OUT");
-			 wallHitInverse = true;
-		}
+//		double collisionX = Controller.distanceTravelX;
+//		double collisionY = Controller.distanceTravelY;
+//		 wallHitInverse=false;
+//		 
+		//need fixing compared to Non-Mirrored One
+//		 //if here FLIPED values because mirrored from the renderWall method
+//		 //cut and del and test below in each with sout result "Debug" style
+//		//if(Controller.distanceTravelY - zDistanceLeft <= 0.9 &&
+//		 if(Controller.distanceTravelX - (-xLeft*8) >= -0.9 &&
+//			Controller.distanceTravelX - (-xLeft*8) <= +0.0 &&
+//			Controller.distanceTravelY - (zDistanceLeft*8) >= -0.0 &&
+//			Controller.distanceTravelY - (zDistanceLeft*8) <= 6 ||
+//			Controller.distanceTravelX- (-xRight*8) >= -0.0 &&
+//			Controller.distanceTravelX- (-xRight*8) <= 8.0 &&
+//			Controller.distanceTravelY - (zDistanceRight*8) >= -0.0 &&
+//			Controller.distanceTravelY - (zDistanceRight*8) <= 6) {
+//			//System.out.println("WATCH OUT");
+//			 wallHitInverse = true;
+//		}
 		
 		
 		////Basic corner pins below
@@ -1074,8 +1140,9 @@ public void floor(Game game) {
 		renderWall(xLeft, xRight, zDistanceLeft
 				,zDistanceRight, yHeight);
 		//xLeft-5, xRight-5
-//		renderWallInverse(-xRight, -xLeft, zDistanceLeft
-//				,zDistanceRight, yHeight);
+		//flipped normals below double side rendering
+		renderWallInverse(-xRight, -xLeft, zDistanceLeft
+				,zDistanceRight, yHeight);
 	}
 	
 	public void wallCrap() {

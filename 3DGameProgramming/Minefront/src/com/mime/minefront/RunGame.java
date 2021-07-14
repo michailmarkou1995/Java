@@ -48,5 +48,10 @@ public class RunGame {
 		game.frame.setVisible(true);
 		
 		game.start();
+		stopMenuThread();
+	}
+	
+	private void stopMenuThread() {
+		Display.getLauncherInstance().stopMenu();
 	}
 }

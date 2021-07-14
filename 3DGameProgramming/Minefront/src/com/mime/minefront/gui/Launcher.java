@@ -39,7 +39,7 @@ public class Launcher extends JFrame implements Runnable{
 	
 	protected int width = 800, height = 400, buttonWidth = 80, buttonHeight = 40;
 
-	public Launcher(int id, Display display) {
+	public Launcher(int id) {//, Display display
 		//this.display=display; //if takes renderMenu from Display only then need to initialize here
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -68,8 +68,10 @@ public class Launcher extends JFrame implements Runnable{
 		addFocusListener(input);
 		addMouseListener(input);
 		addMouseMotionListener(input);
+		
+		//how to go back in Thread of Main menu disposing the Game? and closing the thread?
 		startMenu();
-		display.start();
+		//display.start();/*start only when press PLAY close or hold the startMenu when return the opposite can be done?*/
 	}
 	
 	public void updateFrame() {
@@ -108,14 +110,22 @@ public class Launcher extends JFrame implements Runnable{
 	public void run() {
 		requestFocus();
 		while(running) {
+			//System.out.println("Menu Running");
 			//System.out.println("Menu thread running see in Debug mode console ");
 			//new Display().renderMenu();
 			//display.renderMenu();
-			renderMenu();
+			try {
+				renderMenu();
+			} catch(IllegalStateException e) {
+				System.out.println("Catched");
+				e.printStackTrace();
+			}
+			
 			updateFrame();
 		}
 	}
 	
+	//deprecated GUI non-Custom
 	private void drawButtons() {
 		play = new JButton("Play!");
 		rplay = new Rectangle(width/2 - buttonWidth/2, 90, buttonWidth, buttonHeight);
@@ -167,7 +177,7 @@ public class Launcher extends JFrame implements Runnable{
 		
 	}
 	
-	private void renderMenu() {
+	private void renderMenu() throws IllegalStateException{
 		//put it later in different thread? than Main Game?
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs==null) {
@@ -187,7 +197,10 @@ public class Launcher extends JFrame implements Runnable{
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/play_on.png")),690,130, 80, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,134, 22, 22, null);
 				if(InputHandler.MouseButton == 1) {
-					System.out.println("PLAY");
+					//System.out.println("PLAY");
+					config.loadConfiguration("resources/settings/config.xml");
+					dispose();
+					new RunGame(Display.WindowLocation);
 				}
 			}
 			else
@@ -199,7 +212,8 @@ public class Launcher extends JFrame implements Runnable{
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/options_on.png")),641,170, 130, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,174, 22, 22, null);
 				if(InputHandler.MouseButton == 1) {
-					System.exit(0);
+					new Options();
+					//dispose();
 				}
 
 			}
@@ -209,11 +223,12 @@ public class Launcher extends JFrame implements Runnable{
 			
 			if(InputHandler.MouseX > 690 && InputHandler.MouseX < 690+80 &&
 					InputHandler.MouseY > 210 && InputHandler.MouseY < 210 + 30) {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_on.png")),690,210, 80, 30, null);
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,214, 22, 22, null);	
+				//g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_on.png")),690,210, 80, 30, null);
+				//g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,214, 22, 22, null);	
 				if(InputHandler.MouseButton == 1) {
-					System.exit(0);
+					//System.exit(0);
 				}
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_off.png")),690,210, 80, 30, null);
 			}
 			else
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_off.png")),690,210, 80, 30, null);

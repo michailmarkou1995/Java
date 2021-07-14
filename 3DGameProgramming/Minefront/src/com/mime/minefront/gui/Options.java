@@ -1,5 +1,6 @@
 package com.mime.minefront.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,12 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.mime.minefront.Configuration;
 import com.mime.minefront.Display;
 
-public class Options extends Launcher{
+public class Options extends JFrame{//extends Launcher
 
 
 	private static final long serialVersionUID = 1L;
@@ -23,17 +27,46 @@ public class Options extends Launcher{
 	private JLabel lwidth, lheight;
 	private Rectangle rOK, rresolution;
 	private Choice resolution = new Choice();
+	Configuration config = new Configuration();
+	protected int buttonWidth = 80, buttonHeight = 40;
+
 	
 	int w=0, h=0;
+	
+	//JFrame frame = new JFrame();
+	JPanel window = new JPanel();
 
-	public Options() { //() int id, Display display
-		super(1, new Display());//mpori kai null xwris crash sto new Display();
+//	public Options() { //() int id, Display display
+//		super(1);//mpori kai null xwris crash sto new Display(); // , new Display()
+//		setTitle("Options");
+//		setSize(new Dimension(width, height));
+//		setLocationRelativeTo(null);
+//		
+//		//if(id==1)
+//		drawButtons();
+//	}
+	
+//	public Options() { 
+////		frame.setTitle("Options");
+////		frame.setSize(new Dimension(width, height));
+////		frame.setLocationRelativeTo(null);
+////		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////		frame.setVisible(true);
+//		
+//		drawButtons();
+//	}
+	public Options() { 
 		setTitle("Options");
 		setSize(new Dimension(width, height));
+		add(window);
 		setLocationRelativeTo(null);
+		setResizable(false);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setLayout(null);//new BorderLayout()
+		setVisible(true);
 		
-		//if(id==1)
 		drawButtons();
+		window.repaint();
 	}
 	
 	private void drawButtons() {
@@ -70,7 +103,7 @@ public class Options extends Launcher{
 		OK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new Launcher(0, new Display());
+				new Launcher(0); //, new Display()
 				config.saveConfiguration("width", parseWidth());
 				config.saveConfiguration("height", parseHeight());
 			}

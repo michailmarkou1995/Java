@@ -90,6 +90,10 @@ public class Display extends Canvas implements Runnable{
 		return launcher;
 	}
 	
+	public static Display getGameInstance(Display display) {
+		return display;
+	}
+	
 	public static int getGameWidth() {
 //		if(selection == 0 ) {
 //			WIDTH = 640;
@@ -289,6 +293,7 @@ public class Display extends Canvas implements Runnable{
 
 	//update method
 	private void tick() {
+		//System.out.println(input.key[KeyEvent.VK_UP]);
 		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
 		//robot.keyPress(KeyEvent.VK_H);
 		//robot.keyRelease(KeyEvent.VK_H);
@@ -331,13 +336,13 @@ public class Display extends Canvas implements Runnable{
 //		if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 //		if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 
-//		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
-//		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
+		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
+		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
 		//System.out.println(newY);
-//		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-//		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
-//		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-//		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
+		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
 		if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 		if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}

@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 
 import com.mime.minefront.Configuration;
 import com.mime.minefront.Display;
+import com.mime.minefront.RunMiniGame;
 import com.mime.minefront.RunGame;
 import com.mime.minefront.input.InputHandler;
 
@@ -192,6 +193,29 @@ public class Launcher extends JFrame implements Runnable{
 		try {
 			//g.drawImage(ImageIO.read(Display.class.getResource("/wallpapers/launcher_menu.jpg")),0,0, 800, 400, null);
 			g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/launcher_menu.jpg")),0,0, 800, 400, null);
+			
+			//System.out.println("X:" + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
+			
+			if(InputHandler.MouseX > 670 && InputHandler.MouseX < 670+100 &&
+					InputHandler.MouseY >= 69 && InputHandler.MouseY < 69 + 20) {
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Verdana", 0, 20));
+			g.drawString("Minigame", 670, 90);
+			g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),670+100,74, 22, 22, null);
+			if(InputHandler.MouseButton == 1) {
+				//System.out.println("PLAY");
+				config.loadConfiguration("resources/settings/config.xml");
+				dispose();
+				new RunMiniGame();
+			}
+			} 
+			else
+			{
+				g.setColor(Color.GRAY);
+				g.setFont(new Font("Verdana", 0, 20));
+				g.drawString("Minigame", 670, 90);
+			}
+			
 			if(InputHandler.MouseX > 690 && InputHandler.MouseX < 690+80 &&
 					InputHandler.MouseY > 130 && InputHandler.MouseY < 130 + 30) {
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/play_on.png")),690,130, 80, 30, null);

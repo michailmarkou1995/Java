@@ -7,6 +7,7 @@ import com.mime.minefront.RunnableTest;
 import com.mime.minefront.ThreadCheck;
 import com.mime.minefront.ThreadTest;
 import com.mime.minefront.graphics.Render3D;
+import com.mime.minefront.gui.Pause;
 
 public class Controller {
 
@@ -40,15 +41,16 @@ public class Controller {
 	
 	public void tick(boolean forward,boolean back,boolean left
 				,boolean right,boolean turnLeft,boolean turnRight
-				,boolean jump, boolean crouch, boolean sprint, boolean regenH) {
-		double rotationSpeed = 0.1;//myWay
-		double rotationSpeed1 = 0.002 * Display.MouseSpeed;//theCherno
+				,boolean jump, boolean crouch, boolean sprint, boolean regenH, boolean esc) {
+		double rotationSpeed = 0.1;//myWay 0.1
+		double rotationSpeed1 = 0.002 * Display.MouseSpeed;//theCherno ... calc and Y for correct but wont work good for X Y only for X
 		double walkSpeed = 0.35;
 		double jumpHeight = 0.4;
 		double crouchHeight = 0.35;
 		double xMove = 0;
 		double zMove = 0;
 		
+		//if this NOT comment then Key left right wont work obviously need another var or literal int val
 		if(Display.mouseSpeed < 3 && Display.mouseSpeed > 0 
 				&& Display.mouseSpeed != 0)rotationSpeed *= 0.05;
 		if(Display.mouseSpeed >= 3)rotationSpeed *= 0.5;
@@ -59,6 +61,11 @@ public class Controller {
 		//System.out.println(Display.mouseSpeed);
 //		boolean test = -10 < -1; //yeah don't laugh :|
 //		System.out.println(test);
+		
+		if (esc) {
+			System.out.println("pause game");
+			Pause pause = new Pause();
+		}
 		
 		if (regenH) {
 			//Thread thread = new Thread(new ThreadTest());
@@ -118,19 +125,22 @@ public class Controller {
 		}
 		
 		if(turnLeft) {
-			if (InputHandler.MouseButton == 3) {
-				
-			} else {
-				rotationa -= rotationSpeed;
-			}
+//			if (InputHandler.MouseButton == 3) {
+//				
+//			} else {
+//				rotationa -= rotationSpeed;
+//			}
+			rotationa -= 0.044;
 		}
 		
 		if(turnRight) {
-		if (InputHandler.MouseButton == 3) {
-				//Debug only hold
-			} else {
-				rotationa += rotationSpeed;//rotationSpeed
-			}
+//		if (InputHandler.MouseButton == 3) {
+//				//Debug only hold
+//			} else {
+//				rotationa += rotationSpeed;//rotationSpeed
+//			}
+		rotationa += 0.044;
+		//System.out.println("right");
 		}
 		
 		if(turnLeftM) {

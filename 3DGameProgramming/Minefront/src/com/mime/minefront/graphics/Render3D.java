@@ -15,6 +15,9 @@ public class Render3D extends Render{
 	private double forwardGlobal;
 	private double forward, right, cosine, sine, up, walking, rotationUp, cosine1, sine1;
 	public static boolean wallHit, wallHitInverse;
+	private int spriteSheetWidth = 24;
+	Random random = new Random();
+	double h = 0.5;
 	public static int test;
 
 	public Render3D(int width, int height) {
@@ -178,7 +181,7 @@ public void floor(Game game) {
 					int yPix = (int) (yy + forward);
 					zBuffer[x+y*WIDTH] = z;
 					//PIXELS[x+y*WIDTH] = ((xPix & 15)<<4) | ((yPix & 15)<<4) << 8;	
-					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * 16];	//from 8 to * 16 in the end now width
+					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
 					
 					//limit Render Distance and the renderDistanceLimiter() is just smoothing the brigthness
 					if(z > 400) {//x,y <,> etc 50 100
@@ -187,56 +190,71 @@ public void floor(Game game) {
 				}	
 			}
 		//wall();
-//		Level level = game.level;
-//		int size = 20;
-//		for (int xBlock = -size; xBlock <= size; xBlock++) {
-//			for (int zBlock = -size; zBlock <= size; zBlock++) {
-//				Block block = level.create(xBlock, zBlock);
-//				Block east = level.create(xBlock + 1, zBlock);
-//				Block south = level.create(xBlock, zBlock + 1);
-//				
-//				//MAZE like GENERATION
-//				if (block.solid) {
-//					if(!east.solid) {
-//						renderDWall(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0);
+		Level level = game.level;
+		int size = 20;
+		for (int xBlock = -size; xBlock <= size; xBlock++) {
+			for (int zBlock = -size; zBlock <= size; zBlock++) {
+				Block block = level.create(xBlock, zBlock);
+				Block east = level.create(xBlock + 1, zBlock);
+				Block south = level.create(xBlock, zBlock + 1);
+				
+				//MAZE like GENERATION
+				if (block.solid) {
+					if(!east.solid) {
+						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0);
+					}
+					if(!south.solid) {
+						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0);
+					}
+				} else {
+					if (east.solid) {
+						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0);
+					}
+					if (south.solid) {
+						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0);
+					}
+				}
+			}
+		}
+		
+		for (int xBlock = -size; xBlock <= size; xBlock++) {
+			for (int zBlock = -size; zBlock <= size; zBlock++) {
+				Block block = level.create(xBlock, zBlock);
+				Block east = level.create(xBlock + 1, zBlock);
+				Block south = level.create(xBlock, zBlock + 1);
+				
+				if (block.solid) {
+					if(!east.solid) {
+						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
+					}
+					if(!south.solid) {
+						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);
+					}
+				} else {
+					if (east.solid) {
+						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0.5);
+					}
+					if (south.solid) {
+						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0.5);
+					}
+//					for(int s = 0; s < block.sprites.size(); s++) {
+//						Sprite sprite = block.sprites.get(s);
+//						renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z);
 //					}
-//					if(!south.solid) {
-//						renderDWall(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0);
-//					}
-//				} else {
-//					if (east.solid) {
-//						renderDWall(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0);
-//					}
-//					if (south.solid) {
-//						renderDWall(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0);
-//					}
-//				}
-//			}
-//		}
-//		
-//		for (int xBlock = -size; xBlock <= size; xBlock++) {
-//			for (int zBlock = -size; zBlock <= size; zBlock++) {
-//				Block block = level.create(xBlock, zBlock);
-//				Block east = level.create(xBlock + 1, zBlock);
-//				Block south = level.create(xBlock, zBlock + 1);
-//				
-//				if (block.solid) {
-//					if(!east.solid) {
-//						renderDWall(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
-//					}
-//					if(!south.solid) {
-//						renderDWall(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);
-//					}
-//				} else {
-//					if (east.solid) {
-//						renderDWall(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0.5);
-//					}
-//					if (south.solid) {
-//						renderDWall(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0.5);
-//					}
-//				}
-//			}
-//		}
+				}
+			}
+		}
+		for (int xBlock = -size; xBlock <= size; xBlock++) {
+			for (int zBlock = -size; zBlock <= size; zBlock++) {
+				Block block = level.create(xBlock, zBlock);
+				for(int s = 0; s < block.sprites.size(); s++) {
+					Sprite sprite = block.sprites.get(s);
+//					if (random.nextInt(3) == 0)
+//						h = 0.5; else h = -0.5;
+					renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
+				}
+			}
+		}
 	}
 
 //pixels further gets less brightness
@@ -264,6 +282,70 @@ public void floor(Game game) {
 			PIXELS[i] = r << 16 |  g << 8 | b;// << is * 2^x ==255? e.g. is 8.. 2^x==? 255!
 		}
 }
+	
+	//sprite 2.5 in 3D world
+	public void renderSprite(double x, double y, double z, double hOffset) {
+		double upCorrect = -0.125;//-0.0625;// moving with 0.0625 good for gathering lifes?
+		double rightCorrect = 0.0625;
+		double forwardCorrect = 0.0625;
+		double walkingCorrect = +0.0625;
+
+		
+		double xc = ((x/2) - (right * rightCorrect)) * 2 + 0.5;
+		double yc = ((y/2) - (up * upCorrect))  + (walking * walkingCorrect) * 2 + hOffset;//sprite up down on walk move with "player"
+		double zc = ((z/2) - (forward * forwardCorrect)) * 2;
+		
+		double rotX = xc * cosine - zc * sine; 
+		double rotY = yc;
+		double rotZ = zc * cosine + xc * sine; 
+		
+		double xCenter = 400.0;
+		double yCenter = 300.0;
+		
+		//System.out.println(rotationUp);
+		double xPixel = rotX / rotZ * HEIGHT + xCenter  * 1; //fixes moving Spirtes Y axis
+		double yPixel = rotY / rotZ * HEIGHT + yCenter * rotationUp;
+		
+		//** Resolution of "Tile"
+		double xPixelL = xPixel - HEIGHT / 2 / rotZ; //16 is size of Sprites
+		double xPixelR = xPixel + HEIGHT / 2 / rotZ;
+		double yPixelL = yPixel - HEIGHT / 2 / rotZ;
+		double yPixelR = yPixel + HEIGHT / 2 / rotZ;
+		
+		//pixels are ints
+		int xpl = (int) xPixelL;//x pixel left
+		int xpr = (int) xPixelR;
+		int ypl = (int) yPixelL;
+		int ypr = (int) yPixelR;
+		
+		//clipping
+		if (xpl < 0) xpl=0;
+		if (xpr > WIDTH) xpr=WIDTH;
+		if (ypl < 0) ypl=0;
+		if (ypr > HEIGHT) ypr=HEIGHT;
+		
+		rotZ *= 8;//increase zBuffer "decrease" brightness
+		
+		//rendering 8x8 no matter the Resolution**
+		for (int yp = ypl; yp < ypr; yp++) {
+			double pixelRotationY = (yp - yPixelR) / (yPixelL - yPixelR); 
+			int yt = (int) (pixelRotationY * 8);
+			for (int xp = xpl; xp < xpr; xp++) {
+				double pixelRotationX = (xp - xPixelR) / (xPixelL - xPixelR); 
+				int xTexture = (int) (pixelRotationX * 8);
+				//int yTexture = (int) (8 * pixelRotationY);
+				if (zBuffer[xp + yp * WIDTH] > rotZ) {
+					int col = Texture.floor.PIXELS[((xTexture & 7)+16) + (yt & 7) * spriteSheetWidth];
+					if(col != 0xFFFF00FF) {
+					//PIXELS[xp + yp * WIDTH] = xTexture * 16 + yt * 16 * 256; // Gradient does not ovveride below
+					PIXELS[xp + yp * WIDTH] = Texture.floor.PIXELS[(int) (x + y * WIDTH)];//col;//0x00FFFF;//0x236DCF; //0xFF0000
+					zBuffer[xp + yp * WIDTH] = rotZ;
+					}
+				}
+			}
+		}
+
+	}
 	
 	
 	public void renderWall(double xLeft, double xRight, double zDistanceLeft
@@ -429,7 +511,7 @@ public void floor(Game game) {
 					//PIXELS[x+y*WIDTH] = xTexture * 100;//0x1B91E0;// HORIZONTAL TEXTURE not vertical here
 					//PIXELS[x+y*WIDTH] = xTexture * 100 + yTexture * 100 * 256;
 					//PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xTexture & 7) + (yTexture & 7) * 8];	
-					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * 16];	//16 for 8x16 tex size
+					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * spriteSheetWidth];	//16 for 8x16 tex size
 					zBuffer[x+y*WIDTH] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;//100
 				} catch(ArrayIndexOutOfBoundsException e) {//quick fix
 					e.printStackTrace();
@@ -440,6 +522,136 @@ public void floor(Game game) {
 		//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
 	}
 	
+	public void renderWallRandom(double xLeft, double xRight, double zDistanceLeft
+			,double zDistanceRight, double yHeight) {
+		double upCorrect = 0.0625;
+		double rightCorrect = 0.0625;
+		double forwardCorrect = 0.0625;
+		double backCorrect = 0.0625;
+		double walkingCorrect = -0.0625;
+		double rotationUpCorrect = -0.0625;
+
+		
+		////Basic corner pins below
+		//left side
+		double xcLeft = ((xLeft/2) - (right * rightCorrect)) * 2;//left calc of wall
+		double zcLeft = ((zDistanceLeft/2) - (forward * forwardCorrect)) * 2;
+		
+		double rotLeftSideX = xcLeft * cosine - zcLeft * sine; //System.out.println(cosine);
+		double rotLeftSideX1 = xcLeft * cosine1 - zcLeft * sine1;
+		double yCornerTL = ((-yHeight) - (-up * upCorrect + (walking * walkingCorrect))) * 2;//top left corner
+		double yCornerBL = ((+0.5 - yHeight) - (-up * upCorrect + (walking * walkingCorrect))) * 2;
+		double rotLeftSideZ = zcLeft * (cosine * 1) + xcLeft * (sine * 1);
+		double rotLeftSideZ1 = zcLeft * cosine1 + xcLeft * sine1;
+		//////
+		//right side
+		double xcRight = ((xRight/2) - (right * rightCorrect)) * 2;//left calc of wall
+		double zcRight= ((zDistanceRight/2) - (forward * forwardCorrect)) * 2;
+		
+		double rotRightSideX = xcRight * (cosine * 1) - zcRight * (sine * 1);
+		double rotRightSideX1 = xcRight * cosine1 - zcRight * sine1;
+		double yCornerTR = ((-yHeight) - (-up * upCorrect + (walking * walkingCorrect))) * 2;//top left corner
+		double yCornerBR = ((+0.5 - yHeight) - (-up * upCorrect + (walking * walkingCorrect))) * 2;
+		double rotRightSideZ = zcRight * (cosine * 1)+ xcRight * (sine * 1);
+		double rotRightSideZ1 = zcRight * cosine1+ xcRight * sine1;
+		//////
+		//System.out.println(Controller.turnUpM);
+		
+		double tex30 = 0, tex40 = 8, clip = 0.5;
+		
+		if (rotLeftSideZ <  clip && rotRightSideZ < clip) {
+			return;
+		}
+		
+		//clipping fix
+		//Cohen-SutherLand Algorithm Line Cliping
+		if (rotLeftSideZ < clip) {
+			double clip0 = (clip - rotLeftSideZ) / (rotRightSideZ - rotLeftSideZ);
+			rotLeftSideZ = rotLeftSideZ + (rotRightSideZ - rotLeftSideZ) * clip0;
+			rotLeftSideX = rotLeftSideX + (rotRightSideX - rotLeftSideX) * clip0;
+			tex30 = tex30 + (tex40 - tex30) * clip0;
+		}
+		if (rotRightSideZ < clip) {
+			double clip0 = (clip - rotLeftSideZ) / (rotRightSideZ - rotLeftSideZ);
+			rotRightSideZ = rotLeftSideZ + (rotRightSideZ - rotLeftSideZ) * clip0;
+			rotRightSideX = rotLeftSideX + (rotRightSideX - rotLeftSideX) * clip0;
+			tex40 = tex30 + (tex40 - tex30) * clip0;
+		}
+		//compute pixel location
+		//left and right edges of wall
+		double xPixelLeft, xPixelRight;
+			 xPixelLeft = (rotLeftSideX / rotLeftSideZ * HEIGHT + WIDTH / 2);
+			 xPixelRight = (rotRightSideX / rotRightSideZ * HEIGHT + WIDTH / 2);
+			
+		//protection of negative pixels e.g. the horizontal coordinates wall is bigger than right side
+		if(xPixelLeft >= xPixelRight) {
+			return;//no render
+		}
+		
+		//convert pixels to int to fit square grid
+		int xPixelLeftInt = (int) (xPixelLeft);
+		int xPixelRightInt = (int) (xPixelRight);
+		
+		if(xPixelLeftInt < 0) {
+			xPixelLeftInt = 0;
+		}
+		if(xPixelRightInt > WIDTH) {//Int? or xPixelRight
+			xPixelRightInt = WIDTH;
+		}
+		
+		//corner pins
+		double yPixelLeftTop = (yCornerTL / rotLeftSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);//double yPixelLeftTop = (yCornerTL / rotLeftSideZ * (HEIGHT *( rotationUp/2)) + HEIGHT / 2.0 * rotationUp);
+		double yPixelLeftBottom = (yCornerBL / rotLeftSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);
+		double yPixelRightTop = (yCornerTR / rotRightSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);
+		double yPixelRightBottom = (yCornerBR / rotRightSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);
+		
+		double tex1 = 1 / rotLeftSideZ;
+		double tex2 = 1 / rotRightSideZ;
+		double tex3 = tex30 / rotLeftSideZ;
+		double tex4 = tex40 / rotRightSideZ - tex3;
+		for (int x = xPixelLeftInt; x < xPixelRightInt; x++) {
+			if(!Controller.turnUpM && !Controller.turnDownM) {
+				
+			}
+			//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
+
+			double pixelRotation = (x-xPixelLeft) / (xPixelRight - xPixelLeft);
+			double zWall = (tex1 + (tex2 - tex1) * pixelRotation);
+			
+			if (zBufferWall[x] > zWall) {
+				continue; //fix xray
+			}
+			zBufferWall[x] = zWall;//fix xray
+			
+			int xTexture = (int) ((tex3 + tex4 * pixelRotation) /zWall);
+			
+			double yPixelTop = yPixelLeftTop + (yPixelRightTop - yPixelLeftTop) * pixelRotation;
+			double yPixelBottom = yPixelLeftBottom + (yPixelRightBottom - yPixelLeftBottom) * pixelRotation;
+
+			int yPixelTopInt = (int) (yPixelTop);
+			int yPixelBottomInt = (int) (yPixelBottom);
+			
+			if (yPixelTopInt < 0) {
+				yPixelTopInt = 0;
+			}
+			if(yPixelBottomInt > HEIGHT) {
+				yPixelBottomInt = HEIGHT;
+			}
+			int textureCoordinates = 8;
+			for (int y = yPixelTopInt; y < yPixelBottomInt; y++) {
+				try {
+					double pixelRotationY = (y - yPixelTop) / (yPixelBottom - yPixelTop); 
+					int yTexture = (int) (8 * pixelRotationY);
+					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * spriteSheetWidth];	//16 for 8x16 tex size
+					zBuffer[x+y*WIDTH] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;
+				} catch(ArrayIndexOutOfBoundsException e) {
+					e.printStackTrace();
+					continue;
+				}
+			}
+		}
+	}
+	
 	public void collisionDetection(double xLeft, double xRight, double zDistanceLeft
 			,double zDistanceRight) {
 		//System.out.println(Controller.distanceTravelY - zDistanceRight);//Controller.distanceTravelX - xLeft
@@ -448,9 +660,10 @@ public void floor(Game game) {
 		//System.out.println(Controller.distanceTravelX- (xRight*8));
 		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
 		//System.out.println((wallHit));
-		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
-			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
-		 if(Controller.distanceTravelX - (xLeft*8) <= 0.9 &&
+//		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
+//			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
+		 if(
+			Controller.distanceTravelX - (xLeft*8) <= 0.9 && // /*for horizontal sides*/
 			Controller.distanceTravelX - (xLeft*8) >= +0.0 &&
 			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
 			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
@@ -465,7 +678,15 @@ public void floor(Game game) {
 			Controller.distanceTravelX- (xRight*8) >=0.0 &&
 			Controller.distanceTravelX- (xRight*8) <= 8.0 &&
 			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -6
+			Controller.distanceTravelY - (zDistanceRight*8) >= -6 || /*for vertical sides*/
+			Controller.distanceTravelX - (xLeft*8) >= -5.8 && /*-5.3 is between those*/
+			Controller.distanceTravelX - (xLeft*8) <= -4.7 &&
+			Controller.distanceTravelY - (zDistanceLeft*8) <= -0.0 && /*-0.72 is between those x axis is like y here when walking*/
+			Controller.distanceTravelY - (zDistanceLeft*8) >= -2.0 ||
+			Controller.distanceTravelX - (xRight*8) >= -5.8 && /*corners always close to +-0.* */
+			Controller.distanceTravelX - (xRight*8) <= -4.7 &&/*will be same xRight xLeft general the axis of "forward"*/
+			Controller.distanceTravelY - (zDistanceRight*8) >= 0.0 && /*1.398*/
+			Controller.distanceTravelY - (zDistanceRight*8) <= 8//+2.0 
 			) {
 			wallHit = true;
 		} else wallHit=false;

@@ -45,6 +45,8 @@ public class Game {
 		boolean sprint = key[KeyEvent.VK_SHIFT];
 		boolean regenH = key[KeyEvent.VK_H];
 		boolean jump = key[KeyEvent.VK_SPACE];
+		boolean esc = key[KeyEvent.VK_ESCAPE];
+		
 		{
 		//Thread creation name gone wrong ++ down
 //		RunnableTest r = new RunnableTest(key);
@@ -107,6 +109,6 @@ public class Game {
 //		else jump=false;
 
 		controls.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, 
-				sprint, regenH);
+				sprint, regenH, esc);
 	}
 }

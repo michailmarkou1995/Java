@@ -2,6 +2,8 @@ package com.mime.minefront.level;
 
 import java.util.Random;
 
+import com.mime.minefront.graphics.Sprite;
+
 public class Level {
 
 	public Block[] blocks;
@@ -13,13 +15,16 @@ public class Level {
 		blocks = new Block[width * height];
 		Random random = new Random();
 		
+		//here generate changes before render Happens e.g. change amount of volume
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				Block block = null;
-				if (random.nextInt(4) == 0) {
+				if (random.nextInt(18) == 0) {
 					block = new SolidBlock();//true block
 				} else {
 					block = new Block();//false no block
+					if(random.nextInt(15) == 0)//every 5 without it 1 sprite every block("tile")
+					block.addSprite(new Sprite(0,0,0));
 				}
 				blocks[x+y*width] = block;
 			}

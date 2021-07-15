@@ -96,6 +96,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 		if (keyCode > 0 && keyCode < key.length) {
 			key[keyCode] = true;
 		}
+		//key[keyCode] = true;
 	}
 
 	@Override
@@ -108,6 +109,8 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 //		for (int i = 0; i < key.length; i++) {
 //			key[i] = false;
 //		}
+		
+		//key[keyCode] = false;
 	}
 
 	@Override

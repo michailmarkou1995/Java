@@ -14,4 +14,7 @@ Sprite sheets\
 Simple Collision detection
 
 <img src="resources/images/main.jpg" width="800">
+<img src="resources/images/options.jpg" width="800">
+<img src="resources/images/collision.jpg" width="800">
 <img src="resources/images/in_game_maze.jpg" width="800">
+<img src="resources/images/in_game_maze1.jpg" width="800">

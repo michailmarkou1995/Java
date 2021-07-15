@@ -9,7 +9,7 @@ Custom Launcher + GUI\
 Custom Resolutions\
 X,Y,Z axis navigation\
 Double side rendering aka Flipped Normals\
-Pixel simple Texturing\
+Pixel simple Texturing + Transparency\
 Sprite sheets\
 Simple Collision detection
 

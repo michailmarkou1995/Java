@@ -54,6 +54,10 @@ public class RunGame {
 		stopMenuThread();
 	}
 	
+	public static void getDispose() {
+		game.frame.dispose();
+	}
+	
 	private void stopMenuThread() {
 		Display.getLauncherInstance().stopMenu();
 	}

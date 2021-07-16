@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 import com.mime.minefront.Configuration;
 import com.mime.minefront.Display;
+import com.mime.minefront.input.InputHandler;
 
 public class Options extends JFrame{//extends Launcher
 
@@ -102,8 +103,9 @@ public class Options extends JFrame{//extends Launcher
 		
 		OK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				InputHandler.MouseButton=0;
 				dispose();
-				new Launcher(0); //, new Display()
+				//new Launcher(0); //, new Display()
 				config.saveConfiguration("width", parseWidth());
 				config.saveConfiguration("height", parseHeight());
 			}

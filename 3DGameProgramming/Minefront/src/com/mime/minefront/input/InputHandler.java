@@ -46,6 +46,8 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 		MouseButton = e.getButton();
 		MousePX = e.getX();
 		MousePY = e.getY();
+		System.out.println(e.getClickCount());
+		//e.getClickCount();
 	}
 
 	@Override

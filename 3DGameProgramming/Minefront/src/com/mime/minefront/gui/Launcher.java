@@ -41,6 +41,9 @@ public class Launcher extends JFrame implements Runnable{
 	protected int width = 800, height = 400, buttonWidth = 80, buttonHeight = 40;
 
 	public Launcher(int id) {//, Display display
+		//if(Display.getGameInstance(display) != null)Display.getGameInstance(display).stop();
+		//if(Display.getGameInstance(RunGame.getGameInstance()) != null)Display.getGameInstance(RunGame.getGameInstance()).stop();
+
 		//this.display=display; //if takes renderMenu from Display only then need to initialize here
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -96,6 +99,10 @@ public class Launcher extends JFrame implements Runnable{
 		running = true;
 		thread = new Thread(this, "menu");
 		thread.start();
+		if(Display.getGameInstance(RunGame.getGameInstance()) != null) {
+			RunGame.getDispose();
+			Display.getGameInstance(RunGame.getGameInstance()).stop();
+		}
 	}
 	
 	public void stopMenu() {//throws new Exception return to caller the handle try catch not here
@@ -117,6 +124,7 @@ public class Launcher extends JFrame implements Runnable{
 			//display.renderMenu();
 			try {
 				renderMenu();
+				//System.out.println(Thread.activeCount());
 			} catch(IllegalStateException e) {
 				System.out.println("Catched");
 				e.printStackTrace();
@@ -161,6 +169,7 @@ public class Launcher extends JFrame implements Runnable{
 				//config.saveConfiguration("sd", Display.selection);
 				dispose();
 				new Options();//() //1
+				//frame.dispose();
 			}
 		});
 		
@@ -236,6 +245,7 @@ public class Launcher extends JFrame implements Runnable{
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/options_on.png")),641,170, 130, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,174, 22, 22, null);
 				if(InputHandler.MouseButton == 1) {
+					InputHandler.MouseButton=0;
 					new Options();
 					//dispose();
 				}

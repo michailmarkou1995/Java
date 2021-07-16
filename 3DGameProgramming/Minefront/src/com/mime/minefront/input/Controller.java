@@ -23,6 +23,7 @@ public class Controller {
 	public static boolean crouchWalk = false;
 	public static boolean runWalk = false;
 	public static boolean jumpedStop = false;
+	public static Pause Pause_Menu;
 	ThreadCheck threadCheck = new ThreadCheck();;
 	boolean jumpIf=false;
 	boolean[] key;
@@ -66,7 +67,14 @@ public class Controller {
 		if (esc) {
 			//System.out.println("pause game");
 			//Pause pause = new Pause();
-			Pause.pausedThread = new Pause();
+			
+			//new Pause();
+			Pause_Menu= new Pause();
+			
+			//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
+
+			//Pause.pausedThread = new Pause();
+			//Pause.pausedThreadTry2 = new Pause();
 //			synchronized(this) {
 //			try {
 //				RunGame.getGameInstance().wait();
@@ -75,15 +83,16 @@ public class Controller {
 //				e.printStackTrace();
 //			}
 //			}
-			RunGame.getGameInstance().paused();
+			//RunGame.getGameInstance().paused();
 		}
 		
 		if (regenH) {
 			//Thread thread = new Thread(new ThreadTest());
 			//thread.start();
-			ThreadTest tt1 = new ThreadTest();
-			System.out.println(tt1.getName());
-			tt1.start();
+			//ThreadTest tt1 = new ThreadTest();
+			//System.out.println(tt1.getName());
+			//tt1.start();
+			//System.out.println("Thread is "+Pause.statusThread.isAlive());
 			//System.out.println(input.key);
 			////RunnableTest r = new RunnableTest(input.key);
 			////r.start();

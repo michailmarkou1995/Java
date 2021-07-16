@@ -88,12 +88,17 @@ public class Display extends Canvas implements Runnable{
 		if (launcher == null) {
 			launcher = new Launcher(0);
 		}
-		return launcher;
+		return launcher;//start the launcher from here !
+	}
+	
+	public static void setLauncherInstance(Launcher launcher) {
+		Display.launcher = launcher;
 	}
 	
 	public static Display getGameInstance(Display display) {
 		return display;
 	}
+	
 	
 	public static int getGameWidth() {
 //		if(selection == 0 ) {
@@ -157,6 +162,9 @@ public class Display extends Canvas implements Runnable{
 	public synchronized void continued() {
 			System.out.println("notify");
 			notify();
+			//Pause.getPauseInstance().stopPauseMenu();
+			//if(Pause.getPauseInstance() != null)Pause.getPauseInstance().stopPauseMenu();
+			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
 	}
 	
 //	public synchronized void stopPause() {
@@ -182,6 +190,9 @@ public class Display extends Canvas implements Runnable{
 		requestFocus();
 		//game loop
 		while (running) {
+			//System.out.println("Game Thread");
+			//System.out.println(Thread.activeCount());
+			//System.out.println("Thread is "+Pause.statusThread.isAlive());
 			long currentTime = System.nanoTime();
 			long passedTime = currentTime - previousTime;
 			previousTime = currentTime;
@@ -225,6 +236,7 @@ public class Display extends Canvas implements Runnable{
 				render();
 				frames++;
 				//if(Pause.ID_PAUSED_THREAD==1) {Pause.pausedThread.stopPauseMenu(); Pause.ID_PAUSED_THREAD=0;}
+				//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
 			}
 			if (System.currentTimeMillis() - timer > 1000) {
 			Controller.timeJ1 = System.currentTimeMillis() - timer;

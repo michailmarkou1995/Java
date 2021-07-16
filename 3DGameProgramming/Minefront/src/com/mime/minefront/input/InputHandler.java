@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InputHandler implements KeyListener, FocusListener, MouseListener
 , MouseMotionListener, ComponentListener {
@@ -21,7 +22,8 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 	public static int MouseXwrap, MouseYwrap;
 	public static int WindowX, WindowY;
 	Object MouseCapture;
-	public static boolean dragged = false;
+	public static boolean dragged = false;//, KeyPressedButton=false;
+	public static AtomicBoolean KeyPressedButton = new AtomicBoolean(true);//canShoot final
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -46,7 +48,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 		MouseButton = e.getButton();
 		MousePX = e.getX();
 		MousePY = e.getY();
-		System.out.println(e.getClickCount());
+		//System.out.println(e.getClickCount());
 		//e.getClickCount();
 	}
 
@@ -94,6 +96,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//KeyPressedButton = e.isConsumed();
 		int keyCode = e.getKeyCode();
 		if (keyCode > 0 && keyCode < key.length) {
 			key[keyCode] = true;
@@ -108,6 +111,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 		if (keyCode > 0 && keyCode < key.length) {
 			key[keyCode] = false;
 		}
+		if (keyCode == KeyEvent.VK_ESCAPE) InputHandler.KeyPressedButton.set(true);
 //		for (int i = 0; i < key.length; i++) {
 //			key[i] = false;
 //		}

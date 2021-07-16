@@ -47,6 +47,7 @@ public class Display extends Canvas implements Runnable{
 	public static Point WindowLocation;
 	public static int mouseSpeed;
 	public static int MouseSpeed;
+	public static Graphics g;
 
 	private Thread thread;
 	private Screen screen;
@@ -55,7 +56,7 @@ public class Display extends Canvas implements Runnable{
 	private boolean running = false;
 	private int[] pixels;
 	private Render render;
-	protected InputHandler input;
+	public InputHandler input; //protected
 	protected JFrame frame;
 	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
@@ -151,7 +152,7 @@ public class Display extends Canvas implements Runnable{
 	
 	public synchronized void paused() {
 		try {
-			System.out.println("wait");
+			//System.out.println("wait");
 			wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -160,7 +161,7 @@ public class Display extends Canvas implements Runnable{
 	}
 	
 	public synchronized void continued() {
-			System.out.println("notify");
+			//System.out.println("notify");
 			notify();
 			//Pause.getPauseInstance().stopPauseMenu();
 			//if(Pause.getPauseInstance() != null)Pause.getPauseInstance().stopPauseMenu();
@@ -303,8 +304,22 @@ public class Display extends Canvas implements Runnable{
 		
 	}
 
-	private void render() {
-		
+	public void render() {
+		if(!Controller.not_paused) {
+		BufferStrategy bs = this.getBufferStrategy();
+		if(bs==null) {
+			createBufferStrategy(3);
+			return;
+		}
+		Graphics g = bs.getDrawGraphics();
+		g.setColor(Color.BLACK);
+		//g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", Font.BOLD, 50));//0,1,2,3 bold italics bold and italics
+		g.drawString("PAUSED", WIDTH/2-100, HEIGHT/2);//drawString me +"" oxi sketo int tha baraei error
+		g.dispose();
+		bs.show();
+		} else {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs==null) {
 			createBufferStrategy(3);
@@ -318,7 +333,7 @@ public class Display extends Canvas implements Runnable{
 		}
 		
 		//Graphics2D g = (Graphics2D) bs.getDrawGraphics();//GRAPHICS Graphics2D
-		Graphics g = bs.getDrawGraphics();
+		 g = bs.getDrawGraphics();
 		//g.drawImage(img, 0, 0, WIDTH*20, HEIGHT*20, null);
 		//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.drawImage(img, 0, 0, getGameWidth(), getGameHeight(), null);
@@ -327,7 +342,7 @@ public class Display extends Canvas implements Runnable{
 		g.drawString(fpsInnerText + " fps", 20, 50);//drawString me +"" oxi sketo int tha baraei error
 		g.dispose();
 		bs.show();
-		
+		}
 	}
 
 	//update method

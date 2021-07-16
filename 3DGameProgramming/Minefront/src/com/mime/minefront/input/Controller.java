@@ -16,7 +16,7 @@ public class Controller {
 			, distanceTravel=0.0, distanceTravelX=0.0, distanceTravelY=0.0;
 	//public BigDecimal y = new BigDecimal("0.0");
 	public static boolean turnLeftM = false, turnRightM = false, jumped=false
-			,jumpAgain=true, turnUpM=false, turnDownM=false;
+			,jumpAgain=true, turnUpM=false, turnDownM=false, not_paused = true;
 	public static long timeJ, timeJ1;
 	Robot robot;
 	public static boolean walk = false;
@@ -28,6 +28,7 @@ public class Controller {
 	boolean jumpIf=false;
 	boolean[] key;
 	InputHandler input = new InputHandler();
+	//Display display = new Display();
 	
 //	public static void wait(int ms)
 //	{
@@ -64,13 +65,18 @@ public class Controller {
 //		boolean test = -10 < -1; //yeah don't laugh :|
 //		System.out.println(test);
 		
-		if (esc) {
+		if (esc ) {//&& !InputHandler.KeyPressedButton
+			if(InputHandler.KeyPressedButton.compareAndSet(true, false)) {
 			//System.out.println("pause game");
 			//Pause pause = new Pause();
-			
+			//InputHandler.KeyPressedButton=true;
 			//new Pause();
+			//Display.g.drawString("PAUSED", 250, 150);
+			not_paused=false;
+			//display.renderMenu();
+			RunGame.getGameInstance().render();/************/ //this method for terminate use thread
 			Pause_Menu= new Pause();
-			
+			}
 			//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
 
 			//Pause.pausedThread = new Pause();

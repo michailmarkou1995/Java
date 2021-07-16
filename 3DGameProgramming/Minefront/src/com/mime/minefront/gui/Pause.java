@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import com.mime.minefront.Display;
 import com.mime.minefront.RunGame;
+import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
 public class Pause extends JFrame implements Runnable{
@@ -20,7 +21,7 @@ public class Pause extends JFrame implements Runnable{
 	boolean running = false;
 	Thread thread;
 	protected JPanel window = new JPanel();
-	InputHandler input;
+	InputHandler input, input1;
 	public static Pause pausedThread = null;
 	public static Pause pausedThreadTry2 = null;
 	public static int ID_PAUSED_THREAD=0;
@@ -28,16 +29,18 @@ public class Pause extends JFrame implements Runnable{
 	
 	public Pause() {
 		//pausedThreadTry2 = this;
-		setTitle("Minefront Launcher");
-		setSize(new Dimension(200, 200));
-		//setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
-		
-		setResizable(false);
-		setVisible(true);
-		window.setLayout(null);
-		input = new InputHandler();
-		addKeyListener(input);
+//		setTitle("Minefront Launcher");
+//		setSize(new Dimension(200, 200));
+//		//setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		setLocationRelativeTo(null);
+//		
+//		setResizable(false);
+//		setVisible(true);
+//		window.setLayout(null);
+//		input = new InputHandler();
+		//addKeyListener(input);
+		 input1 = RunGame.getGameInstance().input;
+		addKeyListener(input1);
 		
 		//add(this);
 		//RunGame.getGameInstance().wait();
@@ -54,7 +57,11 @@ public class Pause extends JFrame implements Runnable{
 			System.out.println("Pause Menu");
 			//System.out.println("Thread is "+thread.isAlive());
 			try {
-				renderMenu();
+				inputKey(input1.key);
+				//System.out.println("Keep Pause");
+				//System.out.println(input1.key[KeyEvent.VK_ESCAPE]);
+				//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
+				//renderMenu();
 			} catch(IllegalStateException e) {
 				System.out.println("Catched");
 				e.printStackTrace();
@@ -70,20 +77,22 @@ public class Pause extends JFrame implements Runnable{
 	}
 
 	private void renderMenu() {
-		if (input.key[KeyEvent.VK_ESCAPE]) {
-			System.out.println(KeyEvent.VK_ESCAPE);
+		if (input1.key[KeyEvent.VK_ESCAPE]) {
+			//System.out.println(KeyEvent.VK_ESCAPE);
+			System.out.println(input1.key[KeyEvent.VK_ESCAPE]);
 			//RunGame.getGameInstance().wait();
 			//RunGame.getGameInstance().notify();
 			this.dispose();
 			RunGame.getGameInstance().continued();
 			//ID_PAUSED_THREAD=1;
 			//this.dispose();
+			Controller.not_paused=true;
 			
 			//works if new window only???
 			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work
-			
+			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
 		}
-		if (input.key[KeyEvent.VK_ENTER]) {
+		if (input1.key[KeyEvent.VK_ENTER]) {
 			this.dispose();
 			Display.setLauncherInstance(new Launcher(0));
 		}
@@ -140,5 +149,50 @@ public class Pause extends JFrame implements Runnable{
 //		}
 		return pausedThreadTry2;
 	}
+	
+	private boolean inputKey(boolean[] keys) {
+		boolean test = (keys[KeyEvent.VK_ESCAPE] );//== input1.key[KeyEvent.VK_ESCAPE]
+		//System.out.println(test);
+		if (input1.key[KeyEvent.VK_1]) {
+			//System.out.println(input1.key[KeyEvent.VK_ESCAPE]);
+			System.out.println(input1.KeyPressedButton);
+			//InputHandler.KeyPressedButton=false;
+			//this.dispose();
+			RunGame.getGameInstance().continued();
+
+			Controller.not_paused=true;
+			
+			//works if new window only???
+			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work
+			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
+		}
+		if (input1.key[KeyEvent.VK_2]) {
+			this.dispose();
+			Display.setLauncherInstance(new Launcher(0));
+		}
+		return test;
+	}
+	
+//	private boolean inputKey(boolean[] keys) {
+//		boolean test = (keys[KeyEvent.VK_ESCAPE] );//== input1.key[KeyEvent.VK_ESCAPE]
+//		System.out.println(test);
+//		if (input1.key[KeyEvent.VK_ESCAPE]) {
+//			System.out.println(input1.key[KeyEvent.VK_ESCAPE]);
+//
+//			this.dispose();
+//			RunGame.getGameInstance().continued();
+//
+//			Controller.not_paused=true;
+//			
+//			//works if new window only???
+//			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work
+//			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
+//		}
+//		if (input1.key[KeyEvent.VK_ENTER]) {
+//			this.dispose();
+//			Display.setLauncherInstance(new Launcher(0));
+//		}
+//		return test;
+//	}
 
 }

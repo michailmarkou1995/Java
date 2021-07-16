@@ -2,7 +2,7 @@
 Using Java Built-in Libraries from scratch not graphics Card e.g. DirectX,OpenGL\
 instructor: thecherno
 
-3D X,Y,Z axis Render Engine
+3D X,Y,Z axis Ray cast Render Engine
 Features:\
 Mouse Wraping\
 Custom Launcher + GUI\

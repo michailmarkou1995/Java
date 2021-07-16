@@ -3,6 +3,7 @@ package com.mime.minefront.input;
 import java.awt.Robot;
 
 import com.mime.minefront.Display;
+import com.mime.minefront.RunGame;
 import com.mime.minefront.RunnableTest;
 import com.mime.minefront.ThreadCheck;
 import com.mime.minefront.ThreadTest;
@@ -63,8 +64,18 @@ public class Controller {
 //		System.out.println(test);
 		
 		if (esc) {
-			System.out.println("pause game");
-			Pause pause = new Pause();
+			//System.out.println("pause game");
+			//Pause pause = new Pause();
+			Pause.pausedThread = new Pause();
+//			synchronized(this) {
+//			try {
+//				RunGame.getGameInstance().wait();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			}
+			RunGame.getGameInstance().paused();
 		}
 		
 		if (regenH) {

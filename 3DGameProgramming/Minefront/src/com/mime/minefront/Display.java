@@ -26,6 +26,7 @@ import com.mime.minefront.graphics.Render;
 import com.mime.minefront.graphics.Render3D;
 import com.mime.minefront.graphics.Screen;
 import com.mime.minefront.gui.Launcher;
+import com.mime.minefront.gui.Pause;
 import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
@@ -143,6 +144,29 @@ public class Display extends Canvas implements Runnable{
 		}
 	}
 	
+	public synchronized void paused() {
+		try {
+			System.out.println("wait");
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+	
+	public synchronized void continued() {
+			System.out.println("notify");
+			notify();
+	}
+	
+//	public synchronized void stopPause() {
+//		try {
+//			thread.join();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//}
+	
 
 	@Override
 	public void run() {
@@ -195,9 +219,12 @@ public class Display extends Canvas implements Runnable{
 //				}
 			}
 			
-			if (ticked) {
+			//update game state logic of game
+			//monitor updates match game updates? e.g. 60 tick 60Hz monitor
+			if (ticked) {//update keep static(not java static) every cpu cycle steady updates
 				render();
 				frames++;
+				//if(Pause.ID_PAUSED_THREAD==1) {Pause.pausedThread.stopPauseMenu(); Pause.ID_PAUSED_THREAD=0;}
 			}
 			if (System.currentTimeMillis() - timer > 1000) {
 			Controller.timeJ1 = System.currentTimeMillis() - timer;
@@ -336,13 +363,13 @@ public class Display extends Canvas implements Runnable{
 //		if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 //		if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 
-		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
-		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
-		//System.out.println(newY);
-		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
-		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
+//		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
+//		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
+//		//System.out.println(newY);
+//		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+//		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+//		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+//		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
 		if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
 		if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}

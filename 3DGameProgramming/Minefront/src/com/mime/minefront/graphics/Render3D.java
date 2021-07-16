@@ -15,8 +15,9 @@ public class Render3D extends Render{
 	private double forwardGlobal;
 	private double forward, right, cosine, sine, up, walking, rotationUp, cosine1, sine1;
 	public static boolean wallHit, wallHitInverse;
-	private int spriteSheetWidth = 24;
+	private int spriteSheetWidth = 24, spriteSheetWidthHigh = 128;
 	Random random = new Random();
+	int c = 0;
 	double h = 0.5;
 	public static int test;
 
@@ -147,6 +148,7 @@ public void floor(Game game) {
 			
 			 //z = movement of floor and celing not renderWall()
 			double z = (floorPosition + up) / yDepthCeiling;//+wallking
+			c = 0;
 			if (Controller.walk) {
 				walking = Math.sin(game.time / 6.0) * 0.4;
 				 z = (floorPosition + up + walking) / yDepthCeiling;//+wallking
@@ -167,6 +169,7 @@ public void floor(Game game) {
 			
 			if (yDepthCeiling < 0) {
 				z = (ceilPosition - up) /-yDepthCeiling;//z = -yDepthCeiling wipes ceiling
+				c = 1;
 				if (Controller.walk) {
 					 z = (ceilPosition - up - walking) / -yDepthCeiling;//+wallking
 				}
@@ -177,12 +180,17 @@ public void floor(Game game) {
 					xDepth *=z;
 					double xx =  (xDepth * cosine + z * sine) * 1; //change
 					double yy = (z * cosine - xDepth * sine) * 1; 
-					int xPix = (int) (xx + right);
-					int yPix = (int) (yy + forward);
+					int xPix = (int) ((xx + right) * 4);// * 4 to for 128 tex size to decrease the size but keep high resolution BECAUSE 4 times bigger
+					int yPix = (int) ((yy + forward) * 4);
 					zBuffer[x+y*WIDTH] = z;
 					//PIXELS[x+y*WIDTH] = ((xPix & 15)<<4) | ((yPix & 15)<<4) << 8;	
-					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
-					
+					if(c==0)
+					//PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
+						PIXELS[x+y*WIDTH] = Texture.blocks.PIXELS[((xPix/* * 4  + 1*/ & 30)+0) + (yPix & 30) * spriteSheetWidthHigh];	//from 8 to * 16 in the end now width // 32 offset see in .NET paint
+					else 
+						//PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xPix & 7)+8) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
+						PIXELS[x+y*WIDTH] = Texture.blocks.PIXELS[((xPix & 30)+0) + (yPix & 30) * spriteSheetWidthHigh];	//from 8 to * 16 in the end now width
+
 					//limit Render Distance and the renderDistanceLimiter() is just smoothing the brigthness
 					if(z > 400) {//x,y <,> etc 50 100
 						PIXELS[x+y*WIDTH] = 0;
@@ -244,6 +252,15 @@ public void floor(Game game) {
 				}
 			}
 		}
+//		for (int xBlock = 1; xBlock <= 20; xBlock++) {
+//			for (int zBlock = 1; zBlock <= 20; zBlock++) {
+//				Block block = level.createSimple(xBlock, zBlock);
+//				for(int s = 0; s < block.sprites.size(); s++) {
+//					Sprite sprite = block.sprites.get(s);
+//					renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
+//				}
+//			}
+//		}
 		for (int xBlock = -size; xBlock <= size; xBlock++) {
 			for (int zBlock = -size; zBlock <= size; zBlock++) {
 				Block block = level.create(xBlock, zBlock);
@@ -332,7 +349,7 @@ public void floor(Game game) {
 			int yt = (int) (pixelRotationY * 8);
 			for (int xp = xpl; xp < xpr; xp++) {
 				double pixelRotationX = (xp - xPixelR) / (xPixelL - xPixelR); 
-				int xTexture = (int) (pixelRotationX * 8);
+				int xTexture = (int) (pixelRotationX * 8);//change coords HERE for Texture location applied
 				//int yTexture = (int) (8 * pixelRotationY);
 				if (zBuffer[xp + yp * WIDTH] > rotZ) {
 					int col = Texture.floor.PIXELS[((xTexture & 7)+16) + (yt & 7) * spriteSheetWidth];
@@ -507,11 +524,11 @@ public void floor(Game game) {
 			for (int y = yPixelTopInt; y < yPixelBottomInt; y++) {
 				try {
 					double pixelRotationY = (y - yPixelTop) / (yPixelBottom - yPixelTop); 
-					int yTexture = (int) (8 * pixelRotationY);
+					int yTexture = (int) (8 * pixelRotationY);//change coords HERE for Texture location applied
 					//PIXELS[x+y*WIDTH] = xTexture * 100;//0x1B91E0;// HORIZONTAL TEXTURE not vertical here
 					//PIXELS[x+y*WIDTH] = xTexture * 100 + yTexture * 100 * 256;
 					//PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xTexture & 7) + (yTexture & 7) * 8];	
-					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * spriteSheetWidth];	//16 for 8x16 tex size
+					PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * spriteSheetWidth];	//16 for 8x16 tex size //change coords HERE for Texture location applied
 					zBuffer[x+y*WIDTH] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;//100
 				} catch(ArrayIndexOutOfBoundsException e) {//quick fix
 					e.printStackTrace();

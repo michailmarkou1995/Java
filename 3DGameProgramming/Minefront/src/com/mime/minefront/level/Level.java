@@ -33,8 +33,12 @@ public class Level {
 	
 	public Block create(int x, int y) {
 		if (x < 0 || y < 0 || x >= width || y >= height) {
-			return Block.solidWall;
+			return Block.solidWall; //return till now just true ..nothing!
 		}
+		return blocks[x+y*width];
+	}
+	
+	public Block createSimple(int x, int y) {
 		return blocks[x+y*width];
 	}
 }

@@ -54,9 +54,10 @@ public class Display extends Canvas implements Runnable{
 	private BufferedImage img;
 	private Game game;
 	private boolean running = false;
+	public static boolean onceDid=false;
 	private int[] pixels;
 	private Render render;
-	public InputHandler input; //protected
+	public InputHandler input, inputEsc; //protected
 	protected JFrame frame;
 	private int newX=0, newY=0, oldX=0, oldY=0;
 	private int fpsInnerText;
@@ -78,11 +79,14 @@ public class Display extends Canvas implements Runnable{
 		pixels = ((DataBufferInt)img.getRaster().getDataBuffer()).getData();
 		
 		input = new InputHandler();
+		//input.key[KeyEvent.VK_ESCAPE]=true;
+		//inputEsc = new InputHandler();
 		addKeyListener(input);
 		addFocusListener(input);
 		addMouseListener(input);
 		addMouseMotionListener(input);
 		//System.out.println(test);
+		//System.out.println("Constructor Runs AGAINN");
 	}
 	
 	public static Launcher getLauncherInstance() {
@@ -163,6 +167,7 @@ public class Display extends Canvas implements Runnable{
 	public synchronized void continued() {
 			//System.out.println("notify");
 			notify();
+			input.key[KeyEvent.VK_ESCAPE]=false;//you could use also AtomicBoolean
 			//Pause.getPauseInstance().stopPauseMenu();
 			//if(Pause.getPauseInstance() != null)Pause.getPauseInstance().stopPauseMenu();
 			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
@@ -191,6 +196,23 @@ public class Display extends Canvas implements Runnable{
 		requestFocus();
 		//game loop
 		while (running) {
+			
+			for(int ii=0; ii <= 1; ii++) {
+				/*Atomic Boolean or input.key[KeyEvent.VK_ESCAPE] = false; better than this?*/ // YEAP!!! time & space complexity reduced + 100% solid result instead of this yacky but working
+			for (int i =0; i <= 20; i ++) {
+			if(onceDid) {
+			try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
+			robot.keyPress(KeyEvent.VK_ESCAPE);
+			robot.keyRelease(KeyEvent.VK_ESCAPE);
+			}}onceDid=false;}
+			
+
+			if(onceDid) {
+				input.key[KeyEvent.VK_ESCAPE] = false;
+			onceDid=false;
+			}
+			
+			
 			//System.out.println("Game Thread");
 			//System.out.println(Thread.activeCount());
 			//System.out.println("Thread is "+Pause.statusThread.isAlive());

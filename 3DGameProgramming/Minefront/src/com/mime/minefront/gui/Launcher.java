@@ -37,6 +37,7 @@ public class Launcher extends JFrame implements Runnable{
 	Thread thread;
 	Display display;
 	JFrame frame = new JFrame(); //perito mono gia ama NO extend JFrame + frame.add(this); MUST then
+	public static Launcher laun = null;
 	
 	protected int width = 800, height = 400, buttonWidth = 80, buttonHeight = 40;
 
@@ -63,6 +64,8 @@ public class Launcher extends JFrame implements Runnable{
 		setResizable(false);
 		setVisible(true);
 		window.setLayout(null);
+		
+		laun = this;
 		
 		if (id == 0)
 		drawButtons();
@@ -94,18 +97,18 @@ public class Launcher extends JFrame implements Runnable{
 		}
 	}
 	
-	public void startMenu() {
+	public synchronized void startMenu() {//without synch run in Graphics error but ESC fixes it with that closes instead
 		//new Thread(this, "menu").start();
 		running = true;
 		thread = new Thread(this, "menu");
 		thread.start();
-		if(Display.getGameInstance(RunGame.getGameInstance()) != null) {
-			RunGame.getDispose();
-			Display.getGameInstance(RunGame.getGameInstance()).stop();
-		}
+//		if(Display.getGameInstance(RunGame.getGameInstance()) != null) {
+//			RunGame.getDispose();
+//			Display.getGameInstance(RunGame.getGameInstance()).stop();
+//		}
 	}
 	
-	public void stopMenu() {//throws new Exception return to caller the handle try catch not here
+	public synchronized void stopMenu() {//throws new Exception return to caller the handle try catch not here
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -212,9 +215,12 @@ public class Launcher extends JFrame implements Runnable{
 			g.drawString("Minigame", 670, 90);
 			g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),670+100,74, 22, 22, null);
 			if(InputHandler.MouseButton == 1) {
+				InputHandler.MouseButton = 0;
 				//System.out.println("PLAY");
 				config.loadConfiguration("resources/settings/config.xml");
-				dispose();
+				//dispose();
+				//RunMiniGame.game.frame.dispose();
+				//Launcher.getDispose(); in RunMiniGame() Instead
 				new RunMiniGame();
 			}
 			} 
@@ -230,10 +236,16 @@ public class Launcher extends JFrame implements Runnable{
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/play_on.png")),690,130, 80, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,134, 22, 22, null);
 				if(InputHandler.MouseButton == 1) {
+					InputHandler.MouseButton = 0;
 					//System.out.println("PLAY");
 					config.loadConfiguration("resources/settings/config.xml");
-					dispose();
-					new RunGame(Display.WindowLocation);
+					
+					//this.dispose();
+					//getDispose();//Happens on RunGame instead
+					//new RunGame(Display.WindowLocation);
+					Display.onceDid=true;
+					new RunGame();
+					//dispose();//doesnt run after New RunGame?!
 				}
 			}
 			else
@@ -290,6 +302,10 @@ public class Launcher extends JFrame implements Runnable{
 		g.dispose();
 		bs.show();
 		
+	}
+	
+	public static void getDispose() {
+		laun.dispose();
 	}
 	
 }

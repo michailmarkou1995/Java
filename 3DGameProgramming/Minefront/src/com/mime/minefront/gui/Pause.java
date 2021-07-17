@@ -1,9 +1,11 @@
 package com.mime.minefront.gui;
 
+import java.awt.AWTException;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 
@@ -39,21 +41,30 @@ public class Pause extends JFrame implements Runnable{
 //		window.setLayout(null);
 //		input = new InputHandler();
 		//addKeyListener(input);
+		 Robot robot = null;
+		try {robot = new Robot();} catch (AWTException e1) {e1.printStackTrace();}
 		 input1 = RunGame.getGameInstance().input;
+			robot.keyPress(KeyEvent.VK_0);
+			robot.keyRelease(KeyEvent.VK_0);
+			input1.key[KeyEvent.VK_ESCAPE]=false;
+		 //input1.keyPressed(KeyEvent e);
 		addKeyListener(input1);
-		
+		//input1=null;
 		//add(this);
 		//RunGame.getGameInstance().wait();
 		startPauseMenu();
 		RunGame.getGameInstance().paused();
 		//RunGame.getGameInstance().stop();
 		pausedThreadTry2 = this;//works only here after whole Construct Object initialized
+		//Controller.Pause_Menu=this;
 	}
 	
 	@Override
 	public void run() {
 		requestFocus();
 		while(running) {
+//			addKeyListener(input1);
+//			input1=null;
 			System.out.println("Pause Menu");
 			//System.out.println("Thread is "+thread.isAlive());
 			try {
@@ -151,11 +162,13 @@ public class Pause extends JFrame implements Runnable{
 	}
 	
 	private boolean inputKey(boolean[] keys) {
+		//try {thread.sleep(100);} catch (InterruptedException e1) {e1.printStackTrace();}
+
 		boolean test = (keys[KeyEvent.VK_ESCAPE] );//== input1.key[KeyEvent.VK_ESCAPE]
 		//System.out.println(test);
-		if (input1.key[KeyEvent.VK_1]) {
+		if (input1.key[KeyEvent.VK_ESCAPE]) {
 			//System.out.println(input1.key[KeyEvent.VK_ESCAPE]);
-			System.out.println(input1.KeyPressedButton);
+			//////////System.out.println(input1.KeyPressedButton);
 			//InputHandler.KeyPressedButton=false;
 			//this.dispose();
 			RunGame.getGameInstance().continued();
@@ -166,9 +179,19 @@ public class Pause extends JFrame implements Runnable{
 			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work
 			//if(Controller.Pause_Menu != null) {Controller.Pause_Menu.stopPauseMenu(); Controller.Pause_Menu = null;}
 		}
-		if (input1.key[KeyEvent.VK_2]) {
+		if (input1.key[KeyEvent.VK_ENTER]) {
 			this.dispose();
+			//Display.setLauncherInstance(null);//memory Leak?
+			//Launcher lan = Display.getLauncherInstance();//Display.setLauncherInstance(new Launcher(0));
+			//lan.startMenu(); old thread ID yet doesnt start after Join is considered dead? despite ID that appears?
 			Display.setLauncherInstance(new Launcher(0));
+			
+			//	public void startMenu() {} Laucher class stops same as below
+			/*synchronized(Launcher.laun) {*///this //without synch run in Graphics error but ESC fixes it with that closes instead
+				//Launcher.laun=null;
+			RunGame.getDispose();
+			Display.getGameInstance(RunGame.getGameInstance()).stop();
+			/*}*/
 		}
 		return test;
 	}

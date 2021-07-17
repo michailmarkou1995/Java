@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import com.mime.minefront.gui.Launcher;
+
 //Main JFrame here for main method to be called
 public class RunMiniGame {
 	
@@ -18,7 +20,7 @@ public class RunMiniGame {
 	    BufferedImage cursor = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
 	    Cursor blank = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0,0), "blank");
 	    game = new Color(640, 390); 
-	    game1=new Color();
+	 //   game1=new Color();
 
 		game.frame = new JFrame();
 		game.frame.add(game);
@@ -37,6 +39,7 @@ public class RunMiniGame {
 		//game.frame.addComponentListener(game.input);
 		game.frame.setVisible(true);
 		
+		Launcher.getDispose();
 		game.start();
 		//game1.start(); //if thread start is not in Constructor problem of Instances of new Thread is not possible
 		stopMenuThread();

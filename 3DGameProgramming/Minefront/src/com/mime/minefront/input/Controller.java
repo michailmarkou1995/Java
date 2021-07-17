@@ -75,7 +75,8 @@ public class Controller {
 			not_paused=false;
 			//display.renderMenu();
 			RunGame.getGameInstance().render();/************/ //this method for terminate use thread
-			Pause_Menu= new Pause();
+			//Pause_Menu= new Pause();
+			new Pause();//here is ok but above Graphics error because RunGame.getGameInstance().render() called afterwards
 			}
 			//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
 

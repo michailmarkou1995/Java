@@ -25,6 +25,24 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 	public static boolean dragged = false;//, KeyPressedButton=false;
 	public static AtomicBoolean KeyPressedButton = new AtomicBoolean(true);//canShoot final
 	
+	boolean forward, back, right, left, turnLeft, turnRight, crouch, sprint, regenH, jump, esc;
+	
+	public void tick() {
+		 forward = key[KeyEvent.VK_W];
+		 back = key[KeyEvent.VK_S];
+		 right = key[KeyEvent.VK_D];
+		 left = key[KeyEvent.VK_A];
+		 turnLeft = key[KeyEvent.VK_LEFT];
+		 turnRight = key[KeyEvent.VK_RIGHT];
+		 crouch = key[KeyEvent.VK_CONTROL];
+		 sprint = key[KeyEvent.VK_SHIFT];
+		 regenH = key[KeyEvent.VK_H];
+		 jump = key[KeyEvent.VK_SPACE];
+		 esc = key[KeyEvent.VK_ESCAPE];
+	}
+	
+	//public List<boolean> consoleSecret = new ArrayList<>();
+	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		MouseDX = e.getX();
@@ -102,6 +120,10 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 			key[keyCode] = true;
 		}
 		//key[keyCode] = true;
+		
+		System.out.println(keyCode);
+		Konami.graph = Konami.generateSequenceMap(Konami.code);
+		System.out.println(Konami.checkKonami(38));//KeyCode
 	}
 
 	@Override

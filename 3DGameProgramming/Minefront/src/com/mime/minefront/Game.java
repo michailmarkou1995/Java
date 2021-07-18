@@ -3,49 +3,55 @@ package com.mime.minefront;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.input.InputHandler;
+import com.mime.minefront.input.PlayerController;
 import com.mime.minefront.level.Level;
 
 public class Game {
 
 	public int time;
-	public Controller controls;
+	public PlayerController controls; /* controls == PLAYER kinda*/
+	//public PlayerController controls_Player2;/**use ArrayList instead of creating new Players./mobs */
+	/*public PlayerController[] players;*///if dies remove from array for memory save //you cant do it this way because array is not DYNAMIC no index out of bounds
 	public Level level;
 	public boolean jumpIf;
 	ThreadCheck threadCheck;
 	ThreadTest tt1;
 	Thread t1;
 	
-	public Game() {
-		controls = new Controller();
-		level = new Level(40, 40);
+	public Game(InputHandler input) {
+		controls = new PlayerController(input);
+		//controls = new PlayerController();
+		//controls_Player2 = new PlayerController();
+		level = new Level(16, 16);
+		level.addEntity(controls);//which is player !
 		threadCheck = new ThreadCheck();
 		//t1 = new Thread(threadCheck, "T1");
 		//t1.start();
 		tt1 = new ThreadTest();
 	}
 	
-	public void tick(boolean[] key) {
-		for (int i =0; i < key.length; i++) {
-			if(key[i] == true) {
-				//System.out.println(i);
-				//System.out.println(Arrays.toString(key));
-			}
-		}
+	public void tick() {//boolean[] key
+//		for (int i =0; i < key.length; i++) {
+//			if(key[i] == true) {
+//				//System.out.println(i);
+//				//System.out.println(Arrays.toString(key));
+//			}
+//		}
 		//System.out.println((key[KeyEvent.VK_H]));
 		time++;
 		//get the array boolean[] if its true or false from method calls inside inputHandler
-		boolean forward = key[KeyEvent.VK_W];
-		boolean back = key[KeyEvent.VK_S];
-		boolean right = key[KeyEvent.VK_D];
-		boolean left = key[KeyEvent.VK_A];
-		boolean turnLeft = key[KeyEvent.VK_LEFT];
-		boolean turnRight = key[KeyEvent.VK_RIGHT];
-		boolean crouch = key[KeyEvent.VK_CONTROL];
-		boolean sprint = key[KeyEvent.VK_SHIFT];
-		boolean regenH = key[KeyEvent.VK_H];
-		boolean jump = key[KeyEvent.VK_SPACE];
-		boolean esc = key[KeyEvent.VK_ESCAPE];
+//		boolean forward = key[KeyEvent.VK_W];
+//		boolean back = key[KeyEvent.VK_S];
+//		boolean right = key[KeyEvent.VK_D];
+//		boolean left = key[KeyEvent.VK_A];
+//		boolean turnLeft = key[KeyEvent.VK_LEFT];
+//		boolean turnRight = key[KeyEvent.VK_RIGHT];
+//		boolean crouch = key[KeyEvent.VK_CONTROL];
+//		boolean sprint = key[KeyEvent.VK_SHIFT];
+//		boolean regenH = key[KeyEvent.VK_H];
+//		boolean jump = key[KeyEvent.VK_SPACE];
+//		boolean esc = key[KeyEvent.VK_ESCAPE];
 		
 		{
 		//Thread creation name gone wrong ++ down
@@ -108,7 +114,9 @@ public class Game {
 //		if (Controller.jumped==false) jump = key[KeyEvent.VK_SPACE];
 //		else jump=false;
 
-		controls.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, 
-				sprint, regenH, esc);
+		level.update();//Old Player.tick
+//		controls.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, 
+//				sprint, regenH, esc);
+		//controls_Player2.tick(forward, back, left, right, turnLeft, turnRight, jump, crouch, sprint, regenH, esc);
 	}
 }

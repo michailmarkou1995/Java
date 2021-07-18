@@ -32,7 +32,10 @@ public class RunMiniGame {
 		game.frame.getContentPane().setCursor(blank);
 		game.frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
-				System.exit(0);
+				//System.exit(0);
+				Display.setLauncherInstance(new Launcher(0));
+				//RunMiniGame.getDispose();
+				//RunMiniGame.getGameInstance(RunGame.getGameInstance()).stop();
 			}
 		});
 		game.frame.setLocationRelativeTo(null);

@@ -2,7 +2,7 @@ package com.mime.minefront;
 
 import java.awt.event.KeyEvent;
 
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.input.PlayerController;
 
 public class ThreadCheck implements Runnable{//     extends Thread
 	

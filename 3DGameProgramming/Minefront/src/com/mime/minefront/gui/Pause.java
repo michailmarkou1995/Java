@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import com.mime.minefront.Display;
 import com.mime.minefront.RunGame;
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.input.PlayerController;
 import com.mime.minefront.input.InputHandler;
 
 public class Pause extends JFrame implements Runnable{
@@ -97,7 +97,7 @@ public class Pause extends JFrame implements Runnable{
 			RunGame.getGameInstance().continued();
 			//ID_PAUSED_THREAD=1;
 			//this.dispose();
-			Controller.not_paused=true;
+			PlayerController.not_paused=true;
 			
 			//works if new window only???
 			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work
@@ -173,7 +173,7 @@ public class Pause extends JFrame implements Runnable{
 			//this.dispose();
 			RunGame.getGameInstance().continued();
 
-			Controller.not_paused=true;
+			PlayerController.not_paused=true;
 			
 			//works if new window only???
 			try {thread.join();} catch (InterruptedException e) {e.printStackTrace();}//if only 2 windows opened as seperate threads work

@@ -3,7 +3,7 @@ package com.mime.minefront.graphics;
 import java.util.Random;
 
 import com.mime.minefront.Game;
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.input.PlayerController;
 import com.mime.minefront.level.Block;
 import com.mime.minefront.level.Level;
 
@@ -135,7 +135,7 @@ public void floor(Game game) {
 			//double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
 			//double yDepthCeiling;
 			double yDepthCeiling;
-			if(!Controller.turnUpM && !Controller.turnDownM) {
+			if(!PlayerController.turnUpM && !PlayerController.turnDownM) {
 				yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
 			}
 			 yDepthCeiling = (y - HEIGHT /2.0 * rotationUp) / HEIGHT ;
@@ -149,18 +149,18 @@ public void floor(Game game) {
 			 //z = movement of floor and celing not renderWall()
 			double z = (floorPosition + up) / yDepthCeiling;//+wallking
 			c = 0;
-			if (Controller.walk) {
+			if (PlayerController.walk) {
 				walking = Math.sin(game.time / 6.0) * 0.4;
 				 z = (floorPosition + up + walking) / yDepthCeiling;//+wallking
 			}
-			if (Controller.jumpedStop) {
+			if (PlayerController.jumpedStop) {
 				 up = 0;
 			}
-			if (Controller.crouchWalk && Controller.walk) {
+			if (PlayerController.crouchWalk && PlayerController.walk) {
 				walking = Math.sin(game.time / 6.0) * 0.2;
 				z = (floorPosition + up + walking) / yDepthCeiling;
 			}
-			if (Controller.runWalk && Controller.walk) {
+			if (PlayerController.runWalk && PlayerController.walk) {
 				walking = Math.sin(game.time / 6.0) * 0.7;
 				z = (floorPosition + up + walking) / yDepthCeiling;
 			}
@@ -170,7 +170,7 @@ public void floor(Game game) {
 			if (yDepthCeiling < 0) {
 				z = (ceilPosition - up) /-yDepthCeiling;//z = -yDepthCeiling wipes ceiling
 				c = 1;
-				if (Controller.walk) {
+				if (PlayerController.walk) {
 					 z = (ceilPosition - up - walking) / -yDepthCeiling;//+wallking
 				}
 			}
@@ -379,8 +379,8 @@ public void floor(Game game) {
 		//System.out.println(Controller.distanceTravelX- (xRight*8));
 		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
 		//System.out.println(yPixelLeftTop);
-		double collisionX = Controller.distanceTravelX;
-		double collisionY = Controller.distanceTravelY;
+		double collisionX = PlayerController.distanceTravelX;
+		double collisionY = PlayerController.distanceTravelY;
 		 //wallHit=false;
 		//if(Controller.distanceTravelY - zDistanceLeft <= 0.9 &&
 //		 if(Controller.distanceTravelX - (xLeft*8) <= 0.9 &&
@@ -492,7 +492,7 @@ public void floor(Game game) {
 		double tex4 = tex40 / rotRightSideZ - tex3;
 		//System.out.println(tex4);
 		for (int x = xPixelLeftInt; x < xPixelRightInt; x++) {
-			if(!Controller.turnUpM && !Controller.turnDownM) {
+			if(!PlayerController.turnUpM && !PlayerController.turnDownM) {
 				
 			}
 			collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
@@ -627,7 +627,7 @@ public void floor(Game game) {
 		double tex3 = tex30 / rotLeftSideZ;
 		double tex4 = tex40 / rotRightSideZ - tex3;
 		for (int x = xPixelLeftInt; x < xPixelRightInt; x++) {
-			if(!Controller.turnUpM && !Controller.turnDownM) {
+			if(!PlayerController.turnUpM && !PlayerController.turnDownM) {
 				
 			}
 			//collisionDetection(xLeft,xRight,zDistanceLeft,zDistanceRight);
@@ -680,30 +680,30 @@ public void floor(Game game) {
 //		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
 //			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
 		 if(
-			Controller.distanceTravelX - (xLeft*8) <= 0.9 && // /*for horizontal sides*/
-			Controller.distanceTravelX - (xLeft*8) >= +0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
-			Controller.distanceTravelX- (xRight*8) <=0.0 &&
-			Controller.distanceTravelX- (xRight*8) >= -8.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -6 ||
-			Controller.distanceTravelX - (xLeft*8) >= -0.9 &&
-			Controller.distanceTravelX - (xLeft*8) <= -0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
-			Controller.distanceTravelX- (xRight*8) >=0.0 &&
-			Controller.distanceTravelX- (xRight*8) <= 8.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -6 || /*for vertical sides*/
-			Controller.distanceTravelX - (xLeft*8) >= -5.8 && /*-5.3 is between those*/
-			Controller.distanceTravelX - (xLeft*8) <= -4.7 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= -0.0 && /*-0.72 is between those x axis is like y here when walking*/
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -2.0 ||
-			Controller.distanceTravelX - (xRight*8) >= -5.8 && /*corners always close to +-0.* */
-			Controller.distanceTravelX - (xRight*8) <= -4.7 &&/*will be same xRight xLeft general the axis of "forward"*/
-			Controller.distanceTravelY - (zDistanceRight*8) >= 0.0 && /*1.398*/
-			Controller.distanceTravelY - (zDistanceRight*8) <= 8//+2.0 
+			PlayerController.distanceTravelX - (xLeft*8) <= 0.9 && // /*for horizontal sides*/
+			PlayerController.distanceTravelX - (xLeft*8) >= +0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			PlayerController.distanceTravelX- (xRight*8) <=0.0 &&
+			PlayerController.distanceTravelX- (xRight*8) >= -8.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) >= -6 ||
+			PlayerController.distanceTravelX - (xLeft*8) >= -0.9 &&
+			PlayerController.distanceTravelX - (xLeft*8) <= -0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			PlayerController.distanceTravelX- (xRight*8) >=0.0 &&
+			PlayerController.distanceTravelX- (xRight*8) <= 8.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) >= -6 || /*for vertical sides*/
+			PlayerController.distanceTravelX - (xLeft*8) >= -5.8 && /*-5.3 is between those*/
+			PlayerController.distanceTravelX - (xLeft*8) <= -4.7 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) <= -0.0 && /*-0.72 is between those x axis is like y here when walking*/
+			PlayerController.distanceTravelY - (zDistanceLeft*8) >= -2.0 ||
+			PlayerController.distanceTravelX - (xRight*8) >= -5.8 && /*corners always close to +-0.* */
+			PlayerController.distanceTravelX - (xRight*8) <= -4.7 &&/*will be same xRight xLeft general the axis of "forward"*/
+			PlayerController.distanceTravelY - (zDistanceRight*8) >= 0.0 && /*1.398*/
+			PlayerController.distanceTravelY - (zDistanceRight*8) <= 8//+2.0 
 			) {
 			wallHit = true;
 		} else wallHit=false;
@@ -713,29 +713,29 @@ public void floor(Game game) {
 	public void collisionDetectionOld(double xLeft, double xRight, double zDistanceLeft
 			,double zDistanceRight) {
 		//System.out.println(Controller.distanceTravelY - zDistanceRight);//Controller.distanceTravelX - xLeft
-		System.out.println(Controller.distanceTravelX- (xLeft*8));//System.out.println(xLeft*8);
+		System.out.println(PlayerController.distanceTravelX- (xLeft*8));//System.out.println(xLeft*8);
 		//System.out.println((Controller.distanceTravelY - (zDistanceLeft*8)));
 		//System.out.println(Controller.distanceTravelX- (xRight*8));
 		//System.out.println((Controller.distanceTravelY - (zDistanceRight*8)));
 		//System.out.println((wallHit));
 		if(xLeft <=0.0 && xRight <=0.0 && zDistanceLeft <= 0.0 && zDistanceRight <= 0.0
 			|| xLeft >=0.0 && xRight >= 0.0 && zDistanceLeft >= 0.0 && zDistanceRight >= 0.0)
-		 if(Controller.distanceTravelX - (xLeft*8) <= 0.9 &&
-			Controller.distanceTravelX - (xLeft*8) >= +0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
-			Controller.distanceTravelX- (xRight*8) <=0.0 &&
-			Controller.distanceTravelX- (xRight*8) >= -8.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -6 ||
-			Controller.distanceTravelX - (xLeft*8) >= -0.9 &&
-			Controller.distanceTravelX - (xLeft*8) <= -0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceLeft*8) >= -6 ||
-			Controller.distanceTravelX- (xRight*8) >=0.0 &&
-			Controller.distanceTravelX- (xRight*8) <= 8.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
-			Controller.distanceTravelY - (zDistanceRight*8) >= -6 //||
+		 if(PlayerController.distanceTravelX - (xLeft*8) <= 0.9 &&
+			PlayerController.distanceTravelX - (xLeft*8) >= +0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			PlayerController.distanceTravelX- (xRight*8) <=0.0 &&
+			PlayerController.distanceTravelX- (xRight*8) >= -8.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) >= -6 ||
+			PlayerController.distanceTravelX - (xLeft*8) >= -0.9 &&
+			PlayerController.distanceTravelX - (xLeft*8) <= -0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceLeft*8) >= -6 ||
+			PlayerController.distanceTravelX- (xRight*8) >=0.0 &&
+			PlayerController.distanceTravelX- (xRight*8) <= 8.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) <= 0.0 &&
+			PlayerController.distanceTravelY - (zDistanceRight*8) >= -6 //||
 //			Controller.distanceTravelX - (xLeft*8) <= -5.8 &&
 //			Controller.distanceTravelX - (xLeft*8) >= -5.5 //&&
 //			Controller.distanceTravelY - (zDistanceLeft*8) <= -6.8 &&
@@ -1294,12 +1294,12 @@ public void floor(Game game) {
 		//compute pixel location
 		//left and right edges of wall
 		double xPixelLeft, xPixelRight;
-		if(Controller.turnUpM) {
+		if(PlayerController.turnUpM) {
 			xPixelLeft = (rotLeftSideX / rotLeftSideZ * HEIGHT + WIDTH / 2);
 		}else
 			 xPixelLeft = (rotLeftSideX / rotLeftSideZ * HEIGHT + WIDTH / 2);
 
-		if(Controller.turnDownM) {
+		if(PlayerController.turnDownM) {
 			xPixelRight = (rotRightSideX / rotRightSideZ * HEIGHT + WIDTH / 2);
 			//System.out.println(xPixelRight);
 		}else

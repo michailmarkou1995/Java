@@ -27,7 +27,7 @@ import com.mime.minefront.graphics.Render3D;
 import com.mime.minefront.graphics.Screen;
 import com.mime.minefront.gui.Launcher;
 import com.mime.minefront.gui.Pause;
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.input.PlayerController;
 import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable{
@@ -43,7 +43,7 @@ public class Display extends Canvas implements Runnable{
 	//public int WIDTH1, HEIGHT1;
 	//public int test;
 	
-	public static final String TITLE = "Minefront Pre-Alpha 0.04";
+	public static final String TITLE = "Minefront Pre-Alpha 0.05";
 	public static Point WindowLocation;
 	public static int mouseSpeed;
 	public static int MouseSpeed;
@@ -74,11 +74,12 @@ public class Display extends Canvas implements Runnable{
 		setMinimumSize(size);
 		setMaximumSize(size);
 		screen = new Screen(getGameWidth(),getGameHeight());
-		game = new Game();
+		input = new InputHandler();
+		game = new Game(input);
 		img = new BufferedImage(getGameWidth(), getGameHeight(), BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt)img.getRaster().getDataBuffer()).getData();
 		
-		input = new InputHandler();
+		
 		//input.key[KeyEvent.VK_ESCAPE]=true;
 		//inputEsc = new InputHandler();
 		addKeyListener(input);
@@ -185,92 +186,113 @@ public class Display extends Canvas implements Runnable{
 	@Override
 	public void run() {
 
-		int frames=0;
-		double unprocessedSeconds=0;//AKA delta time in s(seconds) here not ns(nanoseconds)
-		long previousTime = System.nanoTime();
-		double secondsPetTick = 1/60.0;
-		int tickCount = 0;
-		boolean ticked = false;
+		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
+		final double ns = 1_000_000_000.0 / 60.0 ;//60 times per second
+		double delta = 0;
+		int frames=0;
+		int updates = 0;
 
 		requestFocus();
 		//game loop
-		while (running) {
+		while (running) { //cpu cycles
+			long now = System.nanoTime();
 			
-			for(int ii=0; ii <= 1; ii++) {
-				/*Atomic Boolean or input.key[KeyEvent.VK_ESCAPE] = false; better than this?*/ // YEAP!!! time & space complexity reduced + 100% solid result instead of this yacky but working
-			for (int i =0; i <= 20; i ++) {
-			if(onceDid) {
-			try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
-			robot.keyPress(KeyEvent.VK_ESCAPE);
-			robot.keyRelease(KeyEvent.VK_ESCAPE);
-			}}onceDid=false;}
-			
-
-			if(onceDid) {
-				input.key[KeyEvent.VK_ESCAPE] = false;
-			onceDid=false;
+			{//together only work perfect
+				for(int ii=0; ii <= 1; ii++) {
+					/*Atomic Boolean or input.key[KeyEvent.VK_ESCAPE] = false; better than this?*/ // YEAP!!! time & space complexity reduced + 100% solid result instead of this yacky but working
+				for (int i =0; i <= 20; i ++) {
+				if(onceDid) {
+				try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
+				robot.keyPress(KeyEvent.VK_ESCAPE);
+				robot.keyRelease(KeyEvent.VK_ESCAPE);
+				}}onceDid=false;}
+				
+				if(onceDid) {
+					input.key[KeyEvent.VK_ESCAPE] = false;
+				onceDid=false;
+				}
 			}
 			
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			while (delta >= 1) {//only 60 times per second..delta >= ns ..1/60 if passed?	
+				tick();
+				updates++;
+				delta--;
 			
+			}
+			render();
+			frames++;
+			
+			if (System.currentTimeMillis() - timer > 1000) {//while == if in this kind of "endless LOOPS?"
+				PlayerController.timeJ1 = System.currentTimeMillis() - timer;
+				timer += 1000;
+				fpsInnerText = frames;
+				frame.setTitle(TITLE + "    |    " + updates + " ups, " + frames + " fps");
+				updates=0;
+				frames=0;
+				PlayerController.jumped = false;
+				if(PlayerController.timeJ < 7500) PlayerController.timeJ++; else PlayerController.timeJ = 0;
+			}
 			//System.out.println("Game Thread");
 			//System.out.println(Thread.activeCount());
 			//System.out.println("Thread is "+Pause.statusThread.isAlive());
-			long currentTime = System.nanoTime();
-			long passedTime = currentTime - previousTime;
-			previousTime = currentTime;
-			unprocessedSeconds += passedTime/1000000000.0;//nanoseconds to seconds
+//			long currentTime = System.nanoTime();
+//			long passedTime = currentTime - previousTime;
+//			previousTime = currentTime;
+//			unprocessedSeconds += passedTime/1000000000.0;//nanoseconds to seconds
 			//launcher.updateFrame();//it's own thread not same as game in will be hard and fail
 	
-			while (unprocessedSeconds > secondsPetTick) {
-				tick();
-				unprocessedSeconds -= secondsPetTick;
-				ticked = true;
-				tickCount++;
-				if (tickCount % 60 == 0) {
-					//frame.setTitle(TITLE + " FPS: " + frames);
-					fpsInnerText = frames;
-					//System.out.println(frames + "fps");
-					previousTime += 1000;
-					frames=0;
-//					var temp = Controller.jumped;
-//					Controller.jumped = !temp;
-					//timer++;
-					//System.out.println(System.currentTimeMillis() - timer);
-					
-					//ThreadTest tt1 = new ThreadTest();
-					
-
-					//tt1.pause();
-					//tt1.run();
-					//tt1.start();
-				}
-//				if (ticked) {
-//					render();
-//					//wont play here renderMenu()
-//					/*renderMenu();*///Limited FPS here but run in own thread independedly went to Launcher Class
-//					frames++;
+//			while (unprocessedSeconds > secondsPetTick) {
+//				tick();
+//				unprocessedSeconds -= secondsPetTick;
+//				ticked = true;
+//				tickCount++;
+//				if (tickCount % 60 == 0) {//60 ups not fps
+//					//frame.setTitle(TITLE + " FPS: " + frames);
+//					fpsInnerText = frames;
+//					//System.out.println(frames + "fps");
+//					previousTime += 1000;
+//					frames=0;
+////					var temp = Controller.jumped;
+////					Controller.jumped = !temp;
+//					//timer++;
+//					//System.out.println(System.currentTimeMillis() - timer);
+//					
+//					//ThreadTest tt1 = new ThreadTest();
+//					
+//
+//					//tt1.pause();
+//					//tt1.run();
+//					//tt1.start();
 //				}
-			}
-			
-			//update game state logic of game
-			//monitor updates match game updates? e.g. 60 tick 60Hz monitor
-			if (ticked) {//update keep static(not java static) every cpu cycle steady updates
-				render();
-				frames++;
-				//if(Pause.ID_PAUSED_THREAD==1) {Pause.pausedThread.stopPauseMenu(); Pause.ID_PAUSED_THREAD=0;}
-				//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
-			}
-			if (System.currentTimeMillis() - timer > 1000) {
-			Controller.timeJ1 = System.currentTimeMillis() - timer;
-			timer += 1000;
-			//var temp = Controller.jumped;
-			//Controller.jumped = !temp;
-			//System.out.println(timer);
-			Controller.jumped = false;
-			if(Controller.timeJ < 7500) Controller.timeJ++; else Controller.timeJ = 0;
-			//Controller.timeJ = timer;
-		}
+////				if (ticked) {
+////					render();
+////					//wont play here renderMenu()
+////					/*renderMenu();*///Limited FPS here but run in own thread independedly went to Launcher Class
+////					frames++;
+////				}
+//			}
+//			
+//			//update game state logic of game
+//			//monitor updates match game updates? e.g. 60 tick 60Hz monitor
+//			if (ticked) {//update keep static(not java static) every cpu cycle steady updates
+//				render();
+//				frames++;
+//				//if(Pause.ID_PAUSED_THREAD==1) {Pause.pausedThread.stopPauseMenu(); Pause.ID_PAUSED_THREAD=0;}
+//				//if(Pause.getPauseInstance()!=null) {Pause.getPauseInstance().stopPauseMenu(); Pause.pausedThreadTry2=null;}
+//			}
+//			if (System.currentTimeMillis() - timer > 1000) {
+//			Controller.timeJ1 = System.currentTimeMillis() - timer;
+//			timer += 1000;
+//			//var temp = Controller.jumped;
+//			//Controller.jumped = !temp;
+//			//System.out.println(timer);
+//			Controller.jumped = false;
+//			if(Controller.timeJ < 7500) Controller.timeJ++; else Controller.timeJ = 0;
+//			//Controller.timeJ = timer;
+//		}
 			
 //			if (System.currentTimeMillis() - timer > 2000) {
 //				Controller.timeJ1 = System.currentTimeMillis() - timer;
@@ -327,7 +349,7 @@ public class Display extends Canvas implements Runnable{
 	}
 
 	public void render() {
-		if(!Controller.not_paused) {
+		if(!PlayerController.not_paused) {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs==null) {
 			createBufferStrategy(3);
@@ -369,6 +391,7 @@ public class Display extends Canvas implements Runnable{
 
 	//update method
 	private void tick() {
+		input.tick();
 		//System.out.println(input.key[KeyEvent.VK_UP]);
 		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
 		//robot.keyPress(KeyEvent.VK_H);
@@ -379,7 +402,8 @@ public class Display extends Canvas implements Runnable{
 			if(input.key[i] == true) { 
 				//System.out.println(i); System.out.println(Arrays.toString(input.key));
 			}}
-		game.tick(input.key);
+		//game.tick(input.key);
+		game.tick();
 		//System.out.println("break");
 		
 		newX = InputHandler.MouseX;
@@ -420,26 +444,26 @@ public class Display extends Canvas implements Runnable{
 //		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
 //		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
-		if(newY < oldY && Controller.rotationUp <= 2.8) {Controller.turnUpM = true;}
-		if(newY < oldY && Controller.rotationUp >= 2.8) {Controller.turnUpM = false;}
-		if(newY == oldY) {Controller.turnUpM = false; Controller.turnDownM = false;}
-		if(newY > oldY && Controller.rotationUp >= -0.8) {Controller.turnDownM = true;}
-		if(newY > oldY && Controller.rotationUp <= -0.8) {Controller.turnDownM = false;}
+		if(newY < oldY && PlayerController.rotationUp <= 2.8) {PlayerController.turnUpM = true;}
+		if(newY < oldY && PlayerController.rotationUp >= 2.8) {PlayerController.turnUpM = false;}
+		if(newY == oldY) {PlayerController.turnUpM = false; PlayerController.turnDownM = false;}
+		if(newY > oldY && PlayerController.rotationUp >= -0.8) {PlayerController.turnDownM = true;}
+		if(newY > oldY && PlayerController.rotationUp <= -0.8) {PlayerController.turnDownM = false;}
 
 		//String temp = newX < oldX ? System.out.println("Left"); : "";
 		if (newX > oldX) {
 			//System.out.println("Right");
-			Controller.turnRightM = true;
+			PlayerController.turnRightM = true;
 		}
 		if ( newX == oldX) {
 			//System.out.println("Still X");
-			Controller.turnLeftM = false;
-			Controller.turnRightM = false;
+			PlayerController.turnLeftM = false;
+			PlayerController.turnRightM = false;
 		}
 		//if(newX == WIDTH/2 || newX < WIDTH/2)//goes with direct below if
 		if (newX < oldX) {
 			//System.out.println("Left");
-			Controller.turnLeftM = true;
+			PlayerController.turnLeftM = true;
 		}
 //		if (newY == oldY) {
 //			//System.out.println("Still Y");

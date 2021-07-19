@@ -121,10 +121,11 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 		}
 		//key[keyCode] = true;
 		
-		System.out.println(keyCode);
-		Konami.graph = Konami.generateSequenceMap(Konami.code);
-		System.out.println(Konami.checkKonami(38));//KeyCode
-	}
+		/*
+		 * System.out.println(keyCode); Konami.graph =
+		 * Konami.generateSequenceMap(Konami.code);
+		 * System.out.println(Konami.checkKonami(38));//KeyCode
+		 */	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {

@@ -1,5 +1,6 @@
 package com.mime.minefront.graphics;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import com.mime.minefront.Game;
@@ -15,7 +16,7 @@ public class Render3D extends Render{
 	private double forwardGlobal;
 	private double forward, right, cosine, sine, up, walking, rotationUp, cosine1, sine1;
 	public static boolean wallHit, wallHitInverse;
-	private int spriteSheetWidth = 24, spriteSheetWidthHigh = 128;
+	private int spriteSheetWidth = 24, spriteSheetWidthHigh = 128, spriteSheetWidthEnemy=52;
 	Random random = new Random();
 	int c = 0;
 	double h = 0.5;
@@ -199,59 +200,101 @@ public void floor(Game game) {
 			}
 		//wall();
 		Level level = game.level;
-		int size = 20;
+		int size = 20;//20
 		for (int xBlock = -size; xBlock <= size; xBlock++) {
 			for (int zBlock = -size; zBlock <= size; zBlock++) {
 				Block block = level.create(xBlock, zBlock);
 				Block east = level.create(xBlock + 1, zBlock);
 				Block south = level.create(xBlock, zBlock + 1);
-				
+				//System.out.println(block.block_overlap.toString());
+//				for(int i =0; i < block.block_overlap.size(); i++) {
+//					System.out.println(block.block_overlap.get(i));
+//				}
+				//System.out.println(Arrays.toString(block.block_overlap));
 				//MAZE like GENERATION
 				if (block.solid) {
 					if(!east.solid) {
 						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0);
+						//Block blockCoords = new Block();
+						east.addCoords(xBlock + 1, xBlock + 1, zBlock, zBlock + 1);
+						block.addBlock(east);
+//						for(int i =0; i < block.block_overlap.size(); i++) {
+//						//System.out.println(block.block_overlap.get(i).x0);
+//					}
+						//System.out.println(Arrays.deepToString(block.block_overlap.toArray()));
+						//System.out.println(block.block_overlap);
+//						for (Block i : block.block_overlap) {
+//							System.out.println(i);
+//						}
 					}
 					if(!south.solid) {
 						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0);
+						//block.addCoords(xBlock + 1, xBlock, zBlock + 1, zBlock + 1);
+						
+						south.addCoords(xBlock + 1, xBlock, zBlock + 1, zBlock + 1);
+						block.addBlock(south);
+//						for(int i =0; i < block.block_overlap.size(); i++) {
+//						//System.out.println(block.block_overlap.get(i).x0);
+//					}
+						//System.out.println(Arrays.deepToString(block.block_overlap.toArray()));
 					}
 				} else {
 					if (east.solid) {
 						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0);
+						//block.addCoords(xBlock + 1, xBlock + 1, zBlock + 1, zBlock);
+						
+						east.addCoords(xBlock + 1, xBlock + 1, zBlock + 1, zBlock );
+						block.addBlock(east);
 					}
 					if (south.solid) {
 						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0);
+						//block.addCoords(xBlock, xBlock + 1, zBlock + 1, zBlock + 1);
+						
+						south.addCoords(xBlock, xBlock + 1, zBlock + 1, zBlock + 1);
+						block.addBlock(south);
 					}
 				}
 			}
 		}
 		
-		for (int xBlock = -size; xBlock <= size; xBlock++) {
-			for (int zBlock = -size; zBlock <= size; zBlock++) {
-				Block block = level.create(xBlock, zBlock);
-				Block east = level.create(xBlock + 1, zBlock);
-				Block south = level.create(xBlock, zBlock + 1);
-				
-				if (block.solid) {
-					if(!east.solid) {
-						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
-					}
-					if(!south.solid) {
-						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);
-					}
-				} else {
-					if (east.solid) {
-						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0.5);
-					}
-					if (south.solid) {
-						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0.5);
-					}
-//					for(int s = 0; s < block.sprites.size(); s++) {
-//						Sprite sprite = block.sprites.get(s);
-//						renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z);
+//		for(Block b: Block.block_overlap) {
+//			System.out.println(b);
+//		}
+		//System.out.println(Block.block_overlap);
+		//Block.block_overlap.forEach((Block value) -> System.out.print(value));
+		//Block.block_overlap.forEach((value) -> System.out.print(value));
+		//Block.block_overlap.forEach((value) -> System.out.println(value));
+		//Block.block_overlap.forEach(System.out::print);
+		//Block.block_overlap.forEach(System.out::println);
+
+		
+//		for (int xBlock = -size; xBlock <= size; xBlock++) {
+//			for (int zBlock = -size; zBlock <= size; zBlock++) {
+//				Block block = level.create(xBlock, zBlock);
+//				Block east = level.create(xBlock + 1, zBlock);
+//				Block south = level.create(xBlock, zBlock + 1);
+//				
+//				if (block.solid) {
+//					if(!east.solid) {
+//						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
 //					}
-				}
-			}
-		}
+//					if(!south.solid) {
+//						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);			
+//					}
+//				} else {
+//					if (east.solid) {
+//						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0.5);			
+//					}
+//					if (south.solid) {
+//						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0.5);
+//					}
+////					for(int s = 0; s < block.sprites.size(); s++) {
+////						Sprite sprite = block.sprites.get(s);
+////						renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z);
+////					}
+//				}
+//			}
+//		}
 //		for (int xBlock = 1; xBlock <= 20; xBlock++) {
 //			for (int zBlock = 1; zBlock <= 20; zBlock++) {
 //				Block block = level.createSimple(xBlock, zBlock);
@@ -266,12 +309,32 @@ public void floor(Game game) {
 				Block block = level.create(xBlock, zBlock);
 				for(int s = 0; s < block.sprites.size(); s++) {
 					Sprite sprite = block.sprites.get(s);
-//					if (random.nextInt(3) == 0)
-//						h = 0.5; else h = -0.5;
-					renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
+				//	for(int appear=0; appear < Block.block_overlap.size(); appear++) {
+					//	if(Block.block_overlap.get(appear).x0 == xBlock + sprite.x) {
+							renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
+					//	}
+					//}		
 				}
 			}
 		}
+		
+//		for (int xBlock = -size; xBlock <= size; xBlock++) {
+//			for (int zBlock = -size; zBlock <= size; zBlock++) {
+//				Block block = level.create(xBlock, zBlock);
+//				for(int s = 0; s < block.sprites.size(); s++) {
+//					Sprite sprite = block.sprites.get(s);
+////					if (random.nextInt(3) == 0)
+////						h = 0.5; else h = -0.5;
+//					//if(Level.temp_generate_overlap==false)
+//					for(int appear=0; appear < Block.block_overlap.size(); appear++) {
+//						if(Block.block_overlap.get(appear).x0 == xBlock + sprite.x &&
+//								Block.block_overlap.get(appear).z0 == zBlock + sprite.z	) {
+//							renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
+//						}
+//					}		
+//				}
+//			}
+//		}
 	}
 
 //pixels further gets less brightness
@@ -325,7 +388,7 @@ public void floor(Game game) {
 		
 		//** Resolution of "Tile"
 		double xPixelL = xPixel - HEIGHT / 2 / rotZ; //16 is size of Sprites
-		double xPixelR = xPixel + HEIGHT / 2 / rotZ;
+		double xPixelR = xPixel + HEIGHT / 2 / rotZ;//sprite WIDTH change here e.g. /1 stretch
 		double yPixelL = yPixel - HEIGHT / 2 / rotZ;
 		double yPixelR = yPixel + HEIGHT / 2 / rotZ;
 		
@@ -353,7 +416,7 @@ public void floor(Game game) {
 				//int yTexture = (int) (8 * pixelRotationY);
 				if (zBuffer[xp + yp * WIDTH] > rotZ) {
 					int col = Texture.floor.PIXELS[((xTexture & 7)+16) + (yt & 7) * spriteSheetWidth];
-					if(col != 0xFFFF00FF) {
+					if(col != 0xFFFF00FF) {//FF00FF pink
 					//PIXELS[xp + yp * WIDTH] = xTexture * 16 + yt * 16 * 256; // Gradient does not ovveride below
 					PIXELS[xp + yp * WIDTH] = Texture.floor.PIXELS[(int) (x + y * WIDTH)];//col;//0x00FFFF;//0x236DCF; //0xFF0000
 					zBuffer[xp + yp * WIDTH] = rotZ;
@@ -764,6 +827,70 @@ public void floor(Game game) {
 //					//System.out.println("WATCH OUT");
 //					wallHit = false;
 //				}  
+	}
+	
+	public void renderEnemy(double x, double y, double z, double hOffset) {
+		double upCorrect = -0.125;//-0.0625;// moving with 0.0625 good for gathering lifes?
+		double rightCorrect = 0.0625;
+		double forwardCorrect = 0.0625;
+		double walkingCorrect = +0.0625;
+
+		
+		double xc = ((x/2) - (right * rightCorrect)) * 2 + 0.5;
+		double yc = ((y/2) - (up * upCorrect))  + (walking * walkingCorrect) * 2 + hOffset;//sprite up down on walk move with "player"
+		double zc = ((z/2) - (forward * forwardCorrect)) * 2;
+		
+		double rotX = xc * cosine - zc * sine; 
+		double rotY = yc;
+		double rotZ = zc * cosine + xc * sine; 
+		
+		double xCenter = 400.0;
+		double yCenter = 300.0;
+		
+		//System.out.println(rotationUp);
+		double xPixel = rotX / rotZ * HEIGHT + xCenter  * 1; //fixes moving Spirtes Y axis
+		double yPixel = rotY / rotZ * HEIGHT + yCenter * rotationUp;
+		
+		//** Resolution of "Tile"
+		double xPixelL = xPixel - HEIGHT / 2 / rotZ; //16 is size of Sprites
+		double xPixelR = xPixel + HEIGHT / 2 / rotZ;//sprite WIDTH change here e.g. /1 stretch
+		double yPixelL = yPixel - HEIGHT / 2 / rotZ;
+		double yPixelR = yPixel + HEIGHT / 2 / rotZ;
+		
+		//pixels are ints
+		int xpl = (int) xPixelL;//x pixel left
+		int xpr = (int) xPixelR;
+		int ypl = (int) yPixelL;
+		int ypr = (int) yPixelR;
+		
+		//clipping
+		if (xpl < 0) xpl=0;
+		if (xpr > WIDTH) xpr=WIDTH;
+		if (ypl < 0) ypl=0;
+		if (ypr > HEIGHT) ypr=HEIGHT;
+		
+		rotZ *= 8;//increase zBuffer "decrease" brightness
+		
+		//rendering 8x8 no matter the Resolution**
+		for (int yp = ypl; yp < ypr; yp++) {
+			double pixelRotationY = (yp - yPixelR) / (yPixelL - yPixelR); 
+			int yt = (int) (pixelRotationY * 8);
+			for (int xp = xpl; xp < xpr; xp++) {
+				double pixelRotationX = (xp - xPixelR) / (xPixelL - xPixelR); 
+				int xTexture = (int) (pixelRotationX * 8);//change coords HERE for Texture location applied
+				//int yTexture = (int) (8 * pixelRotationY);
+				if (zBuffer[xp + yp * WIDTH] > rotZ) {
+					int col = Texture.enemy1.PIXELS[((xTexture & 23)+16) + (yt & 23) * spriteSheetWidth];
+					if(col != 0xFFF6F6F6) {//FF00FF pink
+					//PIXELS[xp + yp * WIDTH] = xTexture * 16 + yt * 16 * 256; // Gradient does not ovveride below
+					//PIXELS[xp + yp * WIDTH] = Texture.enemy1.PIXELS[(int) (x + y * WIDTH)];//col;//0x00FFFF;//0x236DCF; //0xFF0000
+					PIXELS[xp + yp * WIDTH] =Texture.enemy1.PIXELS[((xTexture & 31)+16) + (yt & 31) * spriteSheetWidth];
+					zBuffer[xp + yp * WIDTH] = rotZ;
+					}
+				}
+			}
+		}
+
 	}
 	
 	public void renderWallDoubleSide(double xLeft, double xRight, double zDistanceLeft

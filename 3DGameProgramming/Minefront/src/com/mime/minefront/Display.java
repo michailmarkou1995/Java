@@ -427,7 +427,10 @@ public class Display extends Canvas implements Runnable{
 			 */
 		//System.out.println("X: " + (oldX-newX) + " Y: " + (oldY-newY));
 		//System.out.println((oldX-newX) + (oldY-newY));
-		mouseSpeed = Math.abs((oldX-newX) + (oldY-newY));
+		//mouseSpeed = Math.abs((oldX-newX) + (oldY-newY));
+		double mouseSpeedX_temp = Math.abs((oldX-newX));
+		double mouseSpeedY_temp = Math.abs((oldY-newY));
+		mouseSpeed = (int)Math.sqrt(mouseSpeedX_temp*mouseSpeedX_temp + mouseSpeedY_temp*mouseSpeedY_temp);
 		}
 		
 		try {robot = new Robot();} catch (AWTException e) {e.printStackTrace();}
@@ -436,13 +439,13 @@ public class Display extends Canvas implements Runnable{
 //		if(newX<0 || newX>WIDTH) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 //		if(newY<0 || newY>HEIGHT) robot.mouseMove((int)WindowLocation.getX()+500, (int)WindowLocation.getY()+500);//robot.mouseMove(WIDTH/2+500, HEIGHT/2);
 
-//		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
-//		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
-//		//System.out.println(newY);
-//		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
-//		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
-//		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
-//		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
+		if(newX<0 || newX>WIDTH) robot.mouseMove(winX+500, winY+500);
+		if(newY<0 || newY>HEIGHT) robot.mouseMove(winX+500, winY+500);
+		//System.out.println(newY);
+		if(newX<0) robot.mouseMove(winX+ getGameWidth() -20, winY + newY);
+		if (newX>=getGameWidth()-20) robot.mouseMove(winX+20, winY + newY);
+		if(newY<15) robot.mouseMove(winX + newX, winY + getGameHeight()-20);
+		if(newY>=getGameHeight()-60) robot.mouseMove(winX + newX, winY + 40);
 
 		if(newY < oldY && PlayerController.rotationUp <= 2.8) {PlayerController.turnUpM = true;}
 		if(newY < oldY && PlayerController.rotationUp >= 2.8) {PlayerController.turnUpM = false;}
@@ -468,7 +471,10 @@ public class Display extends Canvas implements Runnable{
 //		if (newY == oldY) {
 //			//System.out.println("Still Y");
 //		}
-				MouseSpeed = Math.abs((newX - oldX) + (newY - oldY));//no negative value return!
+		double mouseSpeedX_temp = Math.abs((oldX-newX));
+		double mouseSpeedY_temp = Math.abs((oldY-newY));
+		MouseSpeed = (int)Math.sqrt(mouseSpeedX_temp*mouseSpeedX_temp + mouseSpeedY_temp*mouseSpeedY_temp);
+				//MouseSpeed = Math.abs((newX - oldX) + (newY - oldY));//no negative value return!
 				//if (MouseSpeed < 0) { MouseSpeed *= -1;}
 				oldX = newX;
 				oldY = newY;

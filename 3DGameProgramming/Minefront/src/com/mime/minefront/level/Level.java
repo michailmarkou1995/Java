@@ -12,6 +12,7 @@ public class Level {
 	public Block[] blocks;
 	public final int width, height;
 	Random random = new Random();
+	public static boolean temp_generate_overlap=false;
 	
 	private List<Entity> players_mobs_entities = new ArrayList<Entity>();
 	
@@ -41,10 +42,13 @@ public class Level {
 						Block block = null;
 						if (random.nextInt(28) == 0) {
 							block = new SolidBlock();//true block
-						} else {
+							//block.block_overlap.add(block);
+							//temp_generate_overlap=true;
+						} else {//if(!temp_generate_overlap)
 							block = new Block();//false no block
 							if(random.nextInt(15) == 0)//every 5 without it 1 sprite every block("tile")
 							block.addSprite(new Sprite(0,0,0));
+							//temp_generate_overlap=false;
 						}
 						blocks[x+y*width] = block;
 					}

@@ -113,6 +113,7 @@ public void render(Game game) {
 		render3d.renderDWall(-22, -21, 1, 1, 0);
 		render3d.renderDWall(-24, -23, 2, 2, 0);
 		render3d.renderDWall(-22, -22, 0, -1, 0);
+		render3d.renderEnemy(1, 1, 0, 0);
 		render3d.renderDistanceLimiter();
 //		render3d.collisionDetection(-2, -1, 2, 2);
 //		render3d.collisionDetection(0, 1, 1, 1);

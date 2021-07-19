@@ -8,6 +8,8 @@ public class Texture {
 
 	public static Render floor = loadBitmap("/textures/floor1.png");
 	public static Render blocks = loadBitmap("/textures/blocks.png");//floor1
+	public static Render enemy = loadBitmap("/textures/enemy_256_166.png");
+	public static Render enemy1 = loadBitmap("/textures/enemy_24_16.png");
 
 	
 	public static Render loadBitmap(String fileName) {

@@ -1,4 +1,4 @@
-package bmi;
+package com.bmi.calculator;
 
 public class Controller {
 }

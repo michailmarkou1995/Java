@@ -1,4 +1,4 @@
-package sample;
+package com.bmi.calculator;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -6,23 +6,24 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.awt.*;
-import java.security.MessageDigest;
+
 
 class Patient  { //
 
@@ -121,7 +122,7 @@ class Patient  { //
     public ImageView getPicture(Patient person, Boolean checked)
     {
         if (person.category == 1 && checked.equals(false)) {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\underweight.png"); // put a file path here
+            image1 = new Image("/images/underweight.png"); // put a file path here
             pic1 = new ImageView();
             pic1.setVisible(true);
             pic1.setImage(image1);
@@ -129,7 +130,7 @@ class Patient  { //
         }
         else if (person.category == 2 && checked.equals(false))
         {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\normalweight.png"); // put a file path here
+            image1 = new Image("/images/normalweight.png"); // put a file path here
             pic1 = new ImageView();
             pic1.setVisible(true);
             pic1.setImage(image1);
@@ -137,7 +138,7 @@ class Patient  { //
         }
         else if (person.category == 3 && checked.equals(false))
         {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\overweight.png"); // put a file path here
+            image1 = new Image("/images/overweight.png"); // put a file path here
             pic1 = new ImageView();
             pic1.setVisible(true);
             pic1.setImage(image1);
@@ -145,7 +146,7 @@ class Patient  { //
         }
         else if (person.category == 4 && checked.equals(false))
         {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\obese.png"); // put a file path here
+            image1 = new Image("/images/obese.png"); // put a file path here
             //image1 = new Image("bmi/obese.png");
             pic1 = new ImageView();
             pic1.setVisible(true);
@@ -154,14 +155,14 @@ class Patient  { //
         }
         else if (person.category == 4 && checked == true)
         {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\supermanise.png"); // put a file path here
+            image1 = new Image("/images/supermanise.png"); // put a file path here
             pic1 = new ImageView();
             pic1.setVisible(true);
             pic1.setImage(image1);
             return pic1;
         }
         else {
-            image1 = new Image("File:C:\\Users\\backt\\Downloads\\bmi-simple.png"); // put a file path here
+            image1 = new Image("/images/bmi-simple.png"); // put a file path here
             pic1 = new ImageView();
             pic1.setVisible(true);
             pic1.setImage(image1);
@@ -203,12 +204,12 @@ public class Main extends Application{
         scene = new Scene(gridPane,800,500);
         addUIControls (primaryStage); // raw code
 
-        gridPane.getStylesheets().add("bmi/stylesheet.css"); // put a file path here
+        gridPane.getStylesheets().add(getClass().getResource("/css/stylesheet.css").toExternalForm()); // put a file path here
         primaryStage.setOpacity(0.8);
         primaryStage.setTitle("BMI Event");
         primaryStage.setResizable(false);
-        scene.getStylesheets().add("bmi/stylesheet.css"); // put a file path here
-        primaryStage.getIcons().add(new Image("File:C:\\Users\\backt\\Downloads\\icon-heart.png")); // put a file path here
+        scene.getStylesheets().add("/css/stylesheet.css"); // put a file path here
+        primaryStage.getIcons().add(new Image("/images/icon-heart.png")); // put a file path here
         svgPath.setContent(path);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -350,7 +351,7 @@ public class Main extends Application{
         //Creating a panel for the output message
         Vbox = new VBox();
         Vbox.setSpacing(10);
-        Vbox.getStylesheets().add("bmi/stylesheet.css"); // put a file path here
+        Vbox.getStylesheets().add("css/stylesheet.css"); // put a file path here
         checkbox1 = new CheckBox("Bitch please i'm Roidz User");
         isSelectedcheck = checkbox1.isSelected();
 

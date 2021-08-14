@@ -1,11 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ModuleWithProviders }  from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {ModuleWithProviders} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './login/login.component'
-import { UserAccountComponent } from './user-account/user-account.component';
-import { SaveExportComponent } from './save-export/save-export.component';
-import { AuthGuard } from './auth.guard';
+import {UserAccountComponent} from './user-account/user-account.component';
+import {SaveExportComponent} from './save-export/save-export.component';
+import {AuthGuard} from './auth.guard';
 
 const routes: Routes = [
   {

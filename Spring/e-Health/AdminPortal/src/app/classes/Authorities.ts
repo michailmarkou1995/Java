@@ -1,5 +1,3 @@
-
-export class Authorities
-{
-    authority!: string;
+export class Authorities {
+  authority!: string;
 }

@@ -1,360 +1,239 @@
 <h1>Patient Account Page</h1>
 
 <style>
-	.modal{
+  .modal {
     display: block !important; /* I added this to see the modal, you don't need this */
-}
+  }
 
-/* Important part */
-.modal-dialog{
+  /* Important part */
+  .modal-dialog {
     overflow-y: initial !important
-}
-.modal-body{
+  }
+
+  .modal-body {
     height: 80vh;
     overflow-y: auto;
-}
+  }
 </style>
-<!-- <script src="https://use.fontawesome.com/Your-Unique-Code.js"></script>
-
-<style>
-.btn-outline-secondary{
-	content: '\f07a';
-	font-family: FontAwesome;
-	padding-left: 10px
-}
-
-</style> -->
-
-<!-- <style>
-	.light-blue-backdrop {
-      background-color: #5cb3fd;
-	}
-</style> -->
-
-<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
-
-<!-- <button class="btn btn-danger" (click)="triggerModal(modalData)">Open Modal</button>
-
-<ng-template #modalData let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Angular Bootstrap Modal Popup</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p><strong>Are you sure you want to delete <span class="text-primary">"Agatha Harkness"</span> profile?</strong></p>
-    
-    <p>All data related to west view profile will be removed permanently.
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
-  </div>
-</ng-template> -->
-
-
-<!-- <ng-template #content let-modal>
-	<div class="modal-header">
-	  <h4 class="modal-title">Modal title</h4>
-	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-		<span aria-hidden="true">&times;</span>
-	  </button>
-	</div>
-	<div class="modal-body">
-	  <p>One fine body&hellip;</p>
-	</div>
-	<div class="modal-footer">
-	  <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
-	</div>
-  </ng-template> -->
-  
-  
 
 
 <div align="right">
-	<button style="margin:5px;" type="button" name="add_patient" (click)="addDataPatient(content)" class="btn btn-outline-primary mb-2 mr-2 btn-ripple">Add Patient</button>
-	<button style="margin:5px;" type="button" name="add_doctor" (click)="addDataDoctor(contentD)" class="btn btn-primary mb-2 mr-2 btn-ripple">Add Doctor</button>
-	
+  <button (click)="addDataPatient(content)" class="btn btn-outline-primary mb-2 mr-2 btn-ripple" name="add_patient"
+          style="margin:5px;"
+          type="button">Add Patient
+  </button>
+  <button (click)="addDataDoctor(contentD)" class="btn btn-primary mb-2 mr-2 btn-ripple" name="add_doctor"
+          style="margin:5px;"
+          type="button">Add Doctor
+  </button>
+
 </div>
 <!-- class="table table-striped" cellspacing="0" width="100%" -->
- <!--<table datatable [dtOptions]="dtOptions" class="row-border hover">id="userTable"-->
-	<table  class="row-border hover"id="userTableD"><!--id="userTable"-->
-	 <thead>
-		<tr>
-			 <!-- <th>ID</th>  -->
-			<th>User Name</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Email</th>
-			<th>Phone</th> 
-			<th>enabledAcc</th>
-			<th>isDoctor</th>
-			<th style="display:none;">isDoctor</th>
-			<th>Account</th>
-			<th style="display:none;">Account</th>
-			<th>DeleteAcc</th>
-		</tr>
-	</thead> 
-	<!-- <script>
-	console.log(patientUser)
-	console.log('s')
-	</script> -->
-	<tbody *ngIf="patientUser?.length != 0">
-		<tr *ngFor="let patient of test1">
-			 <!-- <td>{{patient.patientID}}</td>  -->
-			<td>{{patient.username}}</td>
-			<td>{{patient.firstName}}</td>
-			<td>{{patient.lastName}}</td>
-			 <td>{{patient.email}}</td>
-			<td>{{patient.phone}}</td> 
-			<td>{{patient.enabled}}</td>
-			<td [hidden]="patient.doctorIs"><a (click)="enableDoctor(contentDoctor, patient.username)" style="cursor: pointer;"class="text-primary">Enable</a></td>
-			<td [hidden]="!patient.doctorIs"><a (click)="disableDoctor(patient.username)" style="cursor: pointer;"class="text-primary">Disable</a></td>
-			<td [hidden]="patient.enabled"><a (click)="enableUser(patient.username)" style="cursor: pointer;"class="text-primary">Enable</a></td>
-			<td [hidden]="!patient.enabled"><a (click)="disableUser(patient.username)" style="cursor: pointer;"class="text-primary">Disable</a></td>
-			<td ><a (click)="deleteUserPrompt('autofocus', patient)" style="cursor: pointer;"class="text-primary">Delete</a></td>
-		</tr>	
-		<tbody *ngIf="patientUser?.length == 0">
-			<tr>
-			  <td colspan="3" class="no-data-available">No data!</td>
-			</tr>
-	</tbody>
-	
-	<!-- <p>{{doctorShow["test"]}}</p>-->
-</table> 
+<!--<table datatable [dtOptions]="dtOptions" class="row-border hover">id="userTable"-->
+<table class="row-border hover" id="userTableD"><!--id="userTable"-->
+  <thead>
+  <tr>
+    <!-- <th>ID</th>  -->
+    <th>User Name</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>enabledAcc</th>
+    <th>isDoctor</th>
+    <th style="display:none;">isDoctor</th>
+    <th>Account</th>
+    <th style="display:none;">Account</th>
+    <th>DeleteAcc</th>
+  </tr>
+  </thead>
+  <tbody *ngIf="patientUser?.length != 0">
+  <tr *ngFor="let patient of test1">
+    <!-- <td>{{patient.patientID}}</td>  -->
+    <td>{{patient.username}}</td>
+    <td>{{patient.firstName}}</td>
+    <td>{{patient.lastName}}</td>
+    <td>{{patient.email}}</td>
+    <td>{{patient.phone}}</td>
+    <td>{{patient.enabled}}</td>
+    <td [hidden]="patient.doctorIs"><a (click)="enableDoctor(contentDoctor, patient.username)" class="text-primary"
+                                       style="cursor: pointer;">Enable</a></td>
+    <td [hidden]="!patient.doctorIs"><a (click)="disableDoctor(patient.username)" class="text-primary"
+                                        style="cursor: pointer;">Disable</a></td>
+    <td [hidden]="patient.enabled"><a (click)="enableUser(patient.username)" class="text-primary"
+                                      style="cursor: pointer;">Enable</a></td>
+    <td [hidden]="!patient.enabled"><a (click)="disableUser(patient.username)" class="text-primary"
+                                       style="cursor: pointer;">Disable</a></td>
+    <td><a (click)="deleteUserPrompt('autofocus', patient)" class="text-primary" style="cursor: pointer;">Delete</a>
+    </td>
+  </tr>
+  <tbody *ngIf="patientUser?.length == 0">
+  <tr>
+    <td class="no-data-available" colspan="3">No data!</td>
+  </tr>
+  </tbody>
 
-
-
-<!-- <h1>Patient Account Page</h1>
- class="table table-striped" cellspacing="0" width="100%" 
- <table datatable [dtOptions]="dtOptions" class="row-border hover">id="userTable"
-	 <thead>
-		<tr>
-			<th>ID</th>
-			<th>User Name</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Email</th>
-			<th>Phone</th>
-			<th>Enabled</th>
-			<th>isDoctor</th>
-			<th>Account</th>
-			<th>DeleteAcc</th>
-		</tr>
-	</thead>
-	<tbody *ngIf="patientUser?.length != 0">
-		<tr *ngFor="let patient of patientUser">
-			<td>{{patient.patientID}}</td>
-			<td>{{patient.username}}</td>
-			<td>{{patient.firstName}}</td>
-			<td>{{patient.lastName}}</td>
-			<td>{{patient.email}}</td>
-			<td>{{patient.phone}}</td>
-			<td>{{patient.enabled}}</td>
-			<td [hidden]="patient.doctorIs"><a (click)="enableDoctor(patient.username)" style="cursor: pointer;">Enable</a></td>
-			<td [hidden]="!patient.doctorIs"><a (click)="disableDoctor(patient.username)" style="cursor: pointer;">Disable</a></td>
-			<td [hidden]="patient.enabled"><a (click)="enableUser(patient.username)" style="cursor: pointer;">Enable</a></td>
-			<td [hidden]="!patient.enabled"><a (click)="disableUser(patient.username)" style="cursor: pointer;">Disable</a></td>
-			<td ><a (click)="deleteUser(patient.patientID)" style="cursor: pointer;">Delete</a></td>
-		</tr>
-		<tbody *ngIf="patientUser?.length == 0">
-			<tr>
-			  <td colspan="3" class="no-data-available">No data!</td>
-			</tr>
-	</tbody>
-	<p>{{doctorShow}}</p> -->
-	<!-- <p>{{doctorShow["test"]}}</p> 
-</table>  -->
-
+</table>
 
 <ng-template #content let-modal>
-	<form (ngSubmit)="onSubmitP()" #userForm="ngForm" method="post" ><!--class="form-inline"-->
-	<div class="modal-header">
-	  <h4 class="modal-title">Add {{nameEvent}}</h4>
-	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-		<span aria-hidden="true">&times;</span>
-	  </button>
-	  
-	</div>
-	<div class="modal-body">
-	   <div class="alert alert-danger alert-dismissible" *ngIf="error">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <form #userForm="ngForm" (ngSubmit)="onSubmitP()" method="post"><!--class="form-inline"-->
+    <div class="modal-header">
+      <h4 class="modal-title">Add {{nameEvent}}</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="close" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </div>
+    <div class="modal-body">
+      <div *ngIf="error" class="alert alert-danger alert-dismissible">
+        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
         {{errorMessage}}
-        </div>
-		<div class="form-group">
+      </div>
+      <div class="form-group">
         <label>Enter First Name</label>
-        <input type="text" name="first_name" [(ngModel)]="first_name" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="first_name" class="form-control" name="first_name" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter Last Name</label>
-        <input type="text" name="last_name" [(ngModel)]="last_name" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="last_name" class="form-control" name="last_name" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter Date of Birth</label>
         <!-- <input type="text" name="dateOfBirth" [(ngModel)]="dateOfBirth" class="form-control" /> -->
-	
-			  <div class="input-group">
-				<input class="form-control" placeholder="yyyy-mm-dd"
-					   name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-				<div class="input-group-append">
-				  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-				</div>
-			  </div>
-			
-		<!-- <pre>Month: {{ date.month }}.{{ date.year }}</pre> -->
-<pre>Model: {{ model | json }}</pre>
-       </div>
-	   <div class="form-group">
-        <label>Enter Phone</label>
-        <input type="text" name="phone" [(ngModel)]="phone" class="form-control" />
-       </div>
-	   <div class="form-group">
-        <label>Enter email</label>
-        <input type="text" name="email" [(ngModel)]="email" class="form-control" />
-       </div>
-	   <div class="form-group">
-        <label>Enter City</label>
-        <input type="text" name="city" [(ngModel)]="city" class="form-control" />
-       </div>
-	   <div class="form-group">
-        <label>Enter username</label>
-        <input type="text" name="username" [(ngModel)]="username" class="form-control" />
-       </div>
-	   <div class="form-group">
-        <label>Enter password</label>
-        <input type="text" name="password" [(ngModel)]="password" class="form-control" />
-       </div>
-	   <!--balta se class anti xima etsi password px patient.password-->
-	</div>
-	<div class="modal-footer">
-	<button type="submit" class="btn btn-danger" (click)="modal.close('Save click')" [disabled]="!userForm.form.valid">Create</button>
-	  <button type="button" class="btn btn-light" (click)="modal.dismiss('Close click')">Close</button>
-	</div>
-</form>
-  </ng-template>
 
-
-  <ng-template #contentD let-modal>
-	<form (ngSubmit)="onSubmitD()" #userForm="ngForm" method="post" ><!--class="form-inline"-->
-	<div class="modal-header">
-	  <h4 class="modal-title">Add {{nameEvent}}</h4>
-	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-		<span aria-hidden="true">&times;</span>
-	  </button>
-	  
-	</div>
-	<div class="modal-body">
-	   <div class="alert alert-danger alert-dismissible" *ngIf="error">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        {{errorMessage}}
+        <div class="input-group">
+          <input #d="ngbDatepicker" [(ngModel)]="model"
+                 class="form-control" name="dp" ngbDatepicker placeholder="yyyy-mm-dd">
+          <div class="input-group-append">
+            <button (click)="d.toggle()" class="btn btn-outline-secondary calendar" type="button"></button>
+          </div>
         </div>
-		<div class="form-group">
+
+        <!-- <pre>Month: {{ date.month }}.{{ date.year }}</pre> -->
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+      <div class="form-group">
+        <label>Enter Phone</label>
+        <input [(ngModel)]="phone" class="form-control" name="phone" type="text"/>
+      </div>
+      <div class="form-group">
+        <label>Enter email</label>
+        <input [(ngModel)]="email" class="form-control" name="email" type="text"/>
+      </div>
+      <div class="form-group">
+        <label>Enter City</label>
+        <input [(ngModel)]="city" class="form-control" name="city" type="text"/>
+      </div>
+      <div class="form-group">
+        <label>Enter username</label>
+        <input [(ngModel)]="username" class="form-control" name="username" type="text"/>
+      </div>
+      <div class="form-group">
+        <label>Enter password</label>
+        <input [(ngModel)]="password" class="form-control" name="password" type="text"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close('Save click')" [disabled]="!userForm.form.valid" class="btn btn-danger"
+              type="submit">Create
+      </button>
+      <button (click)="modal.dismiss('Close click')" class="btn btn-light" type="button">Close</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<ng-template #contentD let-modal>
+  <form #userForm="ngForm" (ngSubmit)="onSubmitD()" method="post"><!--class="form-inline"-->
+    <div class="modal-header">
+      <h4 class="modal-title">Add {{nameEvent}}</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="close" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </div>
+    <div class="modal-body">
+      <div *ngIf="error" class="alert alert-danger alert-dismissible">
+        <a aria-label="close" class="close" data-dismiss="alert" href="#">&times;</a>
+        {{errorMessage}}
+      </div>
+      <div class="form-group">
         <label>Enter First Name</label>
-        <input type="text" name="first_name" [(ngModel)]="first_name" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="first_name" class="form-control" name="first_name" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter Last Name</label>
-        <input type="text" name="last_name" [(ngModel)]="last_name" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="last_name" class="form-control" name="last_name" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter Date of Birth</label>
         <!-- <input type="text" name="dateOfBirth" [(ngModel)]="dateOfBirth" class="form-control" /> -->
-	
-			  <div class="input-group">
-				<input class="form-control" placeholder="yyyy-mm-dd"
-					   name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-				<div class="input-group-append">
-				  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-				</div>
-			  </div>
-			
-		<!-- <pre>Month: {{ date.month }}.{{ date.year }}</pre> -->
-<pre>Model: {{ model | json }}</pre>
-       </div>
-	   <div class="form-group">
+
+        <div class="input-group">
+          <input #d="ngbDatepicker" [(ngModel)]="model"
+                 class="form-control" name="dp" ngbDatepicker placeholder="yyyy-mm-dd">
+          <div class="input-group-append">
+            <button (click)="d.toggle()" class="btn btn-outline-secondary calendar" type="button"></button>
+          </div>
+        </div>
+
+        <!-- <pre>Month: {{ date.month }}.{{ date.year }}</pre> -->
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+      <div class="form-group">
         <label>Enter Phone</label>
-        <input type="text" name="phone" [(ngModel)]="phone" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="phone" class="form-control" name="phone" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter email</label>
-        <input type="text" name="email" [(ngModel)]="email" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="email" class="form-control" name="email" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter City</label>
-        <input type="text" name="city" [(ngModel)]="city" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="city" class="form-control" name="city" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter username</label>
-        <input type="text" name="username" [(ngModel)]="username" class="form-control" />
-       </div>
-	   <div class="form-group">
+        <input [(ngModel)]="username" class="form-control" name="username" type="text"/>
+      </div>
+      <div class="form-group">
         <label>Enter password</label>
-        <input type="text" name="password" [(ngModel)]="password" class="form-control" />
-       </div>
-	   <!--balta se class anti xima etsi password px patient.password-->
-	   <div class="form-group">
+        <input [(ngModel)]="password" class="form-control" name="password" type="text"/>
+      </div>
+      <!--balta se class anti xima etsi password px patient.password-->
+      <div class="form-group">
         <label>Enter Category</label>
-        <input type="text" name="category" [(ngModel)]="category_doctor1" class="form-control" />
-       </div>
-	</div>
-	<div class="modal-footer">
-	<button type="submit" class="btn btn-danger" (click)="modal.close('Save click')" [disabled]="!userForm.form.valid">Create</button>
-	  <button type="button" class="btn btn-light" (click)="modal.dismiss('Close click')">Close</button>
-	</div>
-</form>
-  </ng-template>
+        <input [(ngModel)]="category_doctor1" class="form-control" name="category" type="text"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close('Save click')" [disabled]="!userForm.form.valid" class="btn btn-danger"
+              type="submit">Create
+      </button>
+      <button (click)="modal.dismiss('Close click')" class="btn btn-light" type="button">Close</button>
+    </div>
+  </form>
+</ng-template>
 
-  <!-- <mat-form-field appearance="fill" class="example-form-field">
-	<mat-label>Choose a date</mat-label>
-	<input matInput [matDatepicker]="datepicker">
-	<mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-	<mat-datepicker #datepicker>
-	  <mat-datepicker-actions>
-		<button mat-button matDatepickerCancel>Cancel</button>
-		<button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-	  </mat-datepicker-actions>
-	</mat-datepicker>
-  </mat-form-field>
-  
-  <mat-form-field appearance="fill" class="example-form-field">
-	<mat-label>Enter a date range</mat-label>
-	<mat-date-range-input [rangePicker]="rangePicker">
-	  <input matStartDate placeholder="Start date">
-	  <input matEndDate placeholder="End date">
-	</mat-date-range-input>
-	<mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
-	<mat-date-range-picker #rangePicker>
-	  <mat-date-range-picker-actions>
-		<button mat-button matDateRangePickerCancel>Cancel</button>
-		<button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-	  </mat-date-range-picker-actions>
-	</mat-date-range-picker>
-  </mat-form-field> -->
-
-  <!-- <button class="btn btn-outline-primary" (click)="open('autofocus')">
-	<div>Open confirm modal with `ngbAutofocus`</div>
-	<div class="text-dark" aria-hidden="true"><small>Ok button will be focused</small></div>
-  </button> -->
-  <ng-template #contentDoctor let-modal>
-	<form (ngSubmit)="onSubmitDoctor()" #userForm="ngForm" method="post" >
-	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Doctor Insert info</h4>
-	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-		<span aria-hidden="true">&times;</span>
-	  </button>
-	</div>
-	<div class="modal-body">
-		<div class="form-group">
-		  <label for="datesDoctorAvailable">Doctor Info</label>
-		  <div class="form-group">
-			<label>Enter Category Doctor</label>
-			<input type="text" name="first_name" [(ngModel)]="category_doctor" class="form-control" />
-		   </div>
-		</div>
-	</div>
-	<div class="modal-footer">
-	  <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-	</div>
-	</form>
-  </ng-template>
+<ng-template #contentDoctor let-modal>
+  <form #userForm="ngForm" (ngSubmit)="onSubmitDoctor()" method="post">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Doctor Insert info</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="close" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="datesDoctorAvailable">Doctor Info</label>
+        <div class="form-group">
+          <label>Enter Category Doctor</label>
+          <input [(ngModel)]="category_doctor" class="form-control" name="first_name" type="text"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close('Save click')" class="btn btn-outline-dark" type="submit">Save</button>
+    </div>
+  </form>
+</ng-template>

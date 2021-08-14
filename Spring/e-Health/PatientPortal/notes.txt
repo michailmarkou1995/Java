@@ -1,0 +1,52 @@
+#######Create db schema ehealth_db#######
+cmd/bash "ng serve" on angular projects in root folder of them
+
+docker-compose -f docker-compose.yaml up
+1)docker-compose -f docker-compose.yaml up --env-file .env up
+1.x)docker compose down
+docker-machine stop start
+
+Then I rebuilt that image with:
+docker-compose build --no-cache mongodb
+
+remove all cache and containers and pull them again.
+docker system prune --all
+docker volume prune
+docker-compose up
+
+2)docker ps
+
+3)docker exec -it hashCodeFromDockerPsContainerID bash
+
+docker-compose --env-file .env up
+5)mongo mongodb://localhost:27017 -u rootu -p rootp
+
+4)printenv
+env
+
+5.x)echo $MONGO_INITDB_ROOT_USERNAME
+5.1)mongo mongodb://localhost:27017 -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD
+
+
+
+ docker run -it --rm \
+--network web_default \
+--name mongo-express \
+-p 8081:8081 \
+-e ME_CONFIG_MONGODB_SERVER=database \
+-e ME_CONFIG_MONGODB_ADMINUSERNAME= admin \
+-e ME_CONFIG_MONGODB_ADMINPASSWORD=password \
+mongo-express
+
+
+
+docker run -it --rm \
+--network web_default \
+--name mongo-express \
+-p 8081:8081 \
+-e ME_CONFIG_MONGODB_SERVER= database \
+-e ME_CONFIG_MONGODB_AUTH_DATABASE= dockerdb \
+-e ME_CONFIG_MONGODB_ENABLE_ADMIN=false \
+-e ME_CONFIG_MONGODB_AUTH_USERNAME=admin \
+-e ME_CONFIG_MONGODB_AUTH_PASSWORD=password \
+mongo-express

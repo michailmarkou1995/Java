@@ -1,51 +1,46 @@
 package com.userfrontend.security;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 @Entity
 public class Role {
-	
-	@Id
-  private int roleId;
 
-  private String name;
+    @Id
+    private int roleId;
 
-  @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private Set<PatientRole> patientRoles = new HashSet<>();
+    private String name;
 
-  public Role() {
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PatientRole> patientRoles = new HashSet<>();
 
-  }
+    public Role() {
 
-  public int getRoleId() {
-      return roleId;
-  }
+    }
 
-  public void setRoleId(int roleId) {
-      this.roleId = roleId;
-  }
+    public int getRoleId() {
+        return roleId;
+    }
 
-  public String getName() {
-      return name;
-  }
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
 
-  public void setName(String name) {
-      this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public Set<PatientRole> getPatientRoles() {
-      return patientRoles;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setPatientRoles(Set<PatientRole> patientRoles) {
-      this.patientRoles = patientRoles;
-  }
+    public Set<PatientRole> getPatientRoles() {
+        return patientRoles;
+    }
+
+    public void setPatientRoles(Set<PatientRole> patientRoles) {
+        this.patientRoles = patientRoles;
+    }
 
 }

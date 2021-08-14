@@ -1,183 +1,142 @@
 package com.userfrontend.domain;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PostUpdate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.userfrontend.security.Authority;
+import com.userfrontend.security.PatientRole;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.userfrontend.security.Authority;
-import com.userfrontend.security.PatientRole;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Patient extends User implements UserDetails{
-	 
-		@Id
-    	@GeneratedValue(strategy = GenerationType.AUTO)
-    	@Column(name = "patient_id", nullable = false, updatable = false, unique=true)//
-		private Long patientID;
+@SequenceGenerator(name = "seqPatient", initialValue = 7, allocationSize = 1)
+public class Patient extends User implements UserDetails {
 
-		 @OneToOne( mappedBy = "patientid")
-		    private Doctor doctorid;
-		 
-		@OneToOne(optional=false,cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)//
-		@OnDelete(action = OnDeleteAction.CASCADE)
-		@JoinColumn(name = "medicationAccount_fk")
-		@JsonIgnore
-		private MedicationAccount medicationAccount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seqPatient")
+    @Column(name = "patient_id", nullable = false, updatable = false, unique = true)//
+    private Long patientID;
 
-		
-		@OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
-		@OnDelete(action = OnDeleteAction.CASCADE)
-		@JsonIgnore
-		private List<PatientHealth> patienthealth;
+    @OneToOne(mappedBy = "patientid")
+    private Doctor doctorid;
 
-		@OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.EAGER)
-		@OnDelete(action = OnDeleteAction.CASCADE)
-		@JsonIgnore
-		private List<Appointment>  appointmentList;
-		
-		@OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
-		@JsonIgnore
-		private Set<PatientRole> patientRoles = new HashSet<>();
-		
-
-		public Patient(String username, String password, String firstName, String lastName, String email, String phone,
-				String city, String streetAddress, LocalDate dateOfBirth, String famillyDoctorAccount, boolean enabled,
-				MedicationAccount medicationAccount, List<PatientHealth> patienthealth,
-				List<Appointment> appointmentList, Set<PatientRole> patientRoles) {
-			super();
-//			this.username = username;
-//			this.password = password;
-//			this.firstName = firstName;
-//			this.lastName = lastName;
-//			this.email = email;
-//			this.phone = phone;
-//			this.city = city;
-//			this.streetAddress = streetAddress;
-//			this.dateOfBirth = dateOfBirth;
-//			//this.famillyDoctorAccount = famillyDoctorAccount;
-//			this.enabled = enabled;
-			this.medicationAccount = medicationAccount;
-			//this.doctor = doctor;
-			this.patienthealth = patienthealth;
-			this.appointmentList = appointmentList;
-			this.patientRoles = patientRoles;
-		}
-
-		public Patient(Long patientID, String username, String password, String firstName, String lastName,
-				String email, String phone, String city, String streetAddress, LocalDate dateOfBirth,
-				String famillyDoctorAccount, boolean enabled, MedicationAccount medicationAccount,
-				List<PatientHealth> patienthealth, List<Appointment> appointmentList, Set<PatientRole> patientRoles) {
-			super();
-			this.patientID = patientID;
-//			this.username = username;
-//			this.password = password;
-//			this.firstName = firstName;
-//			this.lastName = lastName;
-//			this.email = email;
-//			this.phone = phone;
-//			this.city = city;
-//			this.streetAddress = streetAddress;
-//			this.dateOfBirth = dateOfBirth;
-//			//this.famillyDoctorAccount = famillyDoctorAccount;
-//			this.enabled = enabled;
-			this.medicationAccount = medicationAccount;
-			//this.doctor = doctor;
-			this.patienthealth = patienthealth;
-			this.appointmentList = appointmentList;
-			this.patientRoles = patientRoles;
-		}
+    @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)//
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "medicationAccount_fk")
+    @JsonIgnore
+    private MedicationAccount medicationAccount;
 
 
-		public Patient() {
-			super();
-		}
+    @OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<PatientHealth> patienthealth;
 
-		public Set<PatientRole> getPatientRoles() {
-			return patientRoles;
-		}
+    @OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Appointment> appointmentList;
 
-		public void setPatientRoles(Set<PatientRole> patientRoles) {
-			this.patientRoles = patientRoles;
-		}
-
-		public MedicationAccount getMedicationAccount() {
-			return medicationAccount;
-		}
-
-		public void setMedicationAccount(MedicationAccount medicationAccount) {
-			this.medicationAccount = medicationAccount;
-		}
-
-		public List<PatientHealth> getPatienthealth() {
-			return patienthealth;
-		}
-
-		public void setPatienthealth(List<PatientHealth> patienthealth) {
-			this.patienthealth = patienthealth;
-		}
-
-		public List<Appointment> getAppointmentList() {
-			return appointmentList;
-		}
-
-		public void setAppointmentList(List<Appointment> appointmentList) {
-			this.appointmentList = appointmentList;
-		}
+    @OneToMany(mappedBy = "patientAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<PatientRole> patientRoles = new HashSet<>();
 
 
-		public Long getPatientID() {
-			return patientID;
-		}
+    public Patient(MedicationAccount medicationAccount, List<PatientHealth> patienthealth,
+                   List<Appointment> appointmentList, Set<PatientRole> patientRoles) {
+        super();
+        this.medicationAccount = medicationAccount;
+        this.patienthealth = patienthealth;
+        this.appointmentList = appointmentList;
+        this.patientRoles = patientRoles;
+    }
 
-		public void setPatientID(Long patientID) {
-			this.patientID = patientID;
-		}
+    public Patient(Long patientID, boolean enabled, MedicationAccount medicationAccount,
+                   List<PatientHealth> patienthealth, List<Appointment> appointmentList, Set<PatientRole> patientRoles) {
+        super();
+        this.patientID = patientID;
+        this.medicationAccount = medicationAccount;
+        this.patienthealth = patienthealth;
+        this.appointmentList = appointmentList;
+        this.patientRoles = patientRoles;
+    }
 
-		@Override
-		    public Collection<? extends GrantedAuthority> getAuthorities() {
-		        Set<GrantedAuthority> authorities = new HashSet<>();
-		        patientRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
-		        return authorities;
-		    }
-		
 
-		@Override
-		public boolean isAccountNonExpired() {
-			// TODO Auto-generated method stub
-			return true;
-		}
+    public Patient() {
+        super();
+    }
 
-		@Override
-		public boolean isAccountNonLocked() {
-			// TODO Auto-generated method stub
-			return true;
-		}
+    public Set<PatientRole> getPatientRoles() {
+        return patientRoles;
+    }
 
-		@Override
-		public boolean isCredentialsNonExpired() {
-			// TODO Auto-generated method stub
-			return true;
-		}
-		
+    public void setPatientRoles(Set<PatientRole> patientRoles) {
+        this.patientRoles = patientRoles;
+    }
+
+    public MedicationAccount getMedicationAccount() {
+        return medicationAccount;
+    }
+
+    public void setMedicationAccount(MedicationAccount medicationAccount) {
+        this.medicationAccount = medicationAccount;
+    }
+
+    public List<PatientHealth> getPatienthealth() {
+        return patienthealth;
+    }
+
+    public void setPatienthealth(List<PatientHealth> patienthealth) {
+        this.patienthealth = patienthealth;
+    }
+
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
+    }
+
+    public void setAppointmentList(List<Appointment> appointmentList) {
+        this.appointmentList = appointmentList;
+    }
+
+
+    public Long getPatientID() {
+        return patientID;
+    }
+
+    public void setPatientID(Long patientID) {
+        this.patientID = patientID;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        patientRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+        return authorities;
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
 }

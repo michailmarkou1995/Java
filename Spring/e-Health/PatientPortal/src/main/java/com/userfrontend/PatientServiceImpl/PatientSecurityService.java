@@ -1,5 +1,7 @@
 package com.userfrontend.PatientServiceImpl;
 
+import com.userfrontend.dao.PatientDao;
+import com.userfrontend.domain.Patient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +10,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.userfrontend.dao.PatientDao;
-import com.userfrontend.domain.Patient;
-
 @Service
-public class PatientSecurityService implements UserDetailsService{
+public class PatientSecurityService implements UserDetailsService {
 
-	/** The application logger */
+    /**
+     * The application logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(PatientSecurityService.class);
 
     @Autowired

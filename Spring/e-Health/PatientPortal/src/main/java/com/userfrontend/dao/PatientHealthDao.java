@@ -1,14 +1,14 @@
 package com.userfrontend.dao;
 
-import java.util.List;
-
+import com.userfrontend.domain.PatientHealth;
 import org.springframework.data.repository.CrudRepository;
 
-import com.userfrontend.domain.PatientHealth;
+import java.util.List;
 
 public interface PatientHealthDao extends CrudRepository<PatientHealth, Long> {
-	
-	List<PatientHealth> findAll();
-	void delete(PatientHealth patientHealth);
+
+    List<PatientHealth> findAll();
+
+    void delete(PatientHealth patientHealth);
 
 }

@@ -1,152 +1,153 @@
 package com.userfrontend.domain;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDate;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+/**
+ * <p>Table inheritance to childs</p>
+ */
 @MappedSuperclass
 public abstract class User {
 
-	@Column(unique=true, nullable = false)
-	private String username;
-	private String password;
-	private String firstName;
-	private String lastName;
-	
+    @Column(unique = true, nullable = false)
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
 
-	@Column(name = "email", nullable = false, unique = true)
-	private String email;
-	private String phone;
-	private String city;
-	private String streetAddress;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-	private LocalDate dateOfBirth;
 
-	private boolean enabled=true;
-	private boolean doctorIs=false;
-	
-	
-	public User() {
-		super();
-	}
-	
-	public User(String username, String password, String firstName, String lastName, String email, String phone,
-			String city, String streetAddress, LocalDate dateOfBirth, boolean enabled, boolean doctorIs) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.phone = phone;
-		this.city = city;
-		this.streetAddress = streetAddress;
-		this.dateOfBirth = dateOfBirth;
-		this.enabled = enabled;
-		this.doctorIs = doctorIs;
-	}
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+    private String phone;
+    private String city;
+    private String streetAddress;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
-	public String getUsername() {
-		return username;
-	}
+    private boolean enabled = true;
+    private boolean doctorIs = false;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
-	public String getPassword() {
-		return password;
-	}
+    public User() {
+        super();
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public User(String username, String password, String firstName, String lastName, String email, String phone,
+                String city, String streetAddress, LocalDate dateOfBirth, boolean enabled, boolean doctorIs) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.city = city;
+        this.streetAddress = streetAddress;
+        this.dateOfBirth = dateOfBirth;
+        this.enabled = enabled;
+        this.doctorIs = doctorIs;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getStreetAddress() {
-		return streetAddress;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setStreetAddress(String streetAddress) {
-		this.streetAddress = streetAddress;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public String getStreetAddress() {
+        return streetAddress;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
 
-	public boolean isDoctorIs() {
-		return doctorIs;
-	}
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-	public void setDoctorIs(boolean doctorIs) {
-		this.doctorIs = doctorIs;
-	}
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-	@Override
-	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", email=" + email + ", phone=" + phone + ", city=" + city + ", streetAddress="
-				+ streetAddress + ", dateOfBirth=" + dateOfBirth + ", enabled=" + enabled + ", doctorIs=" + doctorIs
-				+ "]";
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isDoctorIs() {
+        return doctorIs;
+    }
+
+    public void setDoctorIs(boolean doctorIs) {
+        this.doctorIs = doctorIs;
+    }
+
+    @Override
+    public String toString() {
+        return "User [username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName="
+                + lastName + ", email=" + email + ", phone=" + phone + ", city=" + city + ", streetAddress="
+                + streetAddress + ", dateOfBirth=" + dateOfBirth + ", enabled=" + enabled + ", doctorIs=" + doctorIs
+                + "]";
+    }
+
+
 }

@@ -1,29 +1,28 @@
 package com.userfrontend.PatientServiceImpl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.userfrontend.dao.PatientHealthDao;
 import com.userfrontend.domain.PatientHealth;
 import com.userfrontend.service.PatientHealthService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
-public class PatientHealthImpl implements PatientHealthService{
-	
-	@Autowired
-	private PatientHealthDao patientHealthDao;
+public class PatientHealthImpl implements PatientHealthService {
 
-	@Override
-	public void createPatientHealth(PatientHealth patientHealth) {
-		patientHealthDao.save(patientHealth);
-		
-	}
+    @Autowired
+    private PatientHealthDao patientHealthDao;
 
-	@Override
-	public List<PatientHealth> findAll() {
-		return patientHealthDao.findAll();
-	}
+    @Override
+    public void createPatientHealth(PatientHealth patientHealth) {
+        patientHealthDao.save(patientHealth);
+
+    }
+
+    @Override
+    public List<PatientHealth> findAll() {
+        return patientHealthDao.findAll();
+    }
 
 }

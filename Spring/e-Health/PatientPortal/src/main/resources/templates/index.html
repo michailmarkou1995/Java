@@ -3,44 +3,45 @@
 <head th:replace="common/header :: common-header"/>
 <body>
 <!-- Login Section -->
-    <img class="img-responsive" src="/images/banner.png" alt="banner"/>
-    <div class="container">
-        <div class="row ">
-            <div class="main-center ">
-                <div class="bg-danger" th:if="${param.error}">
-                    Invalid username and secret.
+<img alt="banner" class="img-responsive" src="/images/banner.png"/>
+<div class="container">
+    <div class="row ">
+        <div class="main-center ">
+            <div class="bg-danger" th:if="${param.error}">
+                Invalid username and secret.
+            </div>
+            <div class="bg-danger" th:if="${param.logout}">
+                You have been logged out.
+            </div>
+            <form class="form-signin" method="post" th:action="@{/index}">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <div class="form-group">
+                    <label class="sr-only" for="username">Username</label>
+                    <input autofocus="autofocus" class="form-control" id="username" name="username"
+                           placeholder="Username"
+                           required="required"
+                           roleId="username" type="text"/>
                 </div>
-                <div class="bg-danger" th:if="${param.logout}">
-                    You have been logged out.
+                <div class="form-group">
+                    <label class="sr-only" for="password">Password</label>
+                    <input class="form-control" id="password" name="password" placeholder="Password"
+                           required="required"
+                           roleId="inputPassword" type="password"/>
                 </div>
-                <form class="form-signin" th:action="@{/index}" method="post">
-                    <h2 class="form-signin-heading">Please sign in</h2>
-                    <div class="form-group">
-                        <label for="username" class="sr-only">Username</label>
-                        <input type="text" roleId="username" class="form-control" placeholder="Username" name="username"
-                               id="username"
-                               required="required" autofocus="autofocus"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="sr-only">Password</label>
-                        <input type="password" roleId="inputPassword" class="form-control" placeholder="Password"
-                               id="password"
-                               name="password" required="required"/>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" name="remember-me" id="remember-me"/> &nbsp; Remember me
-                    </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                </form>
-                
-                <hr />
-                
-                <div class="form-group ">
-                    <a type="submit" class="btn btn-info btn-lg btn-block login-button" th:href="@{/signup}">Sign up!</a>
+                <div class="form-group">
+                    <input id="remember-me" name="remember-me" type="checkbox"/> &nbsp; Remember me
                 </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+
+            <hr/>
+
+            <div class="form-group ">
+                <a class="btn btn-info btn-lg btn-block login-button" th:href="@{/signup}" type="submit">Sign up!</a>
             </div>
         </div>
     </div>
+</div>
 
 <div th:replace="common/header :: body-bottom-scripts"/>
 

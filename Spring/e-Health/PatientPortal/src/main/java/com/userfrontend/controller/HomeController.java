@@ -1,18 +1,6 @@
 package com.userfrontend.controller;
 
 
-import java.security.Principal;
-import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.userfrontend.dao.MedicationAccountDao;
 import com.userfrontend.dao.RoleDao;
 import com.userfrontend.domain.MedicationAccount;
@@ -20,70 +8,105 @@ import com.userfrontend.domain.Patient;
 import com.userfrontend.security.PatientRole;
 import com.userfrontend.service.AccountService;
 import com.userfrontend.service.PatientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.security.Principal;
+import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class HomeController {
-	
-	@Autowired
-	private PatientService patientService;
-	
-	@Autowired
-	private RoleDao roleDao;
-	
-	@Autowired
-	private AccountService medaccount;
-	
-	@Autowired
-	private MedicationAccountDao medicationD;
 
-	@RequestMapping("/")
-	public String home() {
-		return "redirect:/index";
-	}
+    private final PatientService patientService;
 
-	@RequestMapping("/index")
-	public String index() {
-		return "index";
-	}
+    private final RoleDao roleDao;
 
-	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public String signup(Model model) {
-		Patient patient = new Patient();
+    private final AccountService medaccount;
 
-		model.addAttribute("patient", patient);
+    private final MedicationAccountDao medicationD;
 
-		return "signup";
-	}
+    @Autowired
+    public HomeController(PatientService patientService, RoleDao roleDao,
+                          AccountService medaccount, MedicationAccountDao medicationD) {
+        this.patientService = patientService;
+        this.roleDao = roleDao;
+        this.medaccount = medaccount;
+        this.medicationD = medicationD;
+    }
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String signupPost(@ModelAttribute("patient") Patient patient, Model model) throws ParseException{
+    // LandPage Login
+    @RequestMapping("/")
+    public String home() {
+        return "redirect:/index";
+    }
 
-			if(patientService.checkPatientExists(patient.getUsername(), patient.getEmail()))  {
-	
-	            if (patientService.checkEmailExists(patient.getEmail())) {
-	                model.addAttribute("emailExists", true);
-	            }
-	
-	            if (patientService.checkUsernameExists(patient.getUsername())) {
-	                model.addAttribute("usernameExists", true);
-	            }
-	            return "signup";
-	        } else {
-	        	Set<PatientRole> patientRoles = new HashSet<>();
-	        	patientRoles.add(new PatientRole(patient, roleDao.findByName("ROLE_USER")));
-	
-	        	patientService.createUser(patient, patientRoles);
-	        	MedicationAccount medication = new MedicationAccount();
-	        	medication=medaccount.findByAccountNumberA(patient.getMedicationAccount().getAccountNumber());
-	        	medication.setPatient(patient);
-	        	medicationD.save(medication);
-	
-	            return "redirect:/";
-	        }
-		}
-	
-	@RequestMapping("/userFront")
-	public String userFront(Principal principal, Model model) {
+    // LandPage Login
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+
+    /**
+     * <p>SignUp Form Page Request Register</p>
+     *
+     * @param model Dependency injection model obj
+     */
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public String signup(Model model) {
+        Patient patient = new Patient();
+
+        // pass to Template Page View Data Obj Holder in patient variable
+        model.addAttribute("patient", patient);
+
+        return "signup";
+    }
+
+    /**
+     * <p>SignUp Form Page Submit new User</p>
+     *
+     * @param patient gets POST Data from "patient" model from view
+     * @return if Register OK to Login Page else user Exists
+     */
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String signupPost(@ModelAttribute("patient") Patient patient, Model model) throws ParseException {
+
+        if (patientService.checkPatientExists(patient.getUsername(), patient.getEmail())) {
+
+            // generate error message to view by pass back model Data
+            if (patientService.checkEmailExists(patient.getEmail())) {
+                model.addAttribute("emailExists", true);
+            }
+
+            if (patientService.checkUsernameExists(patient.getUsername())) {
+                model.addAttribute("usernameExists", true);
+            }
+            return "signup";
+        } else {
+            Set<PatientRole> patientRoles = new HashSet<>();
+            patientRoles.add(new PatientRole(patient, roleDao.findByName("ROLE_USER")));
+
+            patientService.createUser(patient, patientRoles);
+            MedicationAccount medication;
+            medication = medaccount.findByAccountNumberA(patient.getMedicationAccount().getAccountNumber());
+            medication.setPatient(patient);
+            medicationD.save(medication);
+
+            return "redirect:/";
+        }
+    }
+
+    /**
+     * @param principal Logged in Info in memory
+     * @return Main page if Successful Login
+     */
+    @RequestMapping("/userFront")
+    public String userFront(Principal principal, Model model) {
         Patient patient = patientService.findByUsername(principal.getName());
         MedicationAccount medicationAccount = patient.getMedicationAccount();
         model.addAttribute("MyName", principal.getName());
@@ -91,5 +114,5 @@ public class HomeController {
 
         return "userFront";
     }
-	
+
 }

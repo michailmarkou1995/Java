@@ -1,7 +1,6 @@
 package com.userfrontend.config;
 
-import java.security.SecureRandom;
-
+import com.userfrontend.PatientServiceImpl.PatientSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,29 +15,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.userfrontend.PatientServiceImpl.PatientSecurityService;
-
-//import com.userfrontend.service.UserServiceImpl.UserSecurityService;
+import java.security.SecureRandom;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private PatientSecurityService patientSecurityService;
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private static final String SALT = "salt"; // Salt should be protected carefully
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
-    }
-
-
     private static final String[] PUBLIC_MATCHERS = {
             "/webjars/**",
             "/css/**",
@@ -52,13 +36,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
             "/sse",
             "/signup"
     };
+    @Autowired
+    private Environment env;
+    @Autowired
+    private PatientSecurityService patientSecurityService;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests().
 //                antMatchers("/**").
-                antMatchers(PUBLIC_MATCHERS).
+        antMatchers(PUBLIC_MATCHERS).
                 permitAll().anyRequest().authenticated();
 
         http
@@ -69,13 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .and()
                 .rememberMe();
     }
-    
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-        .allowedOrigins("http://localhost:4200","http://localhost:1061");;
+        registry.addMapping("/**");
+//                .allowedOrigins("http://localhost:4200", "http://localhost:1061");
     }
-    
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

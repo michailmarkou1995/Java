@@ -1,4 +1,5 @@
 MVP product it will be updated in future although is fully functional
+[no unit tests, no docker yet maybe on my free time if i have some to add]
 
 YouTube App ScreeCast: https://www.youtube.com/watch?v=V5yfFAJmJBA&t
 

@@ -1,11 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ModuleWithProviders }  from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {ModuleWithProviders} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './login/login.component'
-import { UserAccountComponent } from './user-account/user-account.component';
-import { SaveExportComponent } from './save-export/save-export.component';
-import { AuthGuard } from './auth.guard';
+import {CreateAppointmentComponent} from './create-appointment/create-appointment.component';
+import {InlineAppointmentComponent} from './inline-appointment/inline-appointment.component';
+import {AuthGuard} from './auth.guard';
 
 const routes: Routes = [
   {
@@ -21,12 +19,12 @@ const routes: Routes = [
   },
   {
     path: 'datesDoctorAvailable',
-    component: UserAccountComponent,
+    component: CreateAppointmentComponent,
     canActivate: [AuthGuard]
   },
   {
     path: 'inlineAppointment',
-    component: SaveExportComponent,
+    component: InlineAppointmentComponent,
     canActivate: [AuthGuard]
   },
 ];

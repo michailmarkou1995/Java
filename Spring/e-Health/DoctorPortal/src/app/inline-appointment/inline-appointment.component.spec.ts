@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {LoginComponent} from './login.component';
+import {InlineAppointmentComponent} from './inline-appointment.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('SaveExportComponent', () => {
+  let component: InlineAppointmentComponent;
+  let fixture: ComponentFixture<InlineAppointmentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent]
+      declarations: [InlineAppointmentComponent]
     })
       .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(InlineAppointmentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

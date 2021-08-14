@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('http://fonts.googleapis.com/css?family=Raleway:400,200');
 @import url('http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+
 /* @import "~mdb-angular-ui-kit/assets/scss/mdb.scss"; @import
 "~@fortawesome/fontawesome-free/scss/fontawesome.scss"; @import
 "~@fortawesome/fontawesome-free/scss/solid.scss"; @import
@@ -17,7 +18,7 @@ html {
 }
 
 .clean-font {
-  color: #8f8f8f; 
+  color: #8f8f8f;
   font-weight: 200;
 }
 
@@ -51,9 +52,11 @@ Required for Dropdowns
 .dropdown {
   position: relative;
 }
+
 .dropdown-toggle:focus {
   outline: 0;
 }
+
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -73,6 +76,7 @@ Required for Dropdowns
   border-radius: 2px;
   box-shadow: none;
 }
+
 .dropdown-menu:before {
   content: "\00a0";
   display: block;
@@ -93,16 +97,19 @@ li .dropdown-menu:before {
   height: 0;
   width: 0;
 }
+
 .dropdown-menu.pull-right {
   right: 0;
   left: auto;
 }
+
 .dropdown-menu .divider {
   height: 1px;
   margin: 9px 0;
   overflow: hidden;
   background-color: #bfbfbf;
 }
+
 .dropdown-menu > li > a {
   display: block;
   padding: 3px 20px;
@@ -113,26 +120,32 @@ li .dropdown-menu:before {
   color: #8f8f8f;
   white-space: nowrap;
 }
+
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #808080;
   background-color: #f3f3f3;
 }
+
 .open > .dropdown-menu {
   display: block;
 }
+
 .open > a {
   outline: 0;
 }
+
 .dropdown-menu-right {
   left: auto;
   right: 0;
 }
+
 .dropdown-menu-left {
   left: 0;
   right: auto;
 }
+
 .dropdown-header {
   display: block;
   padding: 3px 20px;
@@ -141,6 +154,7 @@ li .dropdown-menu:before {
   color: #777777;
   white-space: nowrap;
 }
+
 .dropdown-backdrop {
   position: fixed;
   left: 0;
@@ -149,16 +163,19 @@ li .dropdown-menu:before {
   top: 0;
   z-index: 990;
 }
+
 .pull-right > .dropdown-menu {
   right: 0;
   left: auto;
 }
+
 .dropup .caret,
 .navbar-fixed-bottom .dropdown .caret {
   border-top: 0;
   border-bottom: 4px solid;
   content: "";
 }
+
 .dropup .dropdown-menu,
 .navbar-fixed-bottom .dropdown .dropdown-menu {
   top: auto;
@@ -171,65 +188,77 @@ li .dropdown-menu:before {
   padding: 15px 35px 45px;
   margin: 0 auto;
   background-color: #fff;
-  border: 1px solid rgba(0,0,0,0.1);  
-  }
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 
 @media (min-width: 768px) {
   .navbar-right .dropdown-menu {
     left: auto;
     right: 0;
   }
+
   .navbar-right .dropdown-menu-left {
     left: 0;
     right: auto;
   }
 }
+
 .button-group,
 .button-group-vertical {
   position: relative;
   display: inline-block;
   vertical-align: middle;
 }
+
 .button-group > .button,
 .button-group-vertical > .button {
   position: relative;
   float: left;
 }
+
 .btn-ripple {
-	display: inline-block;
-	position: relative;
-	overflow: hidden;
-	transition: all ease-in-out .5s;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  transition: all ease-in-out .5s;
 }
 
 .btn-ripple::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 25%;
-	height: 100%;
-	width: 50%;
-	background-color: #000;
-	border-radius: 50%;
-	opacity: 0;
-	pointer-events: none;
-	transition: all ease-in-out 1s;
-	transform: scale(5, 5);
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 25%;
+  height: 100%;
+  width: 50%;
+  background-color: #000;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all ease-in-out 1s;
+  transform: scale(5, 5);
 }
 
 .btn-ripple:active::after {
-	padding: 0;
-	margin: 0;
-	opacity: .2;
-	transition: 0s;
-	transform: scale(0, 0);
+  padding: 0;
+  margin: 0;
+  opacity: .2;
+  transition: 0s;
+  transform: scale(0, 0);
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 button.calendar, button.calendar:active {
   width: 2.75rem;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=)!important;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=) !important;
   background-repeat: no-repeat;
   background-size: 23px;
   background-position: 50%;

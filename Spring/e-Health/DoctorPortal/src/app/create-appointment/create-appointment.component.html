@@ -1,0 +1,72 @@
+<h1>Patient Account Page</h1>
+
+<ng-template #content let-modal>
+  <form #userForm="ngForm" (ngSubmit)="onSubmit()" method="post">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Appointments update</h4>
+      <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="close" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <form> -->
+      <div class="form-group">
+        <label for="datesDoctorAvailable">Date Available Date</label>
+        <div class="input-group">
+          <input #d="ngbDatepicker" [(ngModel)]="model" class="form-control" name="dp" ngbDatepicker
+                 placeholder="yyyy-mm-dd">
+          <div class="input-group-append">
+            <button (click)="d.toggle()" class="btn btn-outline-secondary calendar" type="button"></button>
+          </div>
+        </div>
+        <!-- <pre>Model: {{ model | json }}</pre> -->
+        <div class="form-group"></div>
+        <div class="form-group">
+          <label>Enter Available time</label>
+          <ngb-timepicker [(ngModel)]="time" [meridian]="meridian" [ngModelOptions]="{standalone: true}"
+                          name="dp1"></ngb-timepicker>
+          <!-- <hr>
+          <pre>Selected time: {{time | json}}</pre> -->
+        </div>
+        <div class="form-group">
+          <button (click)="toggleMeridian()" class="btn btn-sm btn-outline-{{meridian ? 'success' : 'danger'}}">
+            Meridian - {{meridian ? "ON" : "OFF"}}
+          </button>
+        </div>
+      </div>
+      <!-- </form> -->
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.close('Save click')" class="btn btn-outline-dark" type="submit">Save</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<div align="right">
+  <button (click)="addDataAppointment(content)" class="btn btn-outline-primary mb-2 mr-2 btn-ripple" name="add_patient"
+          style="margin:5px;"
+          type="button">Create Appointment
+  </button>
+</div>
+<table class="row-border hover" id="userTableD">
+  <thead>
+  <tr>
+    <th>User Name</th>
+    <th>First Name</th>
+    <th>Delete Date</th>
+  </tr>
+  </thead>
+  <tbody *ngIf="patientUser?.length != 0">
+  <tr *ngFor="let patient of test1">
+    <td>{{patient.dateAvailable}}</td>
+    <td>{{patient.timeAvailable}}</td>
+    <td><a (click)="deleteUserPrompt('autofocus', patient)" class="text-primary" style="cursor: pointer;">Delete</a>
+    </td>
+  </tr>
+  <tbody *ngIf="patientUser?.length == 0">
+  <tr>
+    <td class="no-data-available" colspan="3">No data!</td>
+  </tr>
+  </tbody>
+</table>

@@ -9,10 +9,11 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@SequenceGenerator(name = "seqDatesDoctor", initialValue = 6, allocationSize = 1)
 public class DatesDoctorAvailable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seqDatesDoctor")
     @Column(name = "date_id", nullable = false, updatable = false)
     private Long dateID;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

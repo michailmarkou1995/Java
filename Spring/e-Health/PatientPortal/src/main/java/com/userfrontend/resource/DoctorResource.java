@@ -1,8 +1,5 @@
 package com.userfrontend.resource;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
 import com.userfrontend.dao.*;
 import com.userfrontend.domain.*;
 import com.userfrontend.service.DatesDoctorAvailableService;
@@ -10,14 +7,12 @@ import com.userfrontend.service.PatientService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @RestController
@@ -26,120 +21,134 @@ import java.util.*;
 @PreAuthorize("hasRole('DOCTOR')")
 public class DoctorResource {
 
-    @Autowired
+    final
     DatesDoctorAvailableService datesDoctorAvailableService;
 
-    @Autowired
+    final
     DatesDoctorAvailableDao datesDoctorAvailableDao;
 
-    @Autowired
+    final
     PatientService patientService;
 
-    @Autowired
+    final
     DoctorDao doctorDao;
 
-    @Autowired
+    final
     PatientDao patientDao;
 
-    @Autowired
+    final
     AppointmentDao appDao;
 
-    @Autowired
+    final
     TreatmentGuideDao tG;
 
-    @Autowired
+    final
     PatientHealthDao patDao;
 
+    public DoctorResource(DatesDoctorAvailableService datesDoctorAvailableService, DatesDoctorAvailableDao datesDoctorAvailableDao, PatientService patientService, DoctorDao doctorDao, PatientDao patientDao, AppointmentDao appDao, TreatmentGuideDao tG, PatientHealthDao patDao) {
+        this.datesDoctorAvailableService = datesDoctorAvailableService;
+        this.datesDoctorAvailableDao = datesDoctorAvailableDao;
+        this.patientService = patientService;
+        this.doctorDao = doctorDao;
+        this.patientDao = patientDao;
+        this.appDao = appDao;
+        this.tG = tG;
+        this.patDao = patDao;
+    }
+
+    // get Dates of patients
     @RequestMapping(value = "/doctor/{username}/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DatesDoctorAvailable> getDatesDoctorAvailable(@PathVariable("username") String username) {
         Patient p = patientDao.findByUsername(username);
         return datesDoctorAvailableDao.findAllDoctor(p.getPatientID());
     }
 
+    // Patient Health View in the List View "when presses edit element"
     @RequestMapping(value = "/doctor/{username}/{app_id}/fetch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getPatientAvailable(@PathVariable("username") String username, @PathVariable("app_id") String patId) throws JSONException {
-        Patient p = patientDao.findByUsername(username);
+    public String getPatientAvailable(@PathVariable("app_id") String patId) throws JSONException {
 
         Appointment appPat = appDao.findBasedOnPatienthealth(Long.parseLong(patId));
+
         Optional<TreatmentGuide> tGI = tG.findById(appPat.getTreatmentGuide().getId());
-        TreatmentGuide tGuideEntity = tGI.get();
-        TreatmentGuide tGuide = tGuideEntity;
-        Optional<PatientHealth> pTI = patDao.findById(appPat.getPatienthealth().getId());
-        PatientHealth patHEntity = pTI.get();
-        PatientHealth patH = patHEntity;
-        HashMap<String, String> hm1
-                = new LinkedHashMap<String, String>();
-        System.out.println();
-        JSONArray obj = new JSONArray();
-        JSONObject jsonObject3 = new JSONObject();
-        hm1.put("presription", tGuide.getPrescritpionDirections());
-        hm1.put("diagnosed", patH.getPatientDiagnosed());
-        Iterator it = hm1.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            jsonObject3.put(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
+        TreatmentGuide tGuide = new TreatmentGuide();
+        if (tGI.isPresent()) {
+            tGuide = tGI.get();
         }
-        obj.put(jsonObject3);
 
-        return obj.toString();
+        Optional<PatientHealth> pTI = patDao.findById(appPat.getPatienthealth().getId());
+        PatientHealth patH = new PatientHealth();
+        if (pTI.isPresent()) {
+            patH = pTI.get();
+        }
+
+        HashMap<String, String> patientDetailsHashMap
+                = new LinkedHashMap<String, String>();
+
+        // []
+        JSONArray jsonArrayOfObjsPatientDetails = new JSONArray();
+        // {}
+        JSONObject jsonObjectBuild = new JSONObject();
+
+        patientDetailsHashMap.put("presription", tGuide.getPrescritpionDirections());
+        patientDetailsHashMap.put("diagnosed", patH.getPatientDiagnosed());
+
+        // build Obj of the Array jsonArrayOfObjsPatientDetails
+        for (Map.Entry<String, String> stringStringEntry : patientDetailsHashMap.entrySet()) {
+            jsonObjectBuild.put(String.valueOf(((Map.Entry) stringStringEntry).getKey()), String.valueOf(((Map.Entry) stringStringEntry).getValue()));
+        }
+        // {} to -> [{}]
+        jsonArrayOfObjsPatientDetails.put(jsonObjectBuild);
+
+        // [0:{},1:{[]},...]
+        return jsonArrayOfObjsPatientDetails.toString();
     }
 
-    @RequestMapping(value = "/doctor/{username}/inline1", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void getPatientInline1(@PathVariable("username") String username) {
-        Patient p = patientDao.findByUsername(username);
-        List<String> d = appDao.findDoctorInline(p.getPatientID());
-
-    }
-
+    // List View
+    // get Patients that have scheduled an Appointment and send them to View of DoctorPortal Inline-Appointment endpoint
     @RequestMapping(value = "/doctor/{username}/inline", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getPatientInline(@PathVariable("username") String username) throws JSONException {
 
-        Patient p = patientDao.findByUsername(username);
-        List<Appointment> d = appDao.findDoctorInline1(p.getPatientID());
+        // get Doctor Account
+        Patient doctorAccountAppointments = patientDao.findByUsername(username);
+        List<Appointment> appointmentsList = appDao.findDoctorInline1(doctorAccountAppointments.getPatientID());
 
-        HashMap<String, String> hm
-                = new HashMap<String, String>();
-
-
-        HashMap<String, String> hm1
+        HashMap<String, String> patientDetailsHashMap
                 = new LinkedHashMap<String, String>();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonObject1 = new JSONObject();
 
-        JSONArray obj = new JSONArray();
-
-
-        for (int i = 0; i < d.size(); i++) {
-            JSONObject jsonObject2 = new JSONObject();
-            hm1.put("email", d.get(i).getPatientAccount().getEmail());
-            hm1.put("treatmentguide_id", d.get(i).getTreatmentGuide().getId().toString());
-            hm1.put("medication_account_id", d.get(i).getTreatmentGuide().getMedicationAccount().getId().toString());
-            hm1.put("username",
-                    d.get(i).getPatientAccount().getUsername());
-            hm1.put("phone",
-                    d.get(i).getPatientAccount().getPhone());
-            hm1.put("time", d.get(i).getDatesDoctorAvailable().getTimeAvailable());
-            hm1.put("date", d.get(i).getDatesDoctorAvailable().getDateAvailable().toString());
-            hm1.put("time", d.get(i).getDatesDoctorAvailable().getTimeAvailable());
-            hm1.put("app_id", d.get(i).getPatientAccount().getAppointmentList().toString());
-            hm1.put("app_id", d.get(i).getPatienthealth().getId().toString());
+        // {}
+        //JSONObject jsonObjectTest = new JSONObject();
+        // []
+        JSONArray jsonArrayOfObjsPatientDetails = new JSONArray();
 
 
-            Iterator it = hm1.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                jsonObject2.put(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
+        // per patient Details get list of scheduled appointment
+        for (Appointment appointment : appointmentsList) {
+            // obj of the Outter Array Json
+            JSONObject jsonObjectBuild = new JSONObject();
+            patientDetailsHashMap.put("email", appointment.getPatientAccount().getEmail());
+            patientDetailsHashMap.put("treatmentguide_id", appointment.getTreatmentGuide().getId().toString());
+            patientDetailsHashMap.put("medication_account_id", appointment.getTreatmentGuide().getMedicationAccount().getId().toString());
+            patientDetailsHashMap.put("username",
+                    appointment.getPatientAccount().getUsername());
+            patientDetailsHashMap.put("phone",
+                    appointment.getPatientAccount().getPhone());
+            patientDetailsHashMap.put("time", appointment.getDatesDoctorAvailable().getTimeAvailable());
+            patientDetailsHashMap.put("date", appointment.getDatesDoctorAvailable().getDateAvailable().toString());
+            //patientDetailsHashMap.put("app_id", appointment.getPatientAccount().getAppointmentList().toString()); // appointment id
+            patientDetailsHashMap.put("app_id", appointment.getPatienthealth().getId().toString()); // patient-health id
+
+
+            // build Obj of the Array jsonArrayOfObjsPatientDetails
+            for (Map.Entry<String, String> stringStringEntry : patientDetailsHashMap.entrySet()) {
+                jsonObjectBuild.put(String.valueOf(((Map.Entry) stringStringEntry).getKey()), String.valueOf(((Map.Entry) stringStringEntry).getValue()));
             }
-            obj.put(jsonObject2);
+            jsonArrayOfObjsPatientDetails.put(jsonObjectBuild);
         }
-
-        String content = hm.toString();
-        List<String> sendJ = new ArrayList<String>();
-        sendJ.add(content);
-
-        return obj.toString();
+        // [0:{},1:{[]},...]
+        return jsonArrayOfObjsPatientDetails.toString();
     }
 
+    // Doctor Writes to patient prescription Directions in inline-appointment (Component) DoctorPortal Endpoint
     @RequestMapping(value = "/doctor/setDirections", method = RequestMethod.POST, consumes = "application/json")
     public void setPatientDirections(@RequestBody String localAssocArray) throws JSONException {
         JSONObject jsonObject = new JSONObject(localAssocArray);
@@ -149,43 +158,42 @@ public class DoctorResource {
         System.out.println(patientHealthId);
 
         Appointment appPat = appDao.findBasedOnPatienthealth(patientHealthId);
+
         Optional<TreatmentGuide> tGI = tG.findById(appPat.getTreatmentGuide().getId());
-        TreatmentGuide tGuideEntity = tGI.get();
-        TreatmentGuide tGuide = tGuideEntity;
+        TreatmentGuide tGuide = new TreatmentGuide();
+        if (tGI.isPresent()) {
+            tGuide = tGI.get();
+        }
+
         Optional<PatientHealth> pTI = patDao.findById(appPat.getPatienthealth().getId());
-        PatientHealth patHEntity = pTI.get();
-        PatientHealth patH = patHEntity;
+        PatientHealth patH = new PatientHealth();
+        if (pTI.isPresent()) {
+            patH = pTI.get();
+        }
+
         tGuide.setPrescritpionDirections(prescriptions);
         patH.setPatientDiagnosed(diagnosed);
         patDao.save(patH);
         tG.save(tGuide);
     }
 
-
+    // Doctor Creates Free appointment
     @RequestMapping(value = "/doctor/setAppointment", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public void setDatesDoctorAvailable(@RequestBody String datesAvailable) throws JSONException {
-        JSONObject jsonObject = new JSONObject(datesAvailable);
-        System.out.println(jsonObject);
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) -> {
-
-            try {
-                return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            } catch (DateTimeParseException e) {
-                return LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-
-        }).create();
-        DatesDoctorAvailable datesClass = gson.fromJson(datesAvailable, DatesDoctorAvailable.class);//new Gson().fromJson  if not ovveride <--
-        String l = (jsonObject.getJSONObject("doc").get("doctorAccount").toString());
-        Patient p = patientDao.findByUsername(l);
+        JSONObject datesTimeAvailableDoctor = new JSONObject(datesAvailable);
+        String doctorAcc = (datesTimeAvailableDoctor.getJSONObject("doc").get("doctorAccount").toString());
+        Patient p = patientDao.findByUsername(doctorAcc);
         Optional<Doctor> doctor = doctorDao.findById(p.getPatientID());
-        Doctor doctorEntity = doctor.get();
-        DatesDoctorAvailable datesAvailable1 = new DatesDoctorAvailable(doctorEntity);
-        datesAvailable1.setTimeAvailable(jsonObject.get("timeAvailable").toString());
+        Doctor doctorEntity = new Doctor();
+        if (doctor.isPresent()) {
+            doctorEntity = doctor.get();
+        }
+        DatesDoctorAvailable datesAvailableNew = new DatesDoctorAvailable(doctorEntity);
+        datesAvailableNew.setTimeAvailable(datesTimeAvailableDoctor.get("timeAvailable").toString());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
-        LocalDate dateDoctor = LocalDate.parse(jsonObject.get("dateAvailable").toString(), formatter);
-        datesAvailable1.setDateAvailable(dateDoctor);
-        datesDoctorAvailableDao.save(datesAvailable1);
+        LocalDate dateDoctor = LocalDate.parse(datesTimeAvailableDoctor.get("dateAvailable").toString(), formatter);
+        datesAvailableNew.setDateAvailable(dateDoctor);
+        datesDoctorAvailableDao.save(datesAvailableNew);
     }
 
 }

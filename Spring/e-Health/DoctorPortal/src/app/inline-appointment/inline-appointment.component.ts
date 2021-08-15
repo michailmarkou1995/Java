@@ -297,14 +297,32 @@ export class InlineAppointmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var hardcodedTest = [{
+      "app_id": "1",
+      "username": "root",
+      "medication_account_id": "0",
+      "email": "backtrackpower@gmail.com",
+      "phone": "6908990119",
+      "date": "2021-06-03",
+      "authorities": [{"authority": "ROLE_ADMIN"}],
+      "testfield": true,
+    }];
+    var hardcodedTest1 = [{
+      "0": "1",
+      "1": "root",
+      "2": "0",
+      "3": "backtrackpower@gmail.com",
+      "4": "6908990119",
+      "5": "2021-06-03",
+    }];
 
     this.patientService.getUsers2(localStorage.getItem("username")).subscribe(
       (res: any) => {
-        console.log("hi");
+        console.log("Get JSON Array (of objects) from backend");
         console.log(res);
-        this.apin1 = res;
-        console.log(this.apin1[0].date);
-        //AppointmentInline apin=res
+
+        this.apin1 = res;//hardcodedTest
+        console.log(this.apin1[0]);//.date
         this.test1 = res;
         console.log(this.test);
         setTimeout(() => {

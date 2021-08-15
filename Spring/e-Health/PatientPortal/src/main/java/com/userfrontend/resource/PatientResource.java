@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -42,15 +45,9 @@ public class PatientResource {
     @Autowired
     private MedicationAccountDao medicationD;
 
-    public static Date getDate(String sessionDate) {
-        Long sessionOnDate = Long.parseLong(sessionDate);
-        Date date = new Date(sessionOnDate);
-        return date;
-    }
-
 
     @PostMapping(path = "/patient/set", consumes = "application/json", produces = "application/json")
-    void addUser(@RequestBody Patient patient) {//string
+    void addUserPatient(@RequestBody Patient patient) {
 
         if (patientService.checkPatientExists(patient.getUsername(), patient.getEmail())) {
 
@@ -67,7 +64,7 @@ public class PatientResource {
             patientRoles.add(new PatientRole(patient, roleDao.findByName("ROLE_USER")));
 
             patientService.createUser(patient, patientRoles);
-            MedicationAccount medication = new MedicationAccount();
+            MedicationAccount medication;
             medication = medaccount.findByAccountNumberA(patient.getMedicationAccount().getAccountNumber());
             medication.setPatient(patient);
             medicationD.save(medication);
@@ -105,26 +102,27 @@ public class PatientResource {
             patientRoles.add(new PatientRole(patientClass, roleDao.findByName("ROLE_USER")));
 
             patientService.createUser(patientClass, patientRoles);
-            MedicationAccount medication = new MedicationAccount();
-            medication = medaccount.findByAccountNumberA(patientClass.getMedicationAccount().getAccountNumber());
+            MedicationAccount medication;
             Optional<MedicationAccount> med = medaccount1.findById(patientClass.getMedicationAccount().getId());
-            MedicationAccount medEntity = med.get();
+            MedicationAccount medEntity = new MedicationAccount();
+            if (med.isPresent()){
+                medEntity = med.get();
+            }
+
             medication = medEntity;
-            //medication=medaccount1.findById(patientClass.getMedicationAccount().getId());
             medication.setPatient(patientClass);
             medicationD.save(medication);
         }
         patientService.enableDoctor(patientClass.getUsername(), catD);
-        System.out.println("done");
     }
 
     @RequestMapping(value = "/patient/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Patient> patientList() {
+    public List<Patient> patientListGet() {
         return patientService.findPatientList();
     }
 
     @RequestMapping(value = "/patient/all", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Patient> patientList1() {
+    public List<Patient> patientListPost() {
         return patientService.findPatientList();
     }
 
@@ -149,8 +147,6 @@ public class PatientResource {
     @RequestMapping("/patient/{username}/{category_doctor}/doctor/enable")
     public void enableDoctor(@PathVariable("username") String username, @PathVariable("category_doctor") String catD) {
         patientService.enableDoctor(username, catD);
-
-
     }
 
     @RequestMapping("/patient/{username}/doctor/disable")

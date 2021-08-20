@@ -99,6 +99,7 @@ public class Color extends Canvas implements Runnable {
         g.drawImage(resource.loadImage("/textures/mini_game.png"), 0, 0, resource.getWidth(), resource.getHeight(), null);
         g.fillRect((int) x, (int) y, 32, 32);
         g.setFont(new Font("Verdana", 0, 50));
+        // RGB color check Text Follow Align
         if (resource.getColorHex((int) x, (int) y) == 0xFF6A00) {
             int xx = (int) x;
             int yy = (int) y;

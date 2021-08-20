@@ -1,12 +1,16 @@
 package com.mime.minefront.graphics;
 
 import com.mime.minefront.Game;
+import com.mime.minefront.entity.Entity;
 import com.mime.minefront.input.PlayerController;
 import com.mime.minefront.level.Block;
 import com.mime.minefront.level.Level;
 
 import java.util.Random;
 
+/**
+ * <h2>calc's for pixel formation</h2>
+ */
 public class Render3D extends Render {
 
     public static boolean wallHit, wallHitInverse;
@@ -18,7 +22,7 @@ public class Render3D extends Render {
     Random random = new Random();
     int c = 0;
     double h = 0.5;
-    private double renderDistance = 5000;
+    private double renderDistance = 5000;  // Distance of View
     private double forwardGlobal;
     private double forward, right, cosine, sine, up, walking, rotationUp, cosine1, sine1;
 
@@ -28,102 +32,25 @@ public class Render3D extends Render {
         zBufferWall = new double[width];
     }
 
-//	public void floor() {
-//		
-//		for (int y=0; y<HEIGHT; y++) {
-//			double yDepthCeiling = y - HEIGHT /2.4 ;
-//			double z = 100.0 / yDepthCeiling;
-//				
-//				for (int x=0; x<WIDTH; x++) {
-//					double xDepth = x - WIDTH /2;
-//					xDepth *=z;
-//					int xx = (int) (xDepth) & 5;//>>2;//<< 2;//15
-//					PIXELS[x+y*WIDTH] = xx * 128;		
-//				}	
-//			}
-//	}
-
-//	double time = 0;
-//	public void floor() {
-//		
-//		for (int y=0; y<HEIGHT; y++) {
-//			double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
-//			
-//			if (yDepthCeiling < 0) {
-//				yDepthCeiling = -yDepthCeiling;
-//			}
-//			
-//			double z = 8 / yDepthCeiling;
-//				
-//			time += 0.0005;
-//			
-//				for (int x=0; x<WIDTH; x++) {
-//					double xDepth = (x - WIDTH /2.0) / HEIGHT;
-//					xDepth *=z;
-//					int xx = (int) (xDepth) & 15;//-+* time front diagonal move both xx yy etc
-//					int yy = (int) (z) & 15;//+time
-//					PIXELS[x+y*WIDTH] = (xx * 16) | (yy * 16) << 8;		
-//					//System.out.println(yy);
-//				}	
-//			}
-//	}
-
-//	public void floor(Game game) {
-//		
-//		double forward = game.time/10.0;
-//		double right = game.time/10.0;//-10 - + - = +
-//		double floorPosition = 8;
-//		double ceilPosition = 8;//render distance will make black if high now its shows infinitely
-//		double rotation = game.time/100.0;//0; //game.time/100.0;//animated because time changes
-//		double cosine = Math.cos(rotation);
-//		double sine = Math.sin(rotation);
-//		
-//		for (int y=0; y<HEIGHT; y++) {
-//			double yDepthCeiling = (y - HEIGHT /2.0) / HEIGHT ;
-//			
-//			double z = floorPosition / yDepthCeiling;
-//			
-//			if (yDepthCeiling < 0) {
-//				z = ceilPosition /-yDepthCeiling;//z = -yDepthCeiling wipes ceiling
-//			}
-//			
-//				for (int x=0; x<WIDTH; x++) {
-//					double xDepth = (x - WIDTH /2.0) / HEIGHT;
-//					xDepth *=z;
-//					double xx =  xDepth * cosine + z * sine; //+ right;
-//					double yy = z * cosine - xDepth * sine; //+ forward ;
-//					int xPix = (int) (xx);
-//					int yPix = (int) (yy);
-//					PIXELS[x+y*WIDTH] = ((xPix & 15)* 16) | ((yPix & 15)* 16) << 8;	
-//					//System.out.println(game.time);
-//				}	
-//			}
-//	}
-
+    // Create Celling + floor by manipulating pixels
     public void floor(Game game) {
-        int change = 0;
-        for (int i = 0; i < 1000; i++) {
-            change += i;
-        }
 
         for (int x = 0; x < WIDTH; x++) {
             zBufferWall[x] = 0;
         }
 
-        //double forward = game.time % 100 / 20.0;
-        //double forward = game.controls.z; // game.time % 100 / 20.0; //pop back and forth like movie clip
-        forward = game.controls.z;
+        forward = Entity.z;
         forwardGlobal = forward;
-        right = game.controls.x;
+        right = Entity.x;
         double floorPosition = 8;
-        double ceilPosition = 16;//put biger than RenderDistanceLimiter e.g. 800 Ceil disappear
-        double rotation = game.controls.rotation;//0;//Math.sin(game.time % 1000.0 / 80.0);//game.controls.rotation;//game.time % 100.0 /10.0; // Math.sin(game.time % 1000.0 / 80.0); // Math.sin(game.time / 40.0) * 0.5;
-        rotationUp = game.controls.rotationUp;
+        double ceilPosition = 16;  // put bigger than RenderDistanceLimiter e.g. 800 Ceil disappear
+        double rotation = PlayerController.rotation;  // 0;  // Math.sin(game.time % 1000.0 / 80.0);  // game.controls.rotation;  // game.time % 100.0 /10.0; // Math.sin(game.time % 1000.0 / 80.0); // Math.sin(game.time / 40.0) * 0.5;
+        rotationUp = PlayerController.rotationUp;
         cosine1 = Math.cos(rotationUp);
         sine1 = Math.sin(rotationUp);
-        cosine = Math.cos(rotation);//double
+        cosine = Math.cos(rotation);  // double
         sine = Math.sin(rotation);
-        up = game.controls.y;
+        up = PlayerController.y;
         walking = 0;
 
 
@@ -135,11 +62,11 @@ public class Render3D extends Render {
             }
             yDepthCeiling = (y - HEIGHT / 2.0 * rotationUp) / HEIGHT;
 
-            double z = (floorPosition + up) / yDepthCeiling;//+wallking
+            double z = (floorPosition + up) / yDepthCeiling;  // +wallking
             c = 0;
             if (PlayerController.walk) {
                 walking = Math.sin(game.time / 6.0) * 0.4;
-                z = (floorPosition + up + walking) / yDepthCeiling;//+wallking
+                z = (floorPosition + up + walking) / yDepthCeiling;  // +wallking
             }
             if (PlayerController.jumpedStop) {
                 up = 0;
@@ -174,10 +101,10 @@ public class Render3D extends Render {
                 int spriteSheetWidthHigh = 128;
                 if (c == 0)
                     //PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[(xPix & 7) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
-                    PIXELS[x + y * WIDTH] = Texture.blocks.PIXELS[((xPix/* * 4  + 1*/ & 30) + 0) + (yPix & 30) * spriteSheetWidthHigh];    //from 8 to * 16 in the end now width // 32 offset see in .NET paint
+                    PIXELS[x + y * WIDTH] = Texture.blocks.PIXELS[((xPix & 30) + 0) + (yPix & 30) * spriteSheetWidthHigh];    //from 8 to * 16 in the end now width // 32 offset see in .NET paint
                 else
                     //PIXELS[x+y*WIDTH] = Texture.floor.PIXELS[((xPix & 7)+8) + (yPix & 7) * spriteSheetWidth];	//from 8 to * 16 in the end now width
-                    PIXELS[x + y * WIDTH] = Texture.blocks.PIXELS[((xPix & 30) + 0) + (yPix & 30) * spriteSheetWidthHigh];    //from 8 to * 16 in the end now width
+                    PIXELS[x + y * WIDTH] = Texture.blocks.PIXELS[((xPix & 30)) + (yPix & 30) * spriteSheetWidthHigh];    //from 8 to * 16 in the end now width
 
                 //limit Render Distance and the renderDistanceLimiter() is just smoothing the brigthness
                 if (z > 400) {//x,y <,> etc 50 100
@@ -194,9 +121,7 @@ public class Render3D extends Render {
                 Block east = level.create(xBlock + 1, zBlock);
                 Block south = level.create(xBlock, zBlock + 1);
                 //System.out.println(block.block_overlap.toString());
-//				for(int i =0; i < block.block_overlap.size(); i++) {
-//					System.out.println(block.block_overlap.get(i));
-//				}
+
                 //System.out.println(Arrays.toString(block.block_overlap));
                 //MAZE like GENERATION
                 if (block.solid) {
@@ -233,100 +158,39 @@ public class Render3D extends Render {
             }
         }
 
-        //System.out.println(Arrays.deepToString(Block.block_overlap.toArray()));
+        for (int xBlock = -size; xBlock <= size; xBlock++) {
+            for (int zBlock = -size; zBlock <= size; zBlock++) {
+                Block block = level.create(xBlock, zBlock);
+                Block east = level.create(xBlock + 1, zBlock);
+                Block south = level.create(xBlock, zBlock + 1);
 
-//		List<String> a=new ArrayList<>();
-//	    a.add("111");
-//	    a.add("112");
-//	    a.add("113");
-//	    System.out.println(a.toString());
+                if (block.solid) {
+                    if (!east.solid) {
+                        renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
+                    }
+                    if (!south.solid) {
+                        renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);
+                    }
+                } else {
+                    if (east.solid) {
+                        renderWallRandom(xBlock + 1, xBlock + 1, zBlock + 1, zBlock, 0.5);
+                    }
+                    if (south.solid) {
+                        renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock + 1, 0.5);
+                    }
+                }
+            }
+        }
 
-//		for(int i =0; i < Block.block_overlap.size(); i++) {
-//			//System.out.println(Arrays.deepToString(Block.block_overlap.toArray()));
-//			//System.out.println(Block.block_overlap.toString()+"\n");
-//			//System.out.println(Block.block_overlap);
-//			/*System.out.println(Block.block_overlap.get(i)); */ /**/
-//			System.out.println(Block.block_overlap.get(i).toString());
-//		}
-
-//		for(Block b: Block.block_overlap) {
-//			System.out.println(b);
-//		}
-        //System.out.println(Block.block_overlap);
-        //Block.block_overlap.forEach((Block value) -> System.out.print(value));
-        //Block.block_overlap.forEach((value) -> System.out.print(value));
-        //Block.block_overlap.forEach((value) -> System.out.println(value));
-        //Block.block_overlap.forEach(System.out::print);
-        //Block.block_overlap.forEach(System.out::println);
-
-
-//		for (int xBlock = -size; xBlock <= size; xBlock++) {
-//			for (int zBlock = -size; zBlock <= size; zBlock++) {
-//				Block block = level.create(xBlock, zBlock);
-//				Block east = level.create(xBlock + 1, zBlock);
-//				Block south = level.create(xBlock, zBlock + 1);
-//				
-//				if (block.solid) {
-//					if(!east.solid) {
-//						renderWallRandom(xBlock + 1, xBlock + 1, zBlock, zBlock + 1, 0.5);
-//					}
-//					if(!south.solid) {
-//						renderWallRandom(xBlock + 1, xBlock, zBlock + 1, zBlock + 1, 0.5);			
-//					}
-//				} else {
-//					if (east.solid) {
-//						renderWallRandom(xBlock + 1, xBlock + 1, zBlock+1, zBlock, 0.5);			
-//					}
-//					if (south.solid) {
-//						renderWallRandom(xBlock, xBlock + 1, zBlock + 1, zBlock  + 1, 0.5);
-//					}
-////					for(int s = 0; s < block.sprites.size(); s++) {
-////						Sprite sprite = block.sprites.get(s);
-////						renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z);
-////					}
-//				}
-//			}
-//		}
-//		for (int xBlock = 1; xBlock <= 20; xBlock++) {
-//			for (int zBlock = 1; zBlock <= 20; zBlock++) {
-//				Block block = level.createSimple(xBlock, zBlock);
-//				for(int s = 0; s < block.sprites.size(); s++) {
-//					Sprite sprite = block.sprites.get(s);
-//					renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
-//				}
-//			}
-//		}
         for (int xBlock = -size; xBlock <= size; xBlock++) {
             for (int zBlock = -size; zBlock <= size; zBlock++) {
                 Block block = level.create(xBlock, zBlock);
                 for (int s = 0; s < block.sprites.size(); s++) {
                     Sprite sprite = block.sprites.get(s);
-                    //	for(int appear=0; appear < Block.block_overlap.size(); appear++) {
-                    //	if(Block.block_overlap.get(appear).x0 == xBlock + sprite.x) {
                     renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
-                    //	}
-                    //}
                 }
             }
         }
-
-//		for (int xBlock = -size; xBlock <= size; xBlock++) {
-//			for (int zBlock = -size; zBlock <= size; zBlock++) {
-//				Block block = level.create(xBlock, zBlock);
-//				for(int s = 0; s < block.sprites.size(); s++) {
-//					Sprite sprite = block.sprites.get(s);
-////					if (random.nextInt(3) == 0)
-////						h = 0.5; else h = -0.5;
-//					//if(Level.temp_generate_overlap==false)
-//					for(int appear=0; appear < Block.block_overlap.size(); appear++) {
-//						if(Block.block_overlap.get(appear).x0 == xBlock + sprite.x &&
-//								Block.block_overlap.get(appear).z0 == zBlock + sprite.z	) {
-//							renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, h);
-//						}
-//					}		
-//				}
-//			}
-//		}
     }
 
     //pixels further gets less brightness
@@ -379,10 +243,10 @@ public class Render3D extends Render {
         double yPixel = rotY / rotZ * HEIGHT + yCenter * rotationUp;
 
         //** Resolution of "Tile"
-        double xPixelL = xPixel - HEIGHT / 2 / rotZ; //16 is size of Sprites
-        double xPixelR = xPixel + HEIGHT / 2 / rotZ;//sprite WIDTH change here e.g. /1 stretch
-        double yPixelL = yPixel - HEIGHT / 2 / rotZ;
-        double yPixelR = yPixel + HEIGHT / 2 / rotZ;
+        double xPixelL = xPixel - HEIGHT / 2.0 / rotZ; //16 is size of Sprites
+        double xPixelR = xPixel + HEIGHT / 2.0 / rotZ;//sprite WIDTH change here e.g. /1 stretch
+        double yPixelL = yPixel - HEIGHT / 2.0 / rotZ;
+        double yPixelR = yPixel + HEIGHT / 2.0 / rotZ;
 
         //pixels are ints
         int xpl = (int) xPixelL;//x pixel left
@@ -1422,7 +1286,7 @@ public class Render3D extends Render {
             xPixelRightInt = WIDTH;
         }
 
-        //corner pins
+        // corner pins
         double yPixelLeftTop = (yCornerTL / rotLeftSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);//double yPixelLeftTop = (yCornerTL / rotLeftSideZ * (HEIGHT *( rotationUp/2)) + HEIGHT / 2.0 * rotationUp);
         double yPixelLeftBottom = (yCornerBL / rotLeftSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);
         double yPixelRightTop = (yCornerTR / rotRightSideZ * HEIGHT + HEIGHT / 2.0 * rotationUp);
@@ -1464,14 +1328,15 @@ public class Render3D extends Render {
                     double pixelRotationY = (y - yPixelTop) / (yPixelBottom - yPixelTop);
                     int yTexture = (int) (8 * pixelRotationY);
                     PIXELS[x + y * WIDTH] = Texture.floor.PIXELS[((xTexture & 7) + textureCoordinates) + (yTexture & 7) * 16];
-                    zBuffer[x + y * WIDTH] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;//100
-                } catch (ArrayIndexOutOfBoundsException e) {//quick fix
+                    zBuffer[x + y * WIDTH] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;  // 100
+                } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
 
+    // flipped normals rendering
     public void renderDWall(double xLeft, double xRight, double zDistanceLeft
             , double zDistanceRight, double yHeight) {
 
@@ -1563,6 +1428,5 @@ public class Render3D extends Render {
         }
 
     }
-
 //cos sin wave make a rotation O istead of C or half O they are opossite null
 }

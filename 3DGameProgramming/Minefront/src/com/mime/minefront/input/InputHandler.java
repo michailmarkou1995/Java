@@ -1,6 +1,7 @@
 package com.mime.minefront.input;
 
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InputHandler implements KeyListener, FocusListener, MouseListener
@@ -8,15 +9,15 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 
     public static int MouseX, MouseY, MouseButton, MouseDX, MouseDY, MousePX,
             MousePY;//d for drag P for pressed mouse loc(coordinates)
-    public static int MouseXwrap, MouseYwrap;
     public static int WindowX, WindowY;
-    public static boolean dragged = false;//, KeyPressedButton=false;
-    public static AtomicBoolean KeyPressedButton = new AtomicBoolean(true);//canShoot final
+    public static boolean dragged = false;
+    public static AtomicBoolean KeyPressedButton = new AtomicBoolean(true);
     //public boolean[] key = new boolean[65536];
     public boolean[] key = new boolean[300];
     Object MouseCapture;
     boolean forward, back, right, left, turnLeft, turnRight, crouch, sprint, regenH, jump, esc;
 
+    // Key Input Checking update
     public void tick() {
         forward = key[KeyEvent.VK_W];
         back = key[KeyEvent.VK_S];
@@ -30,8 +31,6 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
         jump = key[KeyEvent.VK_SPACE];
         esc = key[KeyEvent.VK_ESCAPE];
     }
-
-    //public List<boolean> consoleSecret = new ArrayList<>();
 
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -57,7 +56,6 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
         MousePX = e.getX();
         MousePY = e.getY();
         //System.out.println(e.getClickCount());
-        //e.getClickCount();
     }
 
     @Override
@@ -68,7 +66,6 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //system out something?
     }
 
     @Override
@@ -81,25 +78,17 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
     @Override
     public void focusGained(FocusEvent e) {
         // TODO Auto-generated method stub
-
     }
 
-    //outside of window frame
+    // outside of window frame
     @Override
     public void focusLost(FocusEvent e) {
-        for (int i = 0; i < key.length; i++) {
-            key[i] = false;
-        }
-
-//		if (keyCode > 0 && keyCode < key.length) {
-//			key[keyCode] = false;
-//		}
+        Arrays.fill(key, false);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -149,12 +138,10 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener
     @Override
     public void componentShown(ComponentEvent e) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
         // TODO Auto-generated method stub
-
     }
 }

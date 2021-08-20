@@ -3,6 +3,7 @@ package com.mime.minefront.graphics;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ResourceMini {
 
@@ -11,7 +12,7 @@ public class ResourceMini {
 
     public BufferedImage loadImage(String path) {
         try {
-            image = ImageIO.read(ResourceMini.class.getResource(path));
+            image = ImageIO.read(Objects.requireNonNull(ResourceMini.class.getResource(path)));
             this.w = image.getWidth();
             this.h = image.getHeight();
             return image;

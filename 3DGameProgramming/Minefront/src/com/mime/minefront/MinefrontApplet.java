@@ -4,6 +4,9 @@ import java.applet.Applet;
 import java.awt.*;
 import java.io.Serial;
 
+/**
+ * @deprecated Applet usage to run on browser plugin support
+ */
 public class MinefrontApplet extends Applet {
 
     @Serial

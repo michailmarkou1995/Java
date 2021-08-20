@@ -35,28 +35,26 @@ public class Level {
     }
 
     public void generateLevel() {
-        //here generate changes before render Happens e.g. change amount of volume
+        // here generate changes before render Happens e.g. change amount of volume
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Block block = null;
                 if (random.nextInt(28) == 0) {
                     block = new SolidBlock();//true block
                     //block.block_overlap.add(block);
-                    //temp_generate_overlap=true;
-                } else {//if(!temp_generate_overlap)
+                } else {
                     block = new Block();//false no block
                     if (random.nextInt(15) == 0)//every 5 without it 1 sprite every block("tile")
                         block.addSprite(new Sprite(0, 0, 0));
-                    //temp_generate_overlap=false;
                 }
                 blocks[x + y * width] = block;
             }
         }
     }
 
-    public void update() {//PlayerController.tick() extends mob which extends THIS Level.java Class
-        for (int i = 0; i < players_mobs_entities.size(); i++) {
-            players_mobs_entities.get(i).tick();
+    public void update() {
+        for (Entity players_mobs_entity : players_mobs_entities) {
+            players_mobs_entity.tick();
         }
     }
 

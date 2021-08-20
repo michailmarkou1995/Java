@@ -7,7 +7,7 @@ import java.util.Random;
 public class Screen extends Render {
 
     private Render test;
-    private Render3D render3d;
+    private final Render3D render3d;
 
     public Screen(int width, int height) {
         super(width, height);
@@ -15,10 +15,13 @@ public class Screen extends Render {
         render3d = new Render3D(width, height);
         test = new Render(256, 256);//256, 256
         for (int i = 0; i < (256 * 256); i++) {//256,256
-            test.PIXELS[i] = random.nextInt() * (random.nextInt(5) / 4);//transparency like
+            test.PIXELS[i] = random.nextInt() * (random.nextInt(5) / 4);  // transparency like
         }
     }
 
+    /**
+     * assets render final hierarchy
+     */
     public void render(Game game) {
 
         for (int i = 0; i < WIDTH * HEIGHT; i++) {

@@ -13,9 +13,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.io.Serial;
+import java.util.Objects;
 
 public class Launcher extends JFrame implements Runnable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     public static Launcher laun = null;
     protected JPanel window = new JPanel();
@@ -24,22 +27,17 @@ public class Launcher extends JFrame implements Runnable {
     boolean running = false;
     Thread thread;
     Display display;
-    JFrame frame = new JFrame(); //perito mono gia ama NO extend JFrame + frame.add(this); MUST then
+    JFrame frame = new JFrame();
     private JButton play, options, help, quit;
-    private Rectangle rplay, roptions, rhelp, rquit;//if not = something e.g. 0 is null pointer
+    private Rectangle rplay, roptions, rhelp, rquit;
 
-    public Launcher(int id) {//, Display display
-        //if(Display.getGameInstance(display) != null)Display.getGameInstance(display).stop();
-        //if(Display.getGameInstance(RunGame.getGameInstance()) != null)Display.getGameInstance(RunGame.getGameInstance()).stop();
-
-        //this.display=display; //if takes renderMenu from Display only then need to initialize here
+    public Launcher(int id) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
         setUndecorated(true);
-        //new JFrame is not neede because we use directly JFrame extends
         setTitle("Minefront Launcher");
         setSize(new Dimension(width, height));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,9 +61,7 @@ public class Launcher extends JFrame implements Runnable {
         addMouseListener(input);
         addMouseMotionListener(input);
 
-        //how to go back in Thread of Main menu disposing the Game? and closing the thread?
         startMenu();
-        //display.start();/*start only when press PLAY close or hold the startMenu when return the opposite can be done?*/
     }
 
     public static void getDispose() {
@@ -73,33 +69,21 @@ public class Launcher extends JFrame implements Runnable {
     }
 
     public void updateFrame() {
-        //setLocation(500,200);//live update in debug mode hot swap code
-        //System.out.println("X: " + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
+
         if (InputHandler.dragged) {
-            Point p = getLocation();//frame.getLocation if you used Object independly of extend JFrame otherwise Glitchy Movement
+            Point p = getLocation();
             setLocation(p.x + InputHandler.MouseDX - InputHandler.MousePX,
                     p.y + InputHandler.MouseDY - InputHandler.MousePY);
-            //int x = getX();//frame.getY that itan logo JFRame oxi input handler
-            //int y = getY();
-            //System.out.println(x + InputHandler.MouseDX - InputHandler.MousePX);
-            //global window X, Y + Spot you Start Dragging - spot you pressed for dragging static
-//			setLocation(x + InputHandler.MouseDX - InputHandler.MousePX,
-//					y + InputHandler.MouseDY - InputHandler.MousePY);//frame.setLocation
         }
     }
 
-    public synchronized void startMenu() {//without synch run in Graphics error but ESC fixes it with that closes instead
-        //new Thread(this, "menu").start();
+    public synchronized void startMenu() {
         running = true;
         thread = new Thread(this, "menu");
         thread.start();
-//		if(Display.getGameInstance(RunGame.getGameInstance()) != null) {
-//			RunGame.getDispose();
-//			Display.getGameInstance(RunGame.getGameInstance()).stop();
-//		}
     }
 
-    public synchronized void stopMenu() {//throws new Exception return to caller the handle try catch not here
+    public synchronized void stopMenu() {
         try {
             thread.join();
         } catch (InterruptedException e) {
@@ -111,10 +95,6 @@ public class Launcher extends JFrame implements Runnable {
     public void run() {
         requestFocus();
         while (running) {
-            //System.out.println("Menu Running");
-            //System.out.println("Menu thread running see in Debug mode console ");
-            //new Display().renderMenu();
-            //display.renderMenu();
             try {
                 renderMenu();
                 //System.out.println(Thread.activeCount());
@@ -162,7 +142,6 @@ public class Launcher extends JFrame implements Runnable {
                 //config.saveConfiguration("sd", Display.selection);
                 dispose();
                 new Options();//() //1
-                //frame.dispose();
             }
         });
 
@@ -174,7 +153,7 @@ public class Launcher extends JFrame implements Runnable {
 
         quit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);//1 is abnormal if it wasnt suspose to close an exception 0 is expected to close normal
+                System.exit(0);
             }
         });
 
@@ -193,8 +172,7 @@ public class Launcher extends JFrame implements Runnable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 800, 400);
         try {
-            //g.drawImage(ImageIO.read(Display.class.getResource("/wallpapers/launcher_menu.jpg")),0,0, 800, 400, null);
-            g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/launcher_menu.jpg")), 0, 0, 800, 400, null);
+            g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/launcher_menu.jpg"))), 0, 0, 800, 400, null);
 
             //System.out.println("X:" + InputHandler.MouseX + " Y: " + InputHandler.MouseY);
 
@@ -203,14 +181,10 @@ public class Launcher extends JFrame implements Runnable {
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Verdana", 0, 20));
                 g.drawString("Minigame", 670, 90);
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")), 670 + 100, 74, 22, 22, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/arrow_small.png"))), 670 + 100, 74, 22, 22, null);
                 if (InputHandler.MouseButton == 1) {
                     InputHandler.MouseButton = 0;
-                    //System.out.println("PLAY");
                     config.loadConfiguration("resources/settings/config.xml");
-                    //dispose();
-                    //RunMiniGame.game.frame.dispose();
-                    //Launcher.getDispose(); in RunMiniGame() Instead
                     new RunMiniGame();
                 }
             } else {
@@ -221,28 +195,22 @@ public class Launcher extends JFrame implements Runnable {
 
             if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 &&
                     InputHandler.MouseY > 130 && InputHandler.MouseY < 130 + 30) {
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/play_on.png")), 690, 130, 80, 30, null);
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")), 690 + 80, 134, 22, 22, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/play_on.png"))), 690, 130, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/arrow_small.png"))), 690 + 80, 134, 22, 22, null);
                 if (InputHandler.MouseButton == 1) {
                     InputHandler.MouseButton = 0;
-                    //System.out.println("PLAY");
                     config.loadConfiguration("resources/settings/config.xml");
-
-                    //this.dispose();
-                    //getDispose();//Happens on RunGame instead
-                    //new RunGame(Display.WindowLocation);
                     Display.onceDid = true;
                     new RunGame();
-                    //dispose();//doesnt run after New RunGame?!
                 }
             } else
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/play_off.png")), 690, 130, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/play_off.png"))), 690, 130, 80, 30, null);
 
 
             if (InputHandler.MouseX > 641 && InputHandler.MouseX < 641 + 130 &&
                     InputHandler.MouseY > 170 && InputHandler.MouseY < 170 + 30) {
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/options_on.png")), 641, 170, 130, 30, null);
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")), 690 + 80, 174, 22, 22, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/options_on.png"))), 641, 170, 130, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/arrow_small.png"))), 690 + 80, 174, 22, 22, null);
                 if (InputHandler.MouseButton == 1) {
                     InputHandler.MouseButton = 0;
                     new Options();
@@ -250,39 +218,34 @@ public class Launcher extends JFrame implements Runnable {
                 }
 
             } else
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/options_off.png")), 641, 170, 130, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/options_off.png"))), 641, 170, 130, 30, null);
 
 
             if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 &&
                     InputHandler.MouseY > 210 && InputHandler.MouseY < 210 + 30) {
-                //g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_on.png")),690,210, 80, 30, null);
-                //g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")),690+80,214, 22, 22, null);
                 if (InputHandler.MouseButton == 1) {
                     //System.exit(0);
                 }
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_off.png")), 690, 210, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/help_off.png"))), 690, 210, 80, 30, null);
             } else
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/help_off.png")), 690, 210, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/help_off.png"))), 690, 210, 80, 30, null);
 
 
             if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 &&
                     InputHandler.MouseY > 250 && InputHandler.MouseY < 250 + 30) {
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/exit_on.png")), 690, 250, 80, 30, null);
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/arrow_small.png")), 690 + 80, 254, 22, 22, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/exit_on.png"))), 690, 250, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/arrow_small.png"))), 690 + 80, 254, 22, 22, null);
                 if (InputHandler.MouseButton == 1) {
                     System.exit(0);
                 }
             } else
-                g.drawImage(ImageIO.read(Launcher.class.getResource("/wallpapers/menu/exit_off.png")), 690, 250, 80, 30, null);
+                g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/wallpapers/menu/exit_off.png"))), 690, 250, 80, 30, null);
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        //g.setColor(Color.WHITE);
-        //g.setFont(new Font("Verdana", 0, 30));
-        //g.drawString("Play", 720, 90);
         g.dispose();
         bs.show();
 

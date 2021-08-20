@@ -3,6 +3,9 @@ package com.mime.minefront;
 import java.io.*;
 import java.util.Properties;
 
+/**
+ * XML configuration store
+ */
 public class Configuration {
 
     Properties properties = new Properties();
@@ -24,7 +27,7 @@ public class Configuration {
         }
     }
 
-    //define path so many config files in future e.g. load player location not in same as res settings
+    // define path so many config files in future e.g. load player location not in same as res settings
     public void loadConfiguration(String path) {//String key
         try {
             InputStream read = new FileInputStream(path);
@@ -45,6 +48,5 @@ public class Configuration {
     public void setResolution(int width, int height) {
         Display.WIDTH = width;
         Display.HEIGHT = height;
-
     }
 }

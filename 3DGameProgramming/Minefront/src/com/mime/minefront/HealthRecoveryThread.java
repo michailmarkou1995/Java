@@ -1,11 +1,12 @@
 package com.mime.minefront;
 
-public class ThreadTest extends Thread {//extends Thread  implements Runnable
+public class HealthRecoveryThread extends Thread {//extends Thread  implements Runnable
 
     public final Object lock = this;
     public boolean pause = false;
     public double health;
 
+    // Press H to gradually increase health
     public void recoverHealth() {
         for (double i = 0; i <= 100; i = i + 0.1) {
             health += i;

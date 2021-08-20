@@ -15,6 +15,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.Serial;
 
+/**
+ * <h2>Main Game Class Run</h2>
+ */
 public class Display extends Canvas implements Runnable {
     public static final String TITLE = "Minefront Pre-Alpha 0.05";
     @Serial
@@ -125,7 +128,7 @@ public class Display extends Canvas implements Runnable {
         }
     }
 
-    /*? used anywhere really?*/
+    // pause thread for wait
     public synchronized void paused() {
         try {
             wait();
@@ -139,6 +142,7 @@ public class Display extends Canvas implements Runnable {
      * <h2>Game Menu Pause Thread to Continue on "esc"</h2>
      */
     public synchronized void continued() {
+        // return the Thread flow back here
         notify();
         input.key[KeyEvent.VK_ESCAPE] = false;
     }
@@ -216,8 +220,10 @@ public class Display extends Canvas implements Runnable {
         }
     }
 
+    // Display Graphics
     public void render() {
         if (!PlayerController.not_paused) {
+            // Image buffer creation "pre-show" in Display
             BufferStrategy bs = this.getBufferStrategy();
             if (bs == null) {
                 createBufferStrategy(3);
@@ -239,9 +245,8 @@ public class Display extends Canvas implements Runnable {
 
             screen.render(game);
 
-            for (int i = 0; i < getGameWidth() * getGameHeight(); i++) {
-                pixels[i] = screen.PIXELS[i];
-            }
+            if (getGameWidth() * getGameHeight() >= 0)
+                System.arraycopy(screen.PIXELS, 0, pixels, 0, getGameWidth() * getGameHeight());
 
             g = bs.getDrawGraphics();
             g.drawImage(img, 0, 0, getGameWidth(), getGameHeight(), null);
@@ -255,19 +260,25 @@ public class Display extends Canvas implements Runnable {
 
     //update method
     private void tick() {
+
+        // input keys update
         input.tick();
         try {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < input.key.length; i++) {
-            if (input.key[i]) {
-                //System.out.println(i); System.out.println(Arrays.toString(input.key));
-            }
-        }
+
+//        for (int i = 0; i < input.key.length; i++) {
+//            if (input.key[i]) {
+//                //System.out.println(i); System.out.println(Arrays.toString(input.key));
+//            }
+//        }
+
+        // update logic method
         game.tick();
 
+        // Update Mouse Position Coordinates (translate X, Y)
         int newX = InputHandler.MouseX;
         int newY = InputHandler.MouseY;
         int winX = InputHandler.WindowX;
@@ -287,6 +298,7 @@ public class Display extends Canvas implements Runnable {
 
 				your mouseMotionListener can also store the time in milli if you want a really exact "speed"
 			 */
+            // Mouse Speed calc #1
             double mouseSpeedX_temp = Math.abs((oldX - newX)); /*Vector X then SQRT this !*/
             double mouseSpeedY_temp = Math.abs((oldY - newY));/*Vector Y then SQRT this !*/
             mouseSpeed = (int) Math.sqrt(mouseSpeedX_temp * mouseSpeedX_temp + mouseSpeedY_temp * mouseSpeedY_temp);
@@ -298,6 +310,7 @@ public class Display extends Canvas implements Runnable {
             e.printStackTrace();
         }
 
+        // Window Loop Mouse over
         if (newX < 0 || newX > WIDTH) robot.mouseMove(winX + 500, winY + 500);
         if (newY < 0 || newY > HEIGHT) robot.mouseMove(winX + 500, winY + 500);
         if (newX < 0) robot.mouseMove(winX + getGameWidth() - 20, winY + newY);
@@ -305,6 +318,7 @@ public class Display extends Canvas implements Runnable {
         if (newY < 15) robot.mouseMove(winX + newX, winY + getGameHeight() - 20);
         if (newY >= getGameHeight() - 60) robot.mouseMove(winX + newX, winY + 40);
 
+        // Player UP and Down Rotation till a "Natural human neck" degree
         if (newY < oldY && PlayerController.rotationUp <= 2.8) {
             PlayerController.turnUpM = true;
         }
@@ -322,6 +336,7 @@ public class Display extends Canvas implements Runnable {
             PlayerController.turnDownM = false;
         }
 
+        // Turn left and Right Camera First Person
         if (newX > oldX) {
             PlayerController.turnRightM = true;
         }
@@ -333,6 +348,7 @@ public class Display extends Canvas implements Runnable {
             PlayerController.turnLeftM = true;
         }
 
+        // Mouse Speed calc #2 just testing
         double mouseSpeedX_temp = Math.abs((oldX - newX));
         double mouseSpeedY_temp = Math.abs((oldY - newY));
         MouseSpeed = (int) Math.sqrt(mouseSpeedX_temp * mouseSpeedX_temp + mouseSpeedY_temp * mouseSpeedY_temp);

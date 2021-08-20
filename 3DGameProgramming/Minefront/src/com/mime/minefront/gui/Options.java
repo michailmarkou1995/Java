@@ -7,15 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 
 public class Options extends JFrame {//extends Launcher
 
 
+    @Serial
     private static final long serialVersionUID = 1L;
     protected int buttonWidth = 80, buttonHeight = 40;
     Configuration config = new Configuration();
     int w = 0, h = 0;
-    //JFrame frame = new JFrame();
     JPanel window = new JPanel();
     private int width = 550, height = 450;
     private JButton OK;
@@ -24,25 +25,6 @@ public class Options extends JFrame {//extends Launcher
     private Rectangle rOK, rresolution;
     private Choice resolution = new Choice();
 
-//	public Options() { //() int id, Display display
-//		super(1);//mpori kai null xwris crash sto new Display(); // , new Display()
-//		setTitle("Options");
-//		setSize(new Dimension(width, height));
-//		setLocationRelativeTo(null);
-//		
-//		//if(id==1)
-//		drawButtons();
-//	}
-
-    //	public Options() {
-////		frame.setTitle("Options");
-////		frame.setSize(new Dimension(width, height));
-////		frame.setLocationRelativeTo(null);
-////		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-////		frame.setVisible(true);
-//		
-//		drawButtons();
-//	}
     public Options() {
         setTitle("Options");
         setSize(new Dimension(width, height));
@@ -95,7 +77,6 @@ public class Options extends JFrame {//extends Launcher
             public void actionPerformed(ActionEvent e) {
                 InputHandler.MouseButton = 0;
                 dispose();
-                //new Launcher(0); //, new Display()
                 config.saveConfiguration("width", parseWidth());
                 config.saveConfiguration("height", parseHeight());
             }
@@ -139,8 +120,7 @@ public class Options extends JFrame {//extends Launcher
     private int parseHeight() {
         //what happens in try stays in try block
         try {
-            int h = Integer.parseInt(theight.getText());
-            return h;
+            return Integer.parseInt(theight.getText());
         } catch (NumberFormatException e) {
             drop();
             return h;//Global w from drop method

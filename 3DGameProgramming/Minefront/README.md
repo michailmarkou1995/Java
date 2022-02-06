@@ -5,7 +5,7 @@ instructor: thecherno
 3D X,Y,Z axis Ray cast Render Engine
 Features:\
 Mouse Wraping\
-Custom Launcher + GUI (Multi-Threading)\
+Custom Launcher + GUI (Multi-threading)\
 Custom Resolutions\
 X,Y,Z axis navigation\
 Double side rendering aka Flipped Normals\

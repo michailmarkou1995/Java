@@ -1,5 +1,6 @@
 Robot Maze Unique Paths in Android</br>
 
-Edge Detection for tile-position-wraping from side-to-side
+• Start and Walk to Exit Target
+• Edge Detection for tile-position-wrapping from side-to-side
 
 <img src="RobotMaze.gif" width="240">

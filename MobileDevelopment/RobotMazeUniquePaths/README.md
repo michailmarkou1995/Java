@@ -8,6 +8,6 @@ Selection Menu easy for visible and Hard for invisible bombs!
 <img src="RobotMaze.gif" width="240">
 ShowCase GIF
 <img src="ExitTrap.png" width="240">
-Invisible Bombs Watch out!
-<img src="invisibleBombs_DoorTrapExit.png" width="240">
 Which exit will not kill me?
+<img src="invisibleBombs_DoorTrapExit.png" width="240">
+Invisible Bombs Watch out!

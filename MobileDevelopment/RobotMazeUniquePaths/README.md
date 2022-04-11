@@ -1,5 +1,7 @@
 Robot Maze Unique Paths in Android</br>
 
+Google Play: https://play.google.com/store/apps/details?id=io.github.michailmarkou1995.robotmaze
+
 • Start and Walk to Exit Target<br/>
 • Edge Detection for tile-position-wrapping prevention from side-to-side<br/>
 

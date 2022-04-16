@@ -1,0 +1,72 @@
+types
+Signal =<INCREASE>|<DECREASE>|<DO_NOTHING>;
+
+
+values
+MAX=10;
+MIN=-10;
+EXTRA=nil;
+
+
+
+state IncubatorController of
+	requestedTemp : [int]
+	actualTemp : [int]
+
+ 
+	inv mk_IncubatorController(r,a) == (inRange_e(r) or r=EXTRA) and (inRange_e(a) or a=EXTRA)
+	init i== i=mk_IncubatorController(EXTRA,EXTRA)
+	
+   
+   
+end
+
+functions
+
+inRange(a:[int]) result:bool
+pre true 
+post result = (a>=MIN and a <=MAX);
+
+
+inRange_e:([int])->bool
+inRange_e(s) == if (s<>EXTRA and (s<= MAX) and (s>=MIN)) then true else false;
+
+
+operations
+
+
+setInitialTemp(TempIn:[int])
+ext wr actualTemp : [int]
+pre actualTemp=EXTRA  and inRange_e(TempIn)
+post actualTemp=TempIn;
+
+
+requestChange(TempIn:[int]) signalOut:Signal
+ext wr requestedTemp:[int]
+rd actualTemp:[int]
+pre inRange_e(TempIn) and actualTemp<> EXTRA
+post requestedTemp=TempIn and ((actualTemp < TempIn and signalOut=<INCREASE>) or (actualTemp > TempIn and signalOut=<DECREASE>) or (actualTemp = TempIn and signalOut=<DO_NOTHING>));
+
+increment ()signalOut:Signal
+ext wr actualTemp:[int]
+rd requestedTemp:[int]
+pre   actualTemp < requestedTemp and actualTemp <> EXTRA and requestedTemp <> EXTRA
+post (actualTemp = actualTemp~+1) and ((actualTemp < requestedTemp and signalOut=<INCREASE>) or (actualTemp = requestedTemp and signalOut=<DO_NOTHING>));
+
+
+decrement ()signalOut:Signal
+ext wr actualTemp:[int]
+rd requestedTemp:[int]
+pre   actualTemp > requestedTemp and actualTemp <> EXTRA and requestedTemp <> EXTRA
+post (actualTemp = actualTemp~-1) and ((actualTemp > requestedTemp and signalOut=<DECREASE>) or (actualTemp = requestedTemp and signalOut=<DO_NOTHING>));
+
+
+getRequestedTemp() currentRequested : [int]
+ext rd requestedTemp : [int]
+pre true
+post currentRequested = requestedTemp;
+
+getActualTemp() currentActual : [int]
+ext rd actualTemp : [int]
+pre true
+post currentActual = actualTemp;

@@ -1,0 +1,75 @@
+values
+MIN:int=1;
+MAX:int=6;
+
+state RobotMaze of
+	row:int
+	col:int
+	
+	--inv mk_RobotMaze(row_Y, col_X) == (row_Y >= MIN) and (row_Y <= MAX) and (col_X >= MIN) and (col_X <= MAX)
+	--only explicit func for inv
+	inv mk_RobotMaze(row_Y, col_X) == inRange_e(row_Y) and inRange_e(col_X)
+	init i == i = mk_RobotMaze(MIN, MIN)
+end
+
+functions
+
+inRange_e:int->bool
+inRange_e(val) ==
+if (val <= MAX and val >= MIN) then true
+else false;
+
+isAtDoor_i(xPos:int, yPos:int) result:bool
+pre true
+post if (xPos = MAX and yPos = MAX) then result = true
+else result = false;
+
+isAtDoor_e:(int) * (int) -> bool
+isAtDoor_e(row, col) ==
+if (row = MAX and col = MAX) then true
+else false;
+
+operations
+
+setMoveUp()
+ 
+ext wr row:int
+pre row > MIN
+post row = row~ - 1;
+
+setMoveDown()
+ 
+ext wr row:int
+pre row < MAX
+post row = row~ + 1;
+
+setMoveRight()
+ 
+ext wr col:int
+pre col < MAX
+post col = col~ + 1;
+
+setMoveLeft()
+ 
+ext wr col:int
+pre col > MIN
+post col = col~ - 1;
+
+getRow() currentRow:int
+
+ext rd row:int
+pre true
+post currentRow=row;
+
+getCol() currentCol:int
+
+ext rd col:int
+pre true
+post currentCol=col;
+
+Exit()
+
+ext rd row:int
+rd col:int
+pre isAtDoor_e(row, col)
+post (row=1) and (col=1)

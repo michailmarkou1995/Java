@@ -1,0 +1,44 @@
+values
+MAX : int = 10;
+MIN : int = -10;
+EXTRA = nil;
+
+state IncubatorMonitor of
+	temp:[int]
+	
+	--inv mk_IncubatorMonitor(temp) == temp >= MIN and temp <= MAX or temp = nil
+	--init IM == IM = mk_IncubatorMonitor(5)
+	inv mk_IncubatorMonitor(temp) == inRange_e(temp) or temp = EXTRA
+	init IM == IM = mk_IncubatorMonitor(EXTRA)
+end
+
+functions
+
+inRange_e:([int])->bool
+inRange_e(s) == if (s<>EXTRA and (s<= MAX) and (s>=MIN)) then true else false;
+
+operations
+
+setInitialTemp(tempIn:int)
+
+ext wr temp
+pre inRange_e(tempIn) and temp = EXTRA
+post temp = tempIn;
+
+Increment()
+
+ext wr temp:[int]
+pre temp < MAX
+post temp = temp~ + 1;
+
+Decrement()
+
+ext wr temp:[int]
+pre temp > MIN
+post temp = temp~ - 1;
+
+getTemp() currentTemp:int
+
+ext rd temp:[int]
+pre true
+post currentTemp = temp;

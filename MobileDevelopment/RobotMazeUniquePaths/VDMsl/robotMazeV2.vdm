@@ -1,0 +1,106 @@
+types
+
+values
+STARTPOSX:int=1;
+ENDPOSX:int=36;
+WIDTH:int=6;
+
+state RobotMaze of
+	-- x is x and y
+	current_x:int
+	
+	inv mk_RobotMaze(col_X) == inRange_e(col_X)
+	init i == i = mk_RobotMaze(STARTPOSX)
+end
+
+functions
+
+inRange_i(val:int) result:bool
+pre true
+post result <=> (val < ENDPOSX) and (val > STARTPOSX);
+
+inRange_e:int->bool
+inRange_e(val) ==
+if (val <= ENDPOSX and val >= STARTPOSX) then true
+else false;
+
+-- if zero then is on Right Edge number 6,12,18,24,30,36
+calcEdgeRight:int->bool
+calcEdgeRight(e) == 
+if ((e mod (ENDPOSX/WIDTH)) <> 0) then true
+else false;
+
+--calcEdgeRight:int->int
+--calcEdgeRight(e) == 
+--if ((e mod (ENDPOSX/WIDTH)) <> 0) then e
+--else e;
+
+-- if 1 then is on Left Edge number 0,7,13,19,25,31
+calcEdgeLeft(e:int) r:bool
+pre true
+post r <=> ((e mod (ENDPOSX/WIDTH)) <> 1);
+
+isAtDoor_e:int->bool
+isAtDoor_e(xPos) ==
+if (xPos = ENDPOSX) then true
+else false;
+
+operations
+
+setMoveUp()
+ 
+ext wr current_x:int
+pre inRange_i(current_x)
+post current_x = current_x~ - WIDTH;
+
+setMoveDown()
+ 
+ext wr current_x:int
+pre inRange_i(current_x)
+post current_x = current_x~ + WIDTH;
+
+-- in order to move Right must be inRange == true AND maxEdgeRight == true (true on <> 0) same for left
+setMoveRight()
+ 
+ext wr current_x:int
+pre inRange_i(current_x) and maxEdgeRight()
+post current_x = current_x~ + STARTPOSX;
+
+setMoveLeft()
+ 
+ext wr current_x:int
+pre inRange_i(current_x) and maxEdgeLeft()
+post current_x = current_x~ - STARTPOSX;
+
+maxEdgeRight() isEdgeRight: bool
+ext rd current_x
+pre true
+post if(calcEdgeRight(current_x)) then isEdgeRight = true -- calcEdgeRight(current_x) = 0
+else isEdgeRight = false;
+
+maxEdgeLeft() isEdgeLeft: bool
+
+ext rd current_x
+pre calcEdgeLeft(current_x)
+post isEdgeLeft = calcEdgeLeft(current_x);
+
+getPositionX() xPos: int
+
+ext rd current_x
+--pre true
+post if ((current_x mod WIDTH) = 0)
+then xPos = WIDTH
+else xPos = current_x mod WIDTH;
+
+getPositionY() yPos: int
+
+ext rd current_x
+post if (current_x mod WIDTH = 0)
+then yPos = current_x / WIDTH
+else yPos = floor(current_x / WIDTH) + 1;
+
+Exit()
+
+ext rd current_x:int
+pre isAtDoor_e(current_x)
+post (current_x=STARTPOSX)

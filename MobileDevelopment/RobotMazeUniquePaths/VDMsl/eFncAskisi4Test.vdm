@@ -1,0 +1,96 @@
+functions
+
+--#absolute value return
+mabs:int->int
+mabs(val) ==
+if (val < 0) then - val
+else val
+pre true;
+--$ print mabs(4), print mabs(-4)
+
+--################SETS
+
+--#Positive set return recursive func
+PositiveSet:set of int -> set of int
+PositiveSet(s1) == 
+{if (x < 0) then - x else x | x in set s1};
+--$ print PositiveSet({1,-2}), print PositiveSet({-1,2}), print PositiveSet({-1,-2}), print PositiveSet({1,2})
+
+PositiveSet_i(q1 : set of int) res : set of int
+pre q1 <> {}
+post res = {if (x < 0) then - x else x | x in set q1};
+
+PositiveSet2:set of int -> set of int
+PositiveSet2(s1) == 
+if(forall x in set s1 & x < 0) then {x*(-1)|x in set s1}
+elseif (forall x in set s1 & x > 0) then {x|x in set s1}
+else {if (x < 0) then - x else x|x in set s1};
+--$ same result as above with print
+
+--#BiggestSet return but not included
+BiggestSet:set of int * set of int -> set of int
+BiggestSet(s1,s2) == 
+if ((card s1 > card s2) and (s1 not in set s2)) then s1  --"This not-membership check will always yield true" on Integrity check BUT works ok on testing print
+elseif (card s1 < card s2) then s2 
+else {};
+--$ print BiggestSet({1,2},{1,2}), print BiggestSet({1,2},{1,2,3})
+
+--#isAllBigger return but neither empty
+isAllBigger:set of int * set of int -> bool
+isAllBigger(s1,s2) == 
+if (s1 = {} or s2 = {}) then false
+elseif(forall x in set s1 & forall y in set s2 & x > y) then true
+else false;
+--$ print isAllBigger({1,2},{3,4}), print isAllBigger({3,4},{1,2})
+
+isAllBigger_i(q1 : set of int, q2 : set of int) query : bool
+pre q1 <> {} and q2 <> {}
+post query <=> forall x in set q1 & forall y in set q2 & x > y;
+
+
+--################SEQS
+
+--#unique for 2 elems in sequence
+isUnique2: seq of int -> bool --int seqIn(x) returns elem content not number but based on number
+isUnique2(seqIn) == 
+if(forall x,y in set inds seqIn & (x<>y) => (seqIn(x) = seqIn(y))) then false --seqIn(2)
+else true; --seqIn(1); if 2,1 then 1 if 1,2 then 2 if 2,2 then 2
+--$ print isUnique2([1,1]), print isUnique2([1,2])
+
+--#unique for any
+isUnique: seq of int -> bool
+isUnique(seqIn) == 
+if(forall x,y in set inds seqIn & (x<y) => (seqIn(x) < seqIn(y))) then true
+else false;
+--$ print isUnique2([1,1]), print isUnique2([1,2])
+
+--#sum
+sum: seq of int -> int
+sum(seqIn)== 
+if (seqIn = []) then 0
+else hd seqIn + sum(tl seqIn);
+--$ print sum([3,3])
+
+--#remove
+removeNumInSeq: seq of int * int -> seq of int
+removeNumInSeq(seqIn, rmi) == 
+if seqIn = [] then []
+else seqIn(1,...,rmi-1) ^ seqIn(rmi + 1,...,len seqIn);
+--$ p removeNumInSeq([3,4,5],2)
+
+--#recursive Filtering
+filterNums : seq of int * int -> seq of int
+filterNums(seqIn,i) ==
+if seqIn = [] then []
+elseif (hd seqIn > i ) then [hd seqIn] ^ filterNums(tl seqIn,i)
+else filterNums(tl seqIn ,i);
+--$ print filterNums([3,4,5],4)
+
+--#find position
+findPos: seq of int * int -> int
+findPos(qIn, i) == 
+--if (exists p in set elems qIn & p=i) then -999 
+--else qIn(i);
+if (exists p in set inds qIn & p=i) then qIn(i)
+else -999;
+--$ p findPos([3,4,5],1), p findPos([3,4,5],4)

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RobotMaze</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tileImgView">TileImgView</string>
+    <string name="robotImgAlphaView">TileImgView</string>
+    <string name="bombImgView">TileImgView</string>
+    <string name="position">Position:</string>
+    <string name="exit">EXIT</string>
+    <string name="easy">Easy</string>
+    <string name="hard">Hard</string>
+    <string name="level_1">LEVEL 1</string>
+    <string name="buttonAction">btnAction</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5103895472601380/9163367511</string>
+</resources>

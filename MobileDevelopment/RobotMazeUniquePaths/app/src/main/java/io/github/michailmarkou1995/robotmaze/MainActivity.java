@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadRewaredVideoAd(AdRequest adRequest) {
-        RewardedAd.load(this, "ca-app-pub-5103895472601380/7594300829",
+        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadInterstitialAd(AdRequest adRequest) {
-        InterstitialAd.load(this, "ca-app-pub-5103895472601380/1284877496", adRequest,
+        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {

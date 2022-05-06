@@ -87,6 +87,9 @@ else filterNums(tl seqIn ,i);
 --$ print filterNums([3,4,5],4)
 
 --#find position
+-- give position return the number in that position and NOT search for number in sequence 
+-- e.g., [3,4,5], 1 is ok because 1 exists as position which is the number 3 but [3,4,5], 4 is -999 because position 4 does not exists in sequence
+-- it searchs for position not for the given number
 findPos: seq of int * int -> int
 findPos(qIn, i) == 
 --if (exists p in set elems qIn & p=i) then -999 
@@ -94,3 +97,10 @@ findPos(qIn, i) ==
 if (exists p in set inds qIn & p=i) then qIn(i)
 else -999;
 --$ p findPos([3,4,5],1), p findPos([3,4,5],4)
+
+FindPos:seq of int*int-> int
+FindPos(s,i)==
+if len s = 1 then -999
+else let m = FindPos(tl s,i)
+in if s(1) = i then 1 else
+if s(m+1) = i then m+1 else 0;

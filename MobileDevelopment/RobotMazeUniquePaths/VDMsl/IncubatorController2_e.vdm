@@ -22,6 +22,9 @@ inRange(val) == if (val<=10 and val>=-10) then true else false;
 	
 operations
 
+-- Example Note
+-- First print getActualTemp() then p requestChange(3) then p increment() x3 == <INCREASE> till x3 then p increment equals DO_NOTHING
+
 --explicit setInitialTemp
 setInitialTemp:(int)==>()
 setInitialTemp(tempIn) == actualTemp:=tempIn;
@@ -29,20 +32,20 @@ setInitialTemp(tempIn) == actualTemp:=tempIn;
 
 --explicit requestChange
 requestChange:(int)==>(Signal)
-requestChange(tempIn) ==  if (tempIn > actualTemp) then (requestedTemp:=tempIn;return<DO_NOTHING>)
-else return<DO_NOTHING>;
---p requestChange(2)
+requestChange(tempIn) ==  if (tempIn > actualTemp) then (requestedTemp:=tempIn;return<INCREASE>)
+else (requestedTemp:=tempIn;return<DO_NOTHING>);
+--p requestChange(3)
 
 --explicit increment
 increment:()==>(Signal)
 increment() == if (actualTemp < requestedTemp) then (actualTemp:=actualTemp+1;return<INCREASE>)
-else (return<DO_NOTHING>);
---p decrement()
+else return<DO_NOTHING>;
+--p increment()
 
 --explicit decrement
 decrement:()==>(Signal)
 decrement() == if (actualTemp > requestedTemp) then (actualTemp:=actualTemp-1;return<DECREASE>)
-else (return<DO_NOTHING>);
+else return<DO_NOTHING>;
 --p decrement()
 
 --explicit getActualTemp

@@ -1,0 +1,56 @@
+types
+Signal =<INCREASE>|<DECREASE>|<DO_NOTHING>;
+
+values
+MAX:int=10;
+MIN:int=-10;
+--EXTRA=nil;
+
+state IncubatorController of
+	requestedTemp : [int]
+	actualTemp : [int]
+	
+	inv mk_IncubatorController(r,a) == inRange(r) and inRange(a)
+	
+	init i == i = mk_IncubatorController(0,0)
+end
+	
+functions
+	
+inRange:int-> bool
+inRange(val) == if (val<=10 and val>=-10) then true else false;
+	
+operations
+
+--explicit setInitialTemp
+setInitialTemp:(int)==>()
+setInitialTemp(tempIn) == actualTemp:=tempIn;
+--p setInitialTemp(7)
+
+--explicit requestChange
+requestChange:(int)==>(Signal)
+requestChange(tempIn) ==  if (tempIn > actualTemp) then (requestedTemp:=tempIn;return<DO_NOTHING>)
+else return<DO_NOTHING>;
+--p requestChange(2)
+
+--explicit increment
+increment:()==>(Signal)
+increment() == if (actualTemp < requestedTemp) then (actualTemp:=actualTemp+1;return<INCREASE>)
+else (return<DO_NOTHING>);
+--p decrement()
+
+--explicit decrement
+decrement:()==>(Signal)
+decrement() == if (actualTemp > requestedTemp) then (actualTemp:=actualTemp-1;return<DECREASE>)
+else (return<DO_NOTHING>);
+--p decrement()
+
+--explicit getActualTemp
+getActualTemp: ()==> (int)
+getActualTemp() == return(actualTemp);
+--print getActualTemp()
+
+--explicit getrequestedTemp
+getrequestedTemp: ()==> (int)
+getrequestedTemp() == return(requestedTemp);
+--print getrequestedTemp()

@@ -1,0 +1,43 @@
+types
+Element=token;
+
+values 
+MAX:int=20;
+
+state Stack of
+stack: seq of Element 
+inv mk_Stack (s) ==	 (len s <= MAX )
+init p == p = mk_Stack ([])
+end
+
+operations
+
+push(itemIn:Element)
+ext wr stack:seq of Element
+pre len stack < MAX
+post stack = [itemIn] ^  stack~; 
+
+pop() itemRemoved: Element 
+ext wr stack:seq of Element
+pre stack <> []
+post stack = tl stack~ and itemRemoved = hd stack~;
+
+popAll()
+ext wr stack:seq of Element
+pre stack <> []
+post stack = [];
+
+isEmpty() query:bool
+ext rd stack:seq of Element
+pre true
+post query <=> stack=[];
+
+get_size() result: int
+ext rd stack
+pre true
+post result = len(stack);
+
+isFull() query:bool
+ext rd stack:seq of Element
+pre true
+post query <=> len stack =MAX;

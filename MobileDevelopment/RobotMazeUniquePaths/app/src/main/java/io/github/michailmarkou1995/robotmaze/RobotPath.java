@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,12 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
+import io.github.michailmarkou1995.robotmaze.services.InvariantCheck;
+import io.github.michailmarkou1995.robotmaze.services.VDM;
+import io.github.michailmarkou1995.robotmaze.services.VDMException;
+
 /**
  * Logic of Finding Path
  */
-public class RobotPath {
+public class RobotPath implements InvariantCheck {
     final int START_POSITION = 1, END_POSITION = 36, MAZE_WIDTH = 6, MAZE_HEIGHT = 6;
-    static Button btnExit;
+    static Button btnExit, btnStatus;
     static boolean byPassedKaboom = false, doOnce = true;
     static int levelCounter = 0, alternateExit;
     int current_x, current_y, positionRecord = 0; // positionRecord we can capture it here or fetch it from Active Green-Stepped-Block
@@ -44,38 +49,40 @@ public class RobotPath {
     ImageView imgSteppedV, robotV;
     TextView positionRecordText, levelName;
     FrameLayout overlayLevel;
-    boolean moveToWidth, moveToHeight, robotSteppedOut, takeUIcontrol;
+    boolean moveToWidth, moveToHeight, robotSteppedOut, takeUIcontrol, canBePressed;
     static boolean isExitAltered;
     Spawn spawn;
     MainActivity mainAct;
+    Toast mToast = null;
+
+    //Cross-Class Static
+    public static RobotPath ROBOTPATH = null;
 
     // Initialization values and Reset Game Status Variables and UI
+    // TODO implement singleton
     RobotPath(MainActivity mainAct, boolean isResetGameExit) {
+        // VDM-SL INIT
         this(mainAct);
         try {
-            current_x = START_POSITION;
-            current_y = START_POSITION;
-            positionRecord = 1;
-            robotSteppedOut = true; // is at Door?
-            positionRecordText = mainAct.findViewById(R.id.currentPositionText);
-        } catch (NullPointerException e1) {
-            current_x = START_POSITION;
-            current_y = START_POSITION;
-            positionRecord = 0;
-            robotSteppedOut = true; // is at Door?
-        }
-        if (isResetGameExit) {
-            robotV = findViewImgId(this.mainAct, robotView[current_x]);
-            robotV.setImageResource(R.drawable.robot);
-            btnExit.setBackgroundColor(Color.RED);
-            btnExit.setTextColor(Color.BLACK); // contrast colors
-            positionRecordText.setText(String.format("Position: Total = %s, X = %s, Y = %s,",
-                    positionRecord, current_x % MAZE_WIDTH, current_y));
-            for (int i = 2; i < END_POSITION; i++) {
-                imgSteppedV = findViewImgId(this.mainAct, imgView[i]);
-                imgSteppedV.setImageResource(R.drawable.white_non_stepped);
+            startPosition(START_POSITION, START_POSITION);
+            VDM.invTest(this);
+            if (isResetGameExit) {
+                robotV = findViewImgId(this.mainAct, robotView[current_x]);
+                robotV.setImageResource(R.drawable.robot);
+                btnExit.setBackgroundColor(Color.RED);
+                btnExit.setTextColor(Color.BLACK); // contrast colors
+                positionRecordText.setText(String.format("Position: Total = %s, X = %s, Y = %s,",
+                        positionRecord, current_x % MAZE_WIDTH, current_y));
+                for (int i = 2; i < END_POSITION; i++) {
+                    imgSteppedV = findViewImgId(this.mainAct, imgView[i]);
+                    imgSteppedV.setImageResource(R.drawable.white_non_stepped);
+                }
+                Bomb.isTrickExit = true;
             }
-            Bomb.isTrickExit = true;
+            ROBOTPATH = this;
+        } catch (VDMException e) {
+            //Toast.makeText(mainAct,e.toString(),Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -87,10 +94,19 @@ public class RobotPath {
         spawn = new Spawn(levelCounter, this.mainAct);
         //alternateExit = spawn.mainAct.robot.alternateExit;
         btnExit.setVisibility(View.INVISIBLE);
+        btnStatus.setVisibility(View.INVISIBLE);
         levelName = mainAct.findViewById(R.id.levelName);
         levelName.setVisibility(View.VISIBLE);
         levelName.setText(String.format("LEVEL: %d", levelCounter));
         initLevelDisplay(this.mainAct);
+    }
+
+    private void startPosition(int start_positionX, int start_positionY) {
+        current_x = start_positionX;
+        current_y = start_positionY;
+        positionRecord = 1;
+        robotSteppedOut = true; // is at Door?
+        positionRecordText = mainAct.findViewById(R.id.currentPositionText);
     }
 
     private void initLevelDisplay(MainActivity mainAct) {
@@ -104,6 +120,7 @@ public class RobotPath {
                     public void onAnimationEnd(Animator animation) {
                         levelName.setVisibility(View.INVISIBLE);
                         btnExit.setVisibility(View.VISIBLE);
+                        btnStatus.setVisibility(View.VISIBLE);
                         takeUIcontrol = true;
                     }
                 });
@@ -115,53 +132,63 @@ public class RobotPath {
      * @param idButton view.getid() of Component from UI;
      */
     void calculatePathId(int idButton) {
-        if (takeUIcontrol) {
-            switch (idButton) {
-                case R.id.buttonUP:
-                    if (current_y > START_POSITION) {
-                        moveToHeight = true;
-                        moveToWidth = false;
-                        current_y--;
-                        current_x = current_x - MAZE_WIDTH;
-                        calculatePath(this.mainAct);
-                        robotV = findViewImgId(this.mainAct, robotView[current_x + MAZE_WIDTH]);
-                        robotV.setImageResource(R.drawable.empty_alpha);
-                    }
-                    break;
-                case R.id.buttonDOWN:
-                    if (current_y < MAZE_HEIGHT) {
-                        moveToHeight = true;
-                        moveToWidth = false;
-                        current_y++;
-                        current_x = current_x + MAZE_WIDTH;
-                        calculatePath(this.mainAct);
-                        robotV = findViewImgId(this.mainAct, robotView[current_x - MAZE_WIDTH]);
-                        robotV.setImageResource(R.drawable.empty_alpha);
-                    }
-                    break;
-                case R.id.buttonLEFT:
-                    if (current_x > START_POSITION && mazeEdgesLeft(current_x)) {
-                        moveToHeight = false;
-                        moveToWidth = true;
-                        current_x--;
-                        calculatePath(this.mainAct);
-                        robotV = findViewImgId(this.mainAct, robotView[current_x + 1]);
-                        robotV.setImageResource(R.drawable.empty_alpha);
-                    }
-                    break;
-                case R.id.buttonRIGHT:
-                    if (current_x <= END_POSITION && mazeEdgesRight(current_x)) {
-                        moveToHeight = false;
-                        moveToWidth = true;
-                        current_x++;
-                        calculatePath(this.mainAct);
-                        robotV = findViewImgId(this.mainAct, robotView[current_x - 1]);
-                        robotV.setImageResource(R.drawable.empty_alpha);
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + idButton);
+        // VDM-SL Invariant
+        try {
+            if (takeUIcontrol) {
+                switch (idButton) {
+                    case R.id.buttonUP:
+                        if (VDM.preTest(invUp())) {
+                            moveToHeight = true;
+                            moveToWidth = false;
+                            current_y--;
+                            current_x = current_x - MAZE_WIDTH;
+                            calculatePath(this.mainAct);
+                            robotV = findViewImgId(this.mainAct, robotView[current_x + MAZE_WIDTH]);
+                            robotV.setImageResource(R.drawable.empty_alpha);
+                        }
+                        break;
+                    case R.id.buttonDOWN:
+                        if (VDM.preTest(invDown())) {
+                            moveToHeight = true;
+                            moveToWidth = false;
+                            current_y++;
+                            current_x = current_x + MAZE_WIDTH;
+                            calculatePath(this.mainAct);
+                            robotV = findViewImgId(this.mainAct, robotView[current_x - MAZE_WIDTH]);
+                            robotV.setImageResource(R.drawable.empty_alpha);
+                        }
+                        break;
+                    case R.id.buttonLEFT:
+                        if (VDM.preTest(invLeft())) {
+                            moveToHeight = false;
+                            moveToWidth = true;
+                            current_x--;
+                            calculatePath(this.mainAct);
+                            robotV = findViewImgId(this.mainAct, robotView[current_x + 1]);
+                            robotV.setImageResource(R.drawable.empty_alpha);
+                        }
+                        break;
+                    case R.id.buttonRIGHT:
+                        if (VDM.preTest(invRight())) {
+                            moveToHeight = false;
+                            moveToWidth = true;
+                            current_x++;
+                            calculatePath(this.mainAct);
+                            robotV = findViewImgId(this.mainAct, robotView[current_x - 1]);
+                            robotV.setImageResource(R.drawable.empty_alpha);
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + idButton);
+                }
             }
+        } catch (VDMException e) {
+            // show Toast "System Out" only once on Android Screen and not spam message queues
+            if (mToast != null) {
+                mToast.cancel();
+            }
+            mToast = Toast.makeText(mainAct, e.toString(), Toast.LENGTH_SHORT);
+            mToast.show();
         }
     }
 
@@ -303,6 +330,7 @@ public class RobotPath {
                     super.onAnimationEnd(animation);
                     levelName.setVisibility(View.INVISIBLE);
                     btnExit.setVisibility(View.VISIBLE);
+                    btnStatus.setVisibility(View.VISIBLE);
                     mainAct.resetGame();
                 }
             };
@@ -320,5 +348,61 @@ public class RobotPath {
         btnExit.setBackgroundColor(Color.GREEN);
         btnExit.setTextColor(Color.WHITE);
         robotSteppedOut = false;
+    }
+
+    public void btnStatus() {
+        if (!invStatus() && !canBePressed) {
+            btnStatus.setBackgroundColor(Color.GREEN);
+            btnStatus.setTextColor(Color.WHITE);
+            btnStatus.setText(R.string.statusOn);
+            canBePressed = true;
+        } else {
+            btnStatus.setBackgroundColor(Color.RED);
+            btnStatus.setTextColor(Color.BLACK);
+            btnStatus.setText(R.string.statusOff);
+            canBePressed = false;
+        }
+    }
+
+    @Override
+    public boolean invariant() {
+        // fixes position so Invariant Exception never actually called
+        current_x = START_POSITION;
+        current_y = START_POSITION;
+        return true;
+        //return false;
+    }
+
+    @Override
+    public boolean invUp() {
+        // unsigned >>> is / and signed << is * ... power of 2
+        // current_x <= 12 && current_x > 6
+        if (canBePressed && current_x <= ((END_POSITION >>> 0b10) + 3)
+                && current_x > ((START_POSITION << 0b10) + 2) && !invStatus()) {
+            return false;
+        }
+        Log.d("Shift Right", String.valueOf((END_POSITION >> 0b11) + 2));
+        Log.d("Shift Right", String.valueOf((START_POSITION << 0B10) + 2));
+        return current_y > START_POSITION;
+    }
+
+    @Override
+    public boolean invDown() {
+        return current_y < MAZE_HEIGHT;
+    }
+
+    @Override
+    public boolean invLeft() {
+        return current_x > START_POSITION && mazeEdgesLeft(current_x);
+    }
+
+    @Override
+    public boolean invRight() {
+        return current_x <= END_POSITION && mazeEdgesRight(current_x);
+    }
+
+    @Override
+    public boolean invStatus() {
+        return current_x > 0 && current_x <= 6;
     }
 }

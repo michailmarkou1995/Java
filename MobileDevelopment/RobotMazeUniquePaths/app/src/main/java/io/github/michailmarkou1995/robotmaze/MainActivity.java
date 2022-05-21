@@ -30,9 +30,9 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public final String TAG = "MainActivity";
-    static boolean isDifficult;
+    static boolean isDifficult, pressedOnlyOnceBtn;
     public RobotPath robot;
-    private Button btn_easy, btn_hard, buttonExit;
+    private Button btn_easy, btn_hard, buttonExit, buttonStatus;
     private AdView adView;
     private InterstitialAd mInterstitialAd;
     private RewardedAd mRewardedAd;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MainActivity mainAct;
 
     @Override
+    //@SuppressWarnings("DEPRECATION")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -65,11 +66,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         screenStartChoose = findViewById(id.screenStartBackground);
         buttonExit = findViewById(id.buttonEXIT);
+        buttonStatus = findViewById(id.buttonSTATUS);
         btn_easy = findViewById(id.btn_easy);
         btn_hard = findViewById(id.btn_hard);
         btn_easy.setOnClickListener(this);
         btn_hard.setOnClickListener(this);
         buttonExit.setOnClickListener(this);
+        buttonStatus.setOnClickListener(this);
         mainAct = this;
     }
 
@@ -98,56 +101,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d("TAG", "The interstitial ad wasn't ready yet.");
         }
-        switch (view.getId()) {
-            case id.btn_easy:
-                isDifficult = false;
-                RobotPath.btnExit = buttonExit;
-                robot = new RobotPath(mainAct, false);
-                screenStartChoose.animate()
-                        .alpha(0.5f)
-                        .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                btn_easy.animate().rotation(btn_easy.getRotation() - 360).start();
-                                screenStartChoose.animate()
-                                        .alpha(0.0f)
-                                        .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
-                                            @Override
-                                            public void onAnimationEnd(Animator animation) {
-                                                btn_easy.setVisibility(View.GONE);
-                                                btn_hard.setVisibility(View.GONE);
-                                            }
-                                        });
-                            }
-                        });
-                break;
-            case id.btn_hard:
-                isDifficult = true;
-                RobotPath.btnExit = buttonExit;
-                robot = new RobotPath(mainAct, false);
-                screenStartChoose.animate()
-                        .alpha(0.5f)
-                        .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                btn_hard.animate().rotation(btn_hard.getRotation() - 360).start();
-                                screenStartChoose.animate()
-                                        .alpha(0.0f)
-                                        .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
-                                            @Override
-                                            public void onAnimationEnd(Animator animation) {
-                                                btn_easy.setVisibility(View.GONE);
-                                                btn_hard.setVisibility(View.GONE);
-                                            }
-                                        });
-                            }
-                        });
-                break;
-            case id.buttonEXIT:
-                resetGame();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + view.getId());
+        if (!pressedOnlyOnceBtn) {
+            switch (view.getId()) {
+                case id.btn_easy:
+                    pressedOnlyOnceBtn = true;
+                    isDifficult = false;
+                    RobotPath.btnExit = buttonExit;
+                    RobotPath.btnStatus = buttonStatus;
+                    robot = new RobotPath(mainAct, false);
+                    screenStartChoose.animate()
+                            .alpha(0.5f)
+                            .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    btn_easy.animate().rotation(btn_easy.getRotation() - 360).start();
+                                    screenStartChoose.animate()
+                                            .alpha(0.0f)
+                                            .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                    btn_easy.setVisibility(View.GONE);
+                                                    btn_hard.setVisibility(View.GONE);
+                                                }
+                                            });
+                                }
+                            });
+                    break;
+                case id.btn_hard:
+                    pressedOnlyOnceBtn = true;
+                    isDifficult = true;
+                    RobotPath.btnExit = buttonExit;
+                    RobotPath.btnStatus = buttonStatus;
+                    robot = new RobotPath(mainAct, false);
+                    screenStartChoose.animate()
+                            .alpha(0.5f)
+                            .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    btn_hard.animate().rotation(btn_hard.getRotation() - 360).start();
+                                    screenStartChoose.animate()
+                                            .alpha(0.0f)
+                                            .setDuration(1000L).setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                    btn_easy.setVisibility(View.GONE);
+                                                    btn_hard.setVisibility(View.GONE);
+                                                }
+                                            });
+                                }
+                            });
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + view.getId());
+            }
+        }
+        if (view.getId() == id.buttonEXIT) {
+            resetGame();
+        }
+        if (view.getId() == id.buttonSTATUS) {
+            RobotPath.ROBOTPATH.btnStatus();
         }
     }
 
@@ -158,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (robot.spawn.bombList.isEmpty()) {
                 robot = new RobotPath(this, true);
                 robot.takeUIcontrol = false;
+                robot.canBePressed = false;
+                robot.btnStatus();
             } else throw new ArrayStoreException(); // leak error
         }
     }

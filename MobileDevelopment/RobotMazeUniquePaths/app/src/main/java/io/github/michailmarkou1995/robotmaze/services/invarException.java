@@ -1,4 +1,4 @@
-package io.github.michailmarkou1995.robotmaze;
+package io.github.michailmarkou1995.robotmaze.services;
 
 import android.widget.Toast;
 
